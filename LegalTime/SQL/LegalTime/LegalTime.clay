@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<clay-model clay-version="2.0.0">
+<database-model author="" begin-script="" end-script="" id="4225af:125355e7aa2:-7fc5" name="LegalTime" sql-dialect-id="jp.azzurri.clay.dialect.Postgre_7_3_Dialect" version="1.0">
+<schema-list>
+<schema id="4225af:125355e7aa2:-7fc2" name="public">
+<table-list>
+<table id="4225af:125355e7aa2:-7fc4" name="client_pref">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fbd" mandatory="true" name="client_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb9" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fbc" mandatory="false" name="client_name">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7fc3" name="PK_CLIENT_PREF">
+<primary-key-column name="client_id"/>
+</primary-key>
+</table>
+<table id="4225af:125355e7aa2:-7fb6" name="sys_code">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb2" mandatory="true" name="sys_code_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fa0" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb1" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="5" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb0" mandatory="false" name="code_type">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="5" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7faf" mandatory="false" name="code_id">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="255" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fac" mandatory="false" name="description">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="20" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fab" mandatory="false" name="system_or_user">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7fb5" name="PK_SYS_CODE">
+<primary-key-column name="sys_code_id"/>
+<primary-key-column name="client_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7f7a" name="FK_syscode_client" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CLIENT_PREF" referenced-table="client_pref" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7f48" name="tran_type">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f43" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="5" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f42" mandatory="true" name="tran_type">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f40" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="20" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f41" mandatory="false" name="description">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7f47" name="PK_TRAN_TYPE">
+<primary-key-column name="client_id"/>
+<primary-key-column name="tran_type"/>
+</primary-key>
+</table>
+<table id="4225af:125355e7aa2:-7f3f" name="customer_account_register">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f3b" mandatory="true" name="client_account_register_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f3a" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eb4" mandatory="true" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f39" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="10" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f38" mandatory="false" name="effective_dt">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f37" mandatory="false" name="description">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f36" mandatory="false" name="tran_amt">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="5" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f35" mandatory="false" name="tran_type">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7f3e" name="PK_CUSTOMER_ACCOUNT_REGISTER">
+<primary-key-column name="client_account_register_id"/>
+<primary-key-column name="client_id"/>
+<primary-key-column name="customer_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7b30" name="FK_client_account_register_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+<foreign-key id="4225af:125355e7aa2:-770f" name="FK_client_account_register_3" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_TRAN_TYPE" referenced-table="tran_type" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="tran_type" referenced-key-column-name="tran_type"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7f0f" name="expense_register">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f0b" mandatory="true" name="expense_register_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f09" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eb9" mandatory="true" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f0a" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f08" mandatory="false" name="description">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f07" mandatory="false" name="amount">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f06" mandatory="false" name="invoice_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f03" mandatory="false" name="invoiceable">
+<data-type name="BOOL" selected-variant-pattern="BOOL"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7f0e" name="PK_EXPENSE_REGISTER">
+<primary-key-column name="expense_register_id"/>
+<primary-key-column name="client_id"/>
+<primary-key-column name="customer_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7b72" name="FK_expense_register_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7efe" name="labor_register">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7efa" mandatory="true" name="labor_register_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef9" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ebe" mandatory="true" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7ef8" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef7" mandatory="false" name="description">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef6" mandatory="false" name="minute_count">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef5" mandatory="false" name="start_time">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef4" mandatory="false" name="end_time">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef3" mandatory="false" name="activity_date">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef2" mandatory="false" name="invoiceable">
+<data-type name="BOOL" selected-variant-pattern="BOOL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef1" mandatory="false" name="bill_rate">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef0" mandatory="false" name="invoice_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eef" mandatory="false" name="user_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7efd" name="PK_LABOR_REGISTER">
+<primary-key-column name="labor_register_id"/>
+<primary-key-column name="client_id"/>
+<primary-key-column name="customer_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7e17" name="FK_labor_register_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+<foreign-key id="4225af:125355e7aa2:-7907" name="FK_labor_register_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_USER_INFO" referenced-table="user_info" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="user_id" referenced-key-column-name="user_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+<foreign-key id="4225af:125355e7aa2:-7833" name="FK_labor_register_3" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_INVOICE" referenced-table="invoice" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="invoice_id" referenced-key-column-name="invoice_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7ee4" name="expense_invoice_item">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ee0" mandatory="true" name="expense_invoice_item_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7edf" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ec3" mandatory="true" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e75" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ede" mandatory="false" name="expense_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7edd" mandatory="false" name="expense_description">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7edc" mandatory="false" name="amount">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7edb" mandatory="false" name="invoice_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7ee3" name="PK_EXPENSE_INVOICE_ITEM">
+<primary-key-column name="expense_invoice_item_id"/>
+<primary-key-column name="client_id"/>
+<primary-key-column name="customer_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7dc6" name="FK_expense_invoice_item_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+<foreign-key id="4225af:125355e7aa2:-79b2" name="FK_expense_invoice_item_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_INVOICE" referenced-table="invoice" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="invoice_id" referenced-key-column-name="invoice_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7eda" name="customer">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ed6" mandatory="true" name="customer_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ec6" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e7d" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ed5" mandatory="false" name="first_name">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ed4" mandatory="false" name="last_name">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ed3" mandatory="false" name="address">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ed2" mandatory="false" name="city">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="2" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ed1" mandatory="false" name="state">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="10" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ed0" mandatory="false" name="zip">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="30" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ecf" mandatory="false" name="work_phone">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="30" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ece" mandatory="false" name="home_phone">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="30" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ecd" mandatory="false" name="fax">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="100" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ecc" mandatory="false" name="email">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ecb" mandatory="false" name="client_since_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eca" mandatory="false" name="note">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ec9" mandatory="false" name="bill_type">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ec8" mandatory="false" name="monthly_bill_rate">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ec7" mandatory="false" name="active_yn">
+<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7ed9" name="PK_CUSTOMER">
+<primary-key-column name="customer_id"/>
+<primary-key-column name="client_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7a7f" name="FK_customer_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CLIENT_PREF" referenced-table="client_pref" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7eb1" name="invoice">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ead" mandatory="true" name="invoice_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eab" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eaa" mandatory="true" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e7a" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eac" mandatory="false" name="invoice_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ea9" mandatory="false" name="generated_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ea8" mandatory="false" name="invoice_total_amt">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ea7" mandatory="false" name="prev_balance_due">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7eb0" name="PK_INVOICE">
+<primary-key-column name="invoice_id"/>
+<primary-key-column name="client_id"/>
+<primary-key-column name="customer_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7da1" name="FK_invoice_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7ea3" name="payment_log">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e9f" mandatory="true" name="payment_log_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e9b" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e9a" mandatory="true" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e72" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e9e" mandatory="false" name="effective_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e9d" mandatory="false" name="description">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e9c" mandatory="false" name="amount">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e99" mandatory="false" name="invoice_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e98" mandatory="false" name="client_account_register_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7ea2" name="PK_PAYMENT_LOG">
+<primary-key-column name="payment_log_id"/>
+<primary-key-column name="client_id"/>
+<primary-key-column name="customer_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7bcb" name="FK_payment_log_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+<foreign-key id="4225af:125355e7aa2:-7a18" name="FK_payment_log_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER_ACCOUNT_REGISTER" referenced-table="customer_account_register" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="client_account_register_id" referenced-key-column-name="client_account_register_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+</foreign-key>
+<foreign-key id="4225af:125355e7aa2:-7756" name="FK_payment_log_3" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_INVOICE" referenced-table="invoice" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="invoice_id" referenced-key-column-name="invoice_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7e93" name="labor_invoice_item">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e8f" mandatory="true" name="labor_invoice_item_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e8e" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e8d" mandatory="true" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e6f" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e8c" mandatory="false" name="activity_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e8b" mandatory="false" name="activity_description">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e8a" mandatory="false" name="user_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-79cb" mandatory="true" name="invoice_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7e92" name="PK_LABOR_INVOICE_ITEM">
+<primary-key-column name="labor_invoice_item_id"/>
+<primary-key-column name="client_id"/>
+<primary-key-column name="customer_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7caf" name="FK_labor_invoice_item_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+<foreign-key id="4225af:125355e7aa2:-79cd" name="FK_labor_invoice_item_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_INVOICE" referenced-table="invoice" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="invoice_id" referenced-key-column-name="invoice_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7e6e" name="user_info">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e6a" mandatory="true" name="user_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e69" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7e46" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e68" mandatory="false" name="default_bill_rate">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="255" decimal-digits="0" default-value="" id="15a783a:125733d670f:-7f9e" mandatory="false" name="email_addr">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+<column auto-increment="false" column-size="25" decimal-digits="0" default-value="" id="15a783a:125733d670f:-7f9d" mandatory="false" name="display_name">
+<data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7e6d" name="PK_USER_INFO">
+<primary-key-column name="user_id"/>
+<primary-key-column name="client_id"/>
+</primary-key>
+</table>
+<table id="4225af:125355e7aa2:-7e64" name="customer_bill_rate">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e60" mandatory="true" name="customer_bill_rate_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e5c" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e5f" mandatory="false" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e5e" mandatory="false" name="user_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e49" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e5d" mandatory="false" name="bill_rate">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7e63" name="PK_CUSTOMER_BILL_RATE">
+<primary-key-column name="customer_bill_rate_id"/>
+<primary-key-column name="client_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7cfa" name="FK_customer_bill_rate_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+<foreign-key id="4225af:125355e7aa2:-7c19" name="FK_customer_bill_rate_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_USER_INFO" referenced-table="user_info" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="user_id" referenced-key-column-name="user_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+<table id="4225af:125355e7aa2:-7e5b" name="followup">
+<column-list>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e57" mandatory="true" name="followup_id">
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e56" mandatory="true" name="client_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7d7d" mandatory="false" name="customer_id">
+<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e51" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e55" mandatory="false" name="due_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e54" mandatory="false" name="open_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e53" mandatory="false" name="close_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e52" mandatory="false" name="followup_description">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e50" mandatory="false" name="assigned_user_id">
+<data-type name="TEXT" selected-variant-pattern="TEXT"/>
+</column>
+</column-list>
+<primary-key id="4225af:125355e7aa2:-7e5a" name="PK_FOLLOWUP">
+<primary-key-column name="followup_id"/>
+<primary-key-column name="client_id"/>
+</primary-key>
+<foreign-key-list>
+<foreign-key id="4225af:125355e7aa2:-7d5d" name="FK_followup_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
+<foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
+</foreign-key>
+</foreign-key-list>
+</table>
+</table-list>
+</schema>
+</schema-list>
+</database-model>
+<diagram>
+<table-figure refid="4225af:125355e7aa2:-7fc4" x="691" y="470"/>
+<table-figure refid="4225af:125355e7aa2:-7fb6" x="585" y="271"/>
+<table-figure refid="4225af:125355e7aa2:-7f48" x="968" y="15"/>
+<table-figure height="151" refid="4225af:125355e7aa2:-7f3f" width="295" x="825" y="194"/>
+<fk-figure refid="4225af:125355e7aa2:-7b30">
+<source-terminal x="258" y="146"/>
+</fk-figure>
+<table-figure refid="4225af:125355e7aa2:-7f0f" x="5" y="532"/>
+<fk-figure refid="4225af:125355e7aa2:-7b72">
+<source-terminal x="141" y="10"/>
+</fk-figure>
+<table-figure refid="4225af:125355e7aa2:-7efe" x="1177" y="32"/>
+<table-figure refid="4225af:125355e7aa2:-7ee4" x="396" y="762"/>
+<table-figure refid="4225af:125355e7aa2:-7eda" x="1368" y="697"/>
+<table-figure refid="4225af:125355e7aa2:-7eb1" x="1011" y="1015"/>
+<table-figure refid="4225af:125355e7aa2:-7ea3" x="233" y="3"/>
+<fk-figure refid="4225af:125355e7aa2:-7756">
+<source-terminal x="199" y="139"/>
+</fk-figure>
+<table-figure refid="4225af:125355e7aa2:-7e93" x="280" y="999"/>
+<table-figure refid="4225af:125355e7aa2:-7e6e" x="2069" y="498"/>
+<table-figure refid="4225af:125355e7aa2:-7e64" x="1674" y="571"/>
+<table-figure refid="4225af:125355e7aa2:-7e5b" x="2016" y="987"/>
+</diagram>
+</clay-model>

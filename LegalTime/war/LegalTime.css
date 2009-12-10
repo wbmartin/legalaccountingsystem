@@ -1,0 +1,77 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+  text-align: center;
+}
+
+.MainApplicationScrollPanel{
+	margin: 5px 5px 5px 5px;
+}
+.LoginPanel{
+/**	display: block;
+	margin: 200px 100px 100px 250px;
+	vertical-align: middle;
+	*/
+margin-left: auto; 
+margin-right: auto;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+
+body {
+
+   text-align: center;
+  
+}
+#LOADER{
+	margin-top: 200px;
+	margin-left: auto; 
+	margin-right: auto;
+    display: table-cell;
+    vertical-align: middle;	
+}
+
+.AppContainer{
+text-align: left;
+}
+.CENTER{
+text-align: center;
+}
+
+.LEFT{
+text-align: left;
+}
+#ApplicationTitle{
+	font-size: 3em;
+	color: blue;
+}
+.gxt-label{
+font-size: 12px;
+  font: normal 12px tahoma, arial, helvetica, sans-serif;
+
+}
+.gxt-textbox{
+
+
+     
+  margin-left: 20px;
+
+   
+
+}
+/**
+.richtext-area{
+	border: 1px solid black;
+}
+.gwt-RichTextArea{
+	border: 1px solid black;
+}
+*/
+	
