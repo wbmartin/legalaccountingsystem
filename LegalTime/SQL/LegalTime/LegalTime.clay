@@ -9,8 +9,8 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fbd" mandatory="true" name="client_id">
 <data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb9" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb9" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fbc" mandatory="false" name="client_name">
 <data-type name="TEXT" selected-variant-pattern="TEXT"/>
@@ -28,8 +28,8 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fa0" mandatory="true" name="client_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb1" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb1" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="5" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7fb0" mandatory="false" name="code_type">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
@@ -62,8 +62,8 @@
 <column auto-increment="false" column-size="5" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f42" mandatory="true" name="tran_type">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f40" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f40" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="20" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f41" mandatory="false" name="description">
 <data-type name="VARCHAR" selected-variant-pattern="VARCHAR(%n)"/>
@@ -85,8 +85,8 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eb4" mandatory="true" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f39" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f39" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="10" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f38" mandatory="false" name="effective_dt">
 <data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
@@ -128,8 +128,8 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eb9" mandatory="true" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f0a" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f0a" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f08" mandatory="false" name="description">
 <data-type name="TEXT" selected-variant-pattern="TEXT"/>
@@ -167,8 +167,8 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ebe" mandatory="true" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7ef8" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7ef8" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ef7" mandatory="false" name="description">
 <data-type name="TEXT" selected-variant-pattern="TEXT"/>
@@ -230,8 +230,8 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ec3" mandatory="true" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e75" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p)"/>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e75" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ede" mandatory="false" name="expense_dt">
 <data-type name="DATE" selected-variant-pattern="DATE"/>
@@ -271,7 +271,7 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ec6" mandatory="true" name="client_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e7d" mandatory="false" name="last_update">
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e7d" mandatory="false" name="last_update">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="50" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ed5" mandatory="false" name="first_name">
@@ -341,7 +341,7 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eaa" mandatory="true" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e7a" mandatory="false" name="last_update">
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e7a" mandatory="false" name="last_update">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eac" mandatory="false" name="invoice_dt">
@@ -380,7 +380,7 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e9a" mandatory="true" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e72" mandatory="false" name="last_update">
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e72" mandatory="false" name="last_update">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e9e" mandatory="false" name="effective_dt">
@@ -432,7 +432,7 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e8d" mandatory="true" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e6f" mandatory="false" name="last_update">
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e6f" mandatory="false" name="last_update">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e8c" mandatory="false" name="activity_dt">
@@ -473,8 +473,8 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e69" mandatory="true" name="client_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7e46" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7e46" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e68" mandatory="false" name="default_bill_rate">
 <data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
@@ -499,14 +499,14 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e5c" mandatory="true" name="client_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e49" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e5f" mandatory="false" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e5e" mandatory="false" name="user_id">
 <data-type name="TEXT" selected-variant-pattern="TEXT"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e49" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e5d" mandatory="false" name="bill_rate">
 <data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
@@ -535,11 +535,11 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e56" mandatory="true" name="client_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
+<column auto-increment="false" column-size="3" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e51" mandatory="false" name="last_update">
+<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7d7d" mandatory="false" name="customer_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
-</column>
-<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e51" mandatory="false" name="last_update">
-<data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7e55" mandatory="false" name="due_dt">
 <data-type name="DATE" selected-variant-pattern="DATE"/>
@@ -576,7 +576,7 @@
 <table-figure refid="4225af:125355e7aa2:-7fc4" x="691" y="470"/>
 <table-figure refid="4225af:125355e7aa2:-7fb6" x="585" y="271"/>
 <table-figure refid="4225af:125355e7aa2:-7f48" x="968" y="15"/>
-<table-figure height="151" refid="4225af:125355e7aa2:-7f3f" width="295" x="825" y="194"/>
+<table-figure height="151" refid="4225af:125355e7aa2:-7f3f" width="295" x="983" y="184"/>
 <fk-figure refid="4225af:125355e7aa2:-7b30">
 <source-terminal x="258" y="146"/>
 </fk-figure>
@@ -584,17 +584,17 @@
 <fk-figure refid="4225af:125355e7aa2:-7b72">
 <source-terminal x="141" y="10"/>
 </fk-figure>
-<table-figure refid="4225af:125355e7aa2:-7efe" x="1177" y="32"/>
-<table-figure refid="4225af:125355e7aa2:-7ee4" x="396" y="762"/>
+<table-figure refid="4225af:125355e7aa2:-7efe" x="1301" y="27"/>
+<table-figure refid="4225af:125355e7aa2:-7ee4" x="210" y="745"/>
 <table-figure refid="4225af:125355e7aa2:-7eda" x="1368" y="697"/>
 <table-figure refid="4225af:125355e7aa2:-7eb1" x="1011" y="1015"/>
 <table-figure refid="4225af:125355e7aa2:-7ea3" x="233" y="3"/>
 <fk-figure refid="4225af:125355e7aa2:-7756">
 <source-terminal x="199" y="139"/>
 </fk-figure>
-<table-figure refid="4225af:125355e7aa2:-7e93" x="280" y="999"/>
-<table-figure refid="4225af:125355e7aa2:-7e6e" x="2069" y="498"/>
-<table-figure refid="4225af:125355e7aa2:-7e64" x="1674" y="571"/>
+<table-figure refid="4225af:125355e7aa2:-7e93" x="276" y="1053"/>
+<table-figure refid="4225af:125355e7aa2:-7e6e" x="2201" y="324"/>
+<table-figure refid="4225af:125355e7aa2:-7e64" x="1818" y="568"/>
 <table-figure refid="4225af:125355e7aa2:-7e5b" x="2016" y="987"/>
 </diagram>
 </clay-model>

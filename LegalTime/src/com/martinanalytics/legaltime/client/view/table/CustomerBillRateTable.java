@@ -40,7 +40,7 @@ import com.extjs.gxt.ui.client.event.ComponentEvent;
 
 
 public class CustomerBillRateTable extends LayoutContainer {
-	final ListStore<CustomerBillRateDataModelBean> store = new ListStore<CustomerBillRateDataModelBean>(); 
+	final ListStore<CustomerBillRateBean> store = new ListStore<CustomerBillRateBean>(); 
 	private AppNotifyObject notifier;
 	public CustomerBillRateTable(){
 		notifier = new AppNotifyObject();
@@ -166,7 +166,7 @@ public class CustomerBillRateTable extends LayoutContainer {
 	    cp.setSize(600, 300);  
 	    cp.setLayout(new FitLayout());  
 	  
-	    final EditorGrid<CustomerBillRateDataModelBean> grid = new EditorGrid<CustomerBillRateDataModelBean>(store, cm);  
+	    final EditorGrid<CustomerBillRateBean> grid = new EditorGrid<CustomerBillRateBean>(store, cm);  
 	    //grid.setAutoExpandColumn("");  
 	    grid.setBorders(true);  
 	    //grid.addPlugin(checkColumn);  
@@ -179,7 +179,7 @@ public class CustomerBillRateTable extends LayoutContainer {
 	      @Override  
 	      public void componentSelected(ButtonEvent ce) {  
 	        
-	        CustomerBillRateDataModelBean customerBillRateDataModelBean  = new CustomerBillRateDataModelBean();
+	        CustomerBillRateBean customerBillRateDataModelBean  = new CustomerBillRateBean();
 
 		customerBillRateDataModelBean.setBillRate(0D);
  		customerBillRateDataModelBean.setLastUpdate(new java.util.Date());
@@ -217,9 +217,9 @@ public class CustomerBillRateTable extends LayoutContainer {
 	  }  
 	  
 	  public void setList(ArrayList<CustomerBillRateBean> customerBillRateBeans_ ){
-		  List <CustomerBillRateDataModelBean> customerBillRateTableModelDataList = new ArrayList <CustomerBillRateDataModelBean>();
+		  List <CustomerBillRateBean> customerBillRateTableModelDataList = new ArrayList <CustomerBillRateBean>();
 		  for(int ndx = 0; ndx<customerBillRateBeans_.size(); ndx++){
-			  customerBillRateTableModelDataList.add(new CustomerBillRateDataModelBean(customerBillRateBeans_.get(ndx)));
+			  customerBillRateTableModelDataList.add(customerBillRateBeans_.get(ndx));
 		  }
 		  store.removeAll();
 		  store.add(customerBillRateTableModelDataList); 
@@ -228,11 +228,11 @@ public class CustomerBillRateTable extends LayoutContainer {
 	  
 	  public void saveChanges(){
 		  List<Record> modified = store.getModifiedRecords();
-		  CustomerBillRateDataModelBean customerBillRateDataModelBean = new CustomerBillRateDataModelBean();
+		  CustomerBillRateBean customerBillRateDataModelBean = new CustomerBillRateBean();
 		  ArrayList<CustomerBillRateBean> batchSave = new ArrayList<CustomerBillRateBean>();
 		  for (Record r : modified) {
 			  customerBillRateDataModelBean.setProperties(r.getModel().getProperties());
-			  batchSave.add(customerBillRateDataModelBean.getStandardCustomerBillRateBean());
+			  batchSave.add(customerBillRateDataModelBean);
 			  
 			  
 		  }

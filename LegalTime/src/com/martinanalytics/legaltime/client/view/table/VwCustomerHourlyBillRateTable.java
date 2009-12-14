@@ -47,9 +47,9 @@ import com.extjs.gxt.ui.client.Style;
 
 
 public class VwCustomerHourlyBillRateTable extends LayoutContainer {
-	private final ListStore<VwCustomerHourlyBillRateDataModelBean> store = new ListStore<VwCustomerHourlyBillRateDataModelBean>(); 
+	private final ListStore<VwCustomerHourlyBillRateBean> store = new ListStore<VwCustomerHourlyBillRateBean>(); 
 	private AppNotifyObject notifier;
-	private EditorGrid<VwCustomerHourlyBillRateDataModelBean> grid;
+	private EditorGrid<VwCustomerHourlyBillRateBean> grid;
 	public VwCustomerHourlyBillRateTable(){
 		notifier = new AppNotifyObject();
 	}
@@ -180,7 +180,7 @@ public class VwCustomerHourlyBillRateTable extends LayoutContainer {
 	    cp.setSize(325, 200);  
 	    cp.setLayout(new FitLayout());  
 	  
-	    grid = new EditorGrid<VwCustomerHourlyBillRateDataModelBean>(store, cm);  
+	    grid = new EditorGrid<VwCustomerHourlyBillRateBean>(store, cm);  
 	    //grid.setAutoExpandColumn("");  
 	    grid.setBorders(true);  
 	   // setScrollMode(Style.Scroll.NONE);
@@ -194,16 +194,16 @@ public class VwCustomerHourlyBillRateTable extends LayoutContainer {
 //	      @Override  
 //	      public void componentSelected(ButtonEvent ce) {  
 //	        
-//	        VwCustomerHourlyBillRateDataModelBean vwCustomerHourlyBillRateDataModelBean  = new VwCustomerHourlyBillRateDataModelBean();
+//	        VwCustomerHourlyBillRateBean vwCustomerHourlyBillRateBean  = new VwCustomerHourlyBillRateBean();
 //
-//		vwCustomerHourlyBillRateDataModelBean.setLastUpdate(new java.util.Date());
-// 		vwCustomerHourlyBillRateDataModelBean.setCustomerId(0);
-// 		vwCustomerHourlyBillRateDataModelBean.setBillRate(0D);
-// 		vwCustomerHourlyBillRateDataModelBean.setDisplayName("");
-// 		vwCustomerHourlyBillRateDataModelBean.setUserId("");
-// 		vwCustomerHourlyBillRateDataModelBean.setCustomerBillRateId(0);
+//		vwCustomerHourlyBillRateBean.setLastUpdate(new java.util.Date());
+// 		vwCustomerHourlyBillRateBean.setCustomerId(0);
+// 		vwCustomerHourlyBillRateBean.setBillRate(0D);
+// 		vwCustomerHourlyBillRateBean.setDisplayName("");
+// 		vwCustomerHourlyBillRateBean.setUserId("");
+// 		vwCustomerHourlyBillRateBean.setCustomerBillRateId(0);
 //  	        grid.stopEditing();  
-//	        store.insert(vwCustomerHourlyBillRateDataModelBean, 0);
+//	        store.insert(vwCustomerHourlyBillRateBean, 0);
 //	        grid.startEditing(0, 0);  
 //	      }  
 //	  
@@ -232,10 +232,10 @@ public class VwCustomerHourlyBillRateTable extends LayoutContainer {
 	  }  
 	  
 	  public void setList(ArrayList<VwCustomerHourlyBillRateBean> vwCustomerHourlyBillRateBeans_ ){
-		  List <VwCustomerHourlyBillRateDataModelBean> vwCustomerHourlyBillRateTableModelDataList = new ArrayList <VwCustomerHourlyBillRateDataModelBean>();
+		  List <VwCustomerHourlyBillRateBean> vwCustomerHourlyBillRateTableModelDataList = new ArrayList <VwCustomerHourlyBillRateBean>();
 		  for(int ndx = 0; ndx<vwCustomerHourlyBillRateBeans_.size(); ndx++){
 			 // Log.debug("Client Id found set list in table:" + vwCustomerHourlyBillRateBeans_.get(ndx).getClientId());
-			  vwCustomerHourlyBillRateTableModelDataList.add(new VwCustomerHourlyBillRateDataModelBean(vwCustomerHourlyBillRateBeans_.get(ndx)));
+			  vwCustomerHourlyBillRateTableModelDataList.add(vwCustomerHourlyBillRateBeans_.get(ndx));
 			 // Log.debug("SetList2" +vwCustomerHourlyBillRateTableModelDataList.get(ndx).getClientId()+ vwCustomerHourlyBillRateTableModelDataList.get(ndx).getDisplayName() );
 		  }
 		  store.setFiresEvents(false);
@@ -250,20 +250,7 @@ public class VwCustomerHourlyBillRateTable extends LayoutContainer {
 		  
 	  }
 	  
-//	  public void saveChanges(){
-//		  List<Record> modified = store.getModifiedRecords();
-//		  VwCustomerHourlyBillRateDataModelBean vwCustomerHourlyBillRateDataModelBean = new VwCustomerHourlyBillRateDataModelBean();
-//		  ArrayList<VwCustomerHourlyBillRateBean> batchSave = new ArrayList<VwCustomerHourlyBillRateBean>();
-//		  for (Record r : modified) {
-//			  
-//			  vwCustomerHourlyBillRateDataModelBean.setProperties(r.getModel().getProperties());
-//			  batchSave.add(vwCustomerHourlyBillRateDataModelBean.getStandardVwCustomerHourlyBillRateBean());
-//			  
-//		  }
-// 		store.commitChanges();
-//		notifier.notifyAppEvent(this, "SaveVwCustomerHourlyBillRateBatch", batchSave );
-//		  
-//	  }
+
 	
 	public void onDetach(){
 		super.onDetach();
@@ -287,7 +274,7 @@ public class VwCustomerHourlyBillRateTable extends LayoutContainer {
 	/**
 	 * @return the store
 	 */
-	public ListStore<VwCustomerHourlyBillRateDataModelBean> getStore() {
+	public ListStore<VwCustomerHourlyBillRateBean> getStore() {
 		return store;
 	}
 }

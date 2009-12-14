@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventProducer;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
-import com.martinanalytics.legaltime.client.model.bean.CustomerDataModelBean;
+
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.view.table.CustomerTable;
 import com.martinanalytics.legaltime.client.view.table.VwCustomerHourlyBillRateTable;
@@ -83,7 +83,6 @@ public class CustomerView extends AppEventProducer{
 	UserProfile userProfile;
 	private TextField<String> txtActiveYn = new TextField<String>();
 	private NumberField txtMonthlyBillRate = new NumberField();
-	//private ComboBox<BillType> cboBillType = new ComboBox<BillType>();
 	private SimpleComboBox<String> cboBillType = new SimpleComboBox<String>();
 	private TextField<String> txtNote = new TextField<String>();
 	private DateField dtpClientSinceDt = new DateField();
@@ -100,29 +99,22 @@ public class CustomerView extends AppEventProducer{
 	private TextField<java.util.Date> txtLastUpdate = new TextField<java.util.Date>();
 	private TextField<Integer> txtClientId = new TextField<Integer>();
 	private TextField<Integer> txtCustomerId = new TextField<Integer>();
-	//private ListField<CustomerDataModelBean> lstCustomerChooser = new ListField<CustomerDataModelBean>();
-	private final ListStore<CustomerDataModelBean> store = new ListStore<CustomerDataModelBean>();
+	//private ListField<CustomerBean> lstCustomerChooser = new ListField<CustomerBean>();
+	private final ListStore<CustomerBean> store = new ListStore<CustomerBean>();
 	private FormBinding formBindings;    
 	private FormPanel customerFormPanel = new FormPanel();
 	private ContentPanel cp = new ContentPanel();  
-	private Grid<CustomerDataModelBean> grid ;
+	private Grid<CustomerBean> grid ;
 	private	List<ColumnConfig> configs = new ArrayList<ColumnConfig>(); 
 	private ColumnModel cm;
 	private VwCustomerHourlyBillRateTable vwCustomerHourlyBillRateTable = new VwCustomerHourlyBillRateTable();
 
 	private final int LABEL_WIDTH =75;
-	//private CustomerTable customerTable = new CustomerTable();
-	
 
 	private CustomerComposite customerComposite;
 	public CustomerView(){
-		//Log.debug("Customer View Constructor Called");
 		userProfile = UserProfile.getInstance();
 		customerComposite =new CustomerComposite();
-		//lstCustomerChooser.setStore(store);
-		//lstCustomerChooser.setDisplayField("customerChooserDisplay");
-	    
-
 	}
 	/**
 	 * @return the txtActiveYn
@@ -232,7 +224,6 @@ public class CustomerView extends AppEventProducer{
 	public TextField<Integer> getTxtCustomerId() {
 		return txtCustomerId;
 	}
-
 	/**
 	 * @return the customerComposite
 	 */
@@ -257,93 +248,50 @@ public class CustomerView extends AppEventProducer{
 
 class CustomerComposite extends Composite{
 	public CustomerComposite(){
-	
-
-		getCustomerFormPanel().setFrame(true);
-		getCustomerFormPanel().setHeaderVisible(false);
+		customerFormPanel.setFrame(true);
+		customerFormPanel.setHeaderVisible(false);
+		customerFormPanel.setWidth(600);
+		customerFormPanel.setLabelWidth(LABEL_WIDTH);
+		createFields();   
+		cp.setHeading("Customer Editor");  
+		cp.setFrame(true);
+		cp.setSize(800, 1000);  
+		cp.setLayout(new RowLayout(Orientation.HORIZONTAL)); 
+		cp.setScrollMode(Scroll.NONE);
+		cm = createColumnModel();
+		grid = new Grid<CustomerBean>(getStore(), cm);
 		
-		getCustomerFormPanel().setWidth(600);
-		getCustomerFormPanel().setLabelWidth(LABEL_WIDTH);
-		
-
-		createFields();
-     
-	      getCp().setHeading("Customer Editor");  
-	      getCp().setFrame(true);
-	      getCp().setSize(800, 1000);  
-	      getCp().setLayout(new RowLayout(Orientation.HORIZONTAL)); 
-	      cp.setScrollMode(Scroll.NONE);
-
-	      cm = createColumnModel();
-		  
-		  grid = new Grid<CustomerDataModelBean>(getStore(), cm);
-		  
-		  customerFormPanel.setScrollMode(Scroll.NONE);
-	      formBindings = new FormBinding(getCustomerFormPanel(), true);
-	      formBindings.setStore((Store<CustomerDataModelBean>) grid.getStore()); 
-	      formBindings.removeFieldBinding((formBindings.getBinding(cboBillType)));
-	      formBindings.addFieldBinding(new SimpleComboBoxFieldBinding(cboBillType, "billType"));
-     
+		customerFormPanel.setScrollMode(Scroll.NONE);
+		formBindings = new FormBinding(getCustomerFormPanel(), true);
+		formBindings.setStore((Store<CustomerBean>) getGrid().getStore()); 
+		formBindings.removeFieldBinding((formBindings.getBinding(cboBillType)));
+		formBindings.addFieldBinding(new SimpleComboBoxFieldBinding(cboBillType, "billType"));
+//-----------------------
+		getGrid().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
+		getGrid().getSelectionModel().addListener(Events.SelectionChange,  
+				new Listener<SelectionChangedEvent<CustomerBean>>() {  
+					public void handleEvent(SelectionChangedEvent<CustomerBean> be) {  
+						if (be.getSelection().size() > 0) {  
+							if(txtLastName.getValue()==null || customerFormPanel.isValid()){
+								formBindings.bind((ModelData) be.getSelection().get(0)); 
+								notifyAppEvent(this,"CustomerChange", be.getSelection().get(0).getCustomerId());
+							}else{
+								notifyAppEvent(this, "UserMessage", "Please Correct Validation Errors");
+							}
+						} else {  
+							formBindings.unbind();  
+						}  
+					}  
+		});  
+		//------------------
 	      
-	      //-----------------------
-  	      grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
-	      grid.getSelectionModel().addListener(Events.SelectionChange,  
-	          new Listener<SelectionChangedEvent<CustomerDataModelBean>>() {  
-	            public void handleEvent(SelectionChangedEvent<CustomerDataModelBean> be) {  
-	            
-	              if (be.getSelection().size() > 0) {  
-	            	 // Log.debug("Binding"+  be.getSelection().get(0).get("customerId").toString());
-	            	  if(txtLastName.getValue()==null || customerFormPanel.isValid()){
-	            		  formBindings.bind((ModelData) be.getSelection().get(0)); 
-	            		  //getVwCustomerHourlyBillRateTable().removeAll();
-	            		  notifyAppEvent(this,"CustomerChange", be.getSelection().get(0).getCustomerId());
-	            	  }else{
-	  	            	notifyAppEvent(this, "UserMessage", "Please Correct Validation Errors")
-	  ;	              }
-	              } else {  
-	                formBindings.unbind();  
-	              }  
-	            
-	            }  
-	          });  
-	      //------------------
-	      
-	      ToolBar toolBar = new ToolBar();  
-		    Button addCustomer = new Button("Add Customer");  
-		    addCustomer.setBorders(true);
-		    addCustomer.addListener(Events.Select, new Listener<ComponentEvent>() {
-			      public void handleEvent(ComponentEvent be) {
-		        CustomerDataModelBean customerTableModelBean  = new CustomerDataModelBean();
-
-			customerTableModelBean.setActiveYn("Y");
-	 		customerTableModelBean.setMonthlyBillRate(0D);
-	 		customerTableModelBean.setBillType("HOURLY");
-	 		customerTableModelBean.setNote("");
-	 		customerTableModelBean.setClientSinceDt(new java.util.Date());
-	 		customerTableModelBean.setEmail("");
-	 		customerTableModelBean.setFax("");
-	 		customerTableModelBean.setHomePhone("");
-	 		customerTableModelBean.setWorkPhone("");
-	 		customerTableModelBean.setZip("");
-	 		customerTableModelBean.setState("");
-	 		customerTableModelBean.setCity("");
-	 		customerTableModelBean.setAddress("");
-	 		customerTableModelBean.setLastName("Last");
-	 		customerTableModelBean.setFirstName("_");
-	 		customerTableModelBean.setLastUpdate(new java.util.Date());
-	 		customerTableModelBean.setClientId(0);
-	 		customerTableModelBean.setCustomerId(0);
-	  	         
-		        store.insert(customerTableModelBean, 0);
-		        Record record = store.getRecord(store.getAt(0));
-		        record.set("firstName","First");
-		        grid.getSelectionModel().select(0, false);
-		        
-		        
-		        notifyAppEvent(this, "UserRequestedSave");
-		          
-		      }  
-		  
+		ToolBar toolBar = new ToolBar();  
+		Button addCustomer = new Button("Add Customer");  
+		addCustomer.setBorders(true);
+		addCustomer.addListener(Events.Select, new Listener<ComponentEvent>() {
+			public void handleEvent(ComponentEvent be) {
+				notifyAppEvent(this, "AddCustomer"); 
+			}  
 		    }); 
 		    
 		    toolBar.add(addCustomer); 
@@ -372,7 +320,7 @@ class CustomerComposite extends Composite{
   
 			    	  txtActiveYn.setValue("N");
 			    	  store.filter("activeYn","Y");
-			    	  grid.getSelectionModel().select(0, false);
+			    	  getGrid().getSelectionModel().select(0, false);
 			    	  
 			      }
 			    });
@@ -380,18 +328,20 @@ class CustomerComposite extends Composite{
 		    //-----------------------
 		    
 		    //-----------------
-		    getCp().setTopComponent(toolBar);  
+		    cp.setTopComponent(toolBar);  
 		    
 		    
 		    //------------------------
 		  grid.getView().setEmptyText("No Customers Loaded");  
 		  grid.setBorders(true);  
-   	      grid.setWidth(300);
-   	      grid.setHeight(800);
-		  getCustomerFormPanel().setWidth(400);
-		  getCp().add(grid, new RowData(.4, 1));
-		  getCp().add(getCustomerFormPanel(), new RowData(.6, 0));
-	      initWidget(getCp());
+		  grid.setWidth(300);
+		  grid.setHeight(200);
+		  customerFormPanel.setWidth(400);
+		  customerFormPanel.setHeight(350);
+		  customerFormPanel.setScrollMode(Scroll.AUTO);
+		  cp.add(grid, new RowData(325	, 350));
+		  cp.add(customerFormPanel, new RowData(400, 350));
+	      initWidget(cp);
 
 
 	}
@@ -442,50 +392,37 @@ class CustomerComposite extends Composite{
 		txtState.setFieldLabel("State");
 		txtState.setName("state");
 		getCustomerFormPanel().add(txtState);
-
-
-
+		txtState.setMaxLength(2);
 
 		txtZip.setFieldLabel("Zip");
 		txtZip.setName("zip");
 		getCustomerFormPanel().add(txtZip);
 
-
 		txtEmail.setFieldLabel("Email");
 		txtEmail.setName("email");
 		getCustomerFormPanel().add(txtEmail);
-
-		
 
 		txtWorkPhone.setFieldLabel("WorkPhone");
 		txtWorkPhone.setName("workPhone");
 		getCustomerFormPanel().add(txtWorkPhone);
 
-
 		txtHomePhone.setFieldLabel("HomePhone");
 		txtHomePhone.setName("homePhone");
 		getCustomerFormPanel().add(txtHomePhone);
-
 
 		txtFax.setFieldLabel("Fax");
 		txtFax.setName("fax");
 		getCustomerFormPanel().add(txtFax);
 
-		
-
 		dtpClientSinceDt.setFieldLabel("Client Since");
 		dtpClientSinceDt.setName("clientSinceDt");
 		getCustomerFormPanel().add(dtpClientSinceDt);
-		
 
 		txtNote.setFieldLabel("Note");
 		txtNote.setName("note");
 		txtNote.setWidth(300);
 		txtNote.setHeight(200);
 		getCustomerFormPanel().add(txtNote);
-
-	
-		
 
 		cboBillType.setFieldLabel("Bill Type");
 		cboBillType.setName("billType");
@@ -508,34 +445,18 @@ class CustomerComposite extends Composite{
 		      
 		    }});
 		cboBillType.setTriggerAction(TriggerAction.ALL);
-//		cboBillType.addListener(Events.Change, new Listener<FieldEvent>() {
-//        public void handleEvent(FieldEvent be) {
-//        	Log.debug("Changefired");
-//        	if (cboBillType.getValueField().equals("HOURLY")){
-//        		txtMonthlyBillRate.setVisible(true);
-//        	}else{
-//        		txtMonthlyBillRate.setVisible(false);
-//        	}
-//        	
-//          }});
-		
 
-		getCustomerFormPanel().add(cboBillType);
+		customerFormPanel.add(cboBillType);
 		
 		txtMonthlyBillRate.setFieldLabel("MonthlyBillRate");
 		txtMonthlyBillRate.setName("monthlyBillRate");
 		txtMonthlyBillRate.setRegex(GXTValidator.DOUBLE);
 		txtMonthlyBillRate.setAutoValidate(true);
 		getCustomerFormPanel().add(txtMonthlyBillRate);
-		
-		
-		
-		customerFormPanel.add(getVwCustomerHourlyBillRateTable());
-		
-		
-		//------------------------------------
 
-	
+		customerFormPanel.add(getVwCustomerHourlyBillRateTable());
+//------------------------------------
+
 		txtLastUpdate.setFieldLabel("LastUpdate");
 		txtLastUpdate.setName("lastUpdate");
 		getCustomerFormPanel().add(txtLastUpdate);
@@ -552,25 +473,13 @@ class CustomerComposite extends Composite{
 		txtCustomerId.setName("customerId");
 		getCustomerFormPanel().add(txtCustomerId);
 		txtCustomerId.setVisible(false);
-		
-
-		
+	
 		txtActiveYn.setFieldLabel("ActiveYn");
 		txtActiveYn.setName("activeYn");
 		txtActiveYn.setFireChangeEventOnSetValue(true);
 		getCustomerFormPanel().add(txtActiveYn);
 		txtActiveYn.setVisible(false);
 		
-//		Button testb = new Button("VScrolls");
-//		testb.addListener(Events.Select, new Listener<ComponentEvent>() {
-//		      public void handleEvent(ComponentEvent be) {
-//		    	  AppContainer.getInstance().getMainPanel().scrollToTop();
-//		    	  txtNote.setValue("cp:" +AppContainer.getInstance().getMainPanel().getScrollPosition());
-//		//    	 txtNote.setValue("cp:" + cp.getVScrollPosition() + " form:" + customerFormPanel.getVScrollPosition() + "composite:" + );
-//		    	  
-//		      }
-//		    });
-//		customerFormPanel.add(testb);
 
 	}
 	public void onAttach(){
@@ -588,27 +497,17 @@ class CustomerComposite extends Composite{
 	
 
 }
-public void setCustomerList(ArrayList<CustomerBean> customerBeans_){
-	//Log.debug("Set Customer List Called " );
-	  List <CustomerDataModelBean> customerTableModelDataList = new ArrayList <CustomerDataModelBean>();
-	  for(int ndx = 0; ndx<customerBeans_.size(); ndx++){
-		  
-		  customerTableModelDataList.add(new CustomerDataModelBean(customerBeans_.get(ndx)));
-	  }
-	  store.removeAll();
-	  store.add(customerTableModelDataList);
 
-}
 ///**
 // * @param lstCustomerChooser the lstCustomerChooser to set
 // */
-//public void setLstCustomerChooser(ListField<CustomerDataModelBean> lstCustomerChooser) {
+//public void setLstCustomerChooser(ListField<CustomerBean> lstCustomerChooser) {
 //	this.lstCustomerChooser = lstCustomerChooser;
 //}
 ///**
 // * @return the lstCustomerChooser
 // */
-//public ListField<CustomerDataModelBean> getLstCustomerChooser() {
+//public ListField<CustomerBean> getLstCustomerChooser() {
 //	return lstCustomerChooser;
 //}
 
@@ -677,39 +576,10 @@ public ColumnModel createColumnModel(){
 /**
  * @return the store
  */
-public ListStore<CustomerDataModelBean> getStore() {
+public ListStore<CustomerBean> getStore() {
 	return store;
 }
-public void updateSelectedBeansinStore(ArrayList<CustomerBean> customerResult_) {
-	int ndxStore;
-	try{
-		for(int ndx =0;ndx<customerResult_.size();ndx++){
-			
-			for(ndxStore =0;ndx < store.getCount();ndxStore++){
-				if(store.getAt(ndxStore).get("customerId").equals(customerResult_.get(ndx).getCustomerId())){
-					store.getAt(ndxStore).setBean( customerResult_.get(ndx));
-					//Log.debug("match found: "+ customerResult_.get(ndx).getCustomerId());
-					break;
-					
-				}else if(store.getAt(ndxStore).get("customerId").equals(0) && store.getAt(ndxStore).get("lastName").equals(customerResult_.get(ndx).getLastName()) && store.getAt(ndxStore).get("firstName").equals(customerResult_.get(ndx).getFirstName())){
-					store.getAt(ndxStore).setBean( customerResult_.get(ndx));
-					//Log.debug("match found: "+ customerResult_.get(ndx).getCustomerId());
-					notifyAppEvent(this, "RefreshBillRates", customerResult_.get(ndx).getCustomerId());
-					break;
-				}else{
-					Log.debug("mistmatch" + store.getAt(ndxStore).get("customerId") );
-				}
-				
-			}
-			
-		
-			
-		}
-	}catch(NullPointerException e){
-		
-	}
-	
-}
+
 
 /**
  * @return the customerFormPanel
@@ -741,6 +611,13 @@ public void setCp(ContentPanel cp) {
  */
 public ContentPanel getCp() {
 	return cp;
+}
+
+/**
+ * @return the grid
+ */
+public Grid<CustomerBean> getGrid() {
+	return grid;
 }
 
 
