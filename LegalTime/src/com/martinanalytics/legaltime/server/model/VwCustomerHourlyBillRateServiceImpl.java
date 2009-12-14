@@ -210,8 +210,6 @@ public class VwCustomerHourlyBillRateServiceImpl extends RemoteServiceServlet
           bean.setUserId(rs.getString(5));
           bean.setCustomerBillRateId(rs.getInt(6));
           bean.setClientId(rs.getInt(7));
-          bean.isNew(false);
-          bean.resetIsModified();
           return bean;
         }
 

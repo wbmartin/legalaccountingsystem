@@ -209,8 +209,8 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
           bean.setCustomerId(rs.getInt(4));
           bean.setClientId(rs.getInt(5));
           bean.setCustomerBillRateId(rs.getInt(6));
-          bean.isNew(false);
-          bean.resetIsModified();
+//          bean.isNew(false);
+//          bean.resetIsModified();
           return bean;
         }
 

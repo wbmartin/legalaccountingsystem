@@ -3,6 +3,7 @@
 package com.martinanalytics.legaltime.client.controller;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.extjs.gxt.ui.client.Style.SortDir;
 import com.extjs.gxt.ui.client.event.ComponentEvent;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
@@ -20,7 +21,7 @@ import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBillRateBean;
-import com.martinanalytics.legaltime.client.model.bean.CustomerDataModelBean;
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerHourlyBillRateBean;
 import com.martinanalytics.legaltime.client.model.CustomerBillRateService;
@@ -31,7 +32,6 @@ import com.martinanalytics.legaltime.client.model.VwCustomerHourlyBillRateServic
 import com.martinanalytics.legaltime.client.model.VwCustomerHourlyBillRateServiceAsync;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.view.CustomerView;
-import com.martinanalytics.legaltime.client.view.table.VwCustomerHourlyBillRateDataModelBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 //        public void handleEvent(ComponentEvent be) {
 //        	Log.debug("result: " + customerView.getCustomerFormPanel().isValid());
 //        	if(customerView.getCustomerFormPanel().isValid()){
-//	        	List <CustomerDataModelBean> beans = customerView.getLstCustomerChooser().getSelection();
+//	        	List <CustomerBean> beans = customerView.getLstCustomerChooser().getSelection();
 //	    		//masterController.notifyUserOfSystemError("CustomerChange", beans.get(0).getCustomerId().toString() );
 //	    		retrieveCustomerBeanByPrKey(beans.get(0).getCustomerId());
 //        	}else{
@@ -134,6 +134,8 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 	}else if (e_.getName().equals(	"RefreshBillRates")){
 		Integer custId = (Integer)e_.getPayLoad();
 		getCustomerRates(custId);
+	}else if (e_.getName().equals(	"AddCustomer")){
+		addCustomer();
 	}else{
 		Log.debug("Unexpected AppEvent named" +e_.getName() );
 	}
@@ -189,7 +191,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 						masterController.getAppContainer().setTransactionResults(
 							"Successfully Retrieved Customer listing"
 							, (new java.util.Date().getTime() - startTime.getTime()));
-						customerView.setCustomerList(customerResult);
+							setCustomerList(customerResult);
 					}
 		});
 	  }
@@ -371,7 +373,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 					masterController.getAppContainer().setTransactionResults(
 							"Successfully saved Customer Batch"
 							, (new java.util.Date().getTime() - startTime.getTime()));
-					customerView.updateSelectedBeansinStore(customerResult);
+					updateSelectedBeansinStore(customerResult);
 	
 						
 				}
@@ -421,7 +423,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     try{
 	customerBean_.setMonthlyBillRate((Double) customerView.getTxtMonthlyBillRate().getValue());
     }catch(Exception e){
-    	customerBean_.setMonthlyBillRate(0);
+    	customerBean_.setMonthlyBillRate(0D);
     }
     try{
 	customerBean_.setBillType(customerView.getCboBillType().getSimpleValue());
@@ -531,40 +533,55 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   }
   
   public void saveAllChanges(){
-	  ListStore<CustomerDataModelBean> store = customerView.getStore();
+	  ListStore<CustomerBean> store = customerView.getStore();
 	  List<Record> modified = store.getModifiedRecords();
-	  CustomerDataModelBean customerTableModelBean = new CustomerDataModelBean();
+	  CustomerBean customerTableModelBean = new CustomerBean();
 	  ArrayList<CustomerBean> batchSave = new ArrayList<CustomerBean>();
 	  for (Record r : modified) {
 		  Log.debug("Identified Modified Record");
 		  customerTableModelBean.setProperties(r.getModel().getProperties());
-		  batchSave.add(customerTableModelBean.getStandardCustomerBean());
+		  batchSave.add(customerTableModelBean);
 		  
 		  
 	  }
 		store.commitChanges();
 		saveCustomerBeanBatch( batchSave );
+		
+		saveRateChanges();
 	  
   }
- 
-  
-  public void saveOldChangesGetNewRates(Integer custId_){
-	  ListStore<VwCustomerHourlyBillRateDataModelBean> store = customerView.getVwCustomerHourlyBillRateTable().getStore();
+  public void saveRateChanges(){
+	  ListStore<VwCustomerHourlyBillRateBean> store = customerView.getVwCustomerHourlyBillRateTable().getStore();
 	  List<Record> modified = store.getModifiedRecords();
-	  VwCustomerHourlyBillRateDataModelBean vwCustomerHourlyBillRateDataModelBean = new VwCustomerHourlyBillRateDataModelBean();
+	  VwCustomerHourlyBillRateBean vwCustomerHourlyBillRateBean = new VwCustomerHourlyBillRateBean();
 	  ArrayList<CustomerBillRateBean> batchSave = new ArrayList<CustomerBillRateBean>();
+	  CustomerBillRateBean customerBillRateBean;// = new CustomerBillRateBean();
 	  for (Record r : modified) {
 		  Log.debug("Table.saveChange1: " + r.getModel().getProperties().get("clientId"));
-		  vwCustomerHourlyBillRateDataModelBean.setProperties(r.getModel().getProperties());
-		  Log.debug("SaveOld CHanges"+vwCustomerHourlyBillRateDataModelBean.getProperties().toString());
-		  batchSave.add(vwCustomerHourlyBillRateDataModelBean.getStandardCustomerBillRateBean());
+		  vwCustomerHourlyBillRateBean.setProperties(r.getModel().getProperties());
+		  Log.debug("SaveOld CHanges"+vwCustomerHourlyBillRateBean.getProperties().toString());
 		  
-		  Log.debug("Table.saveChanges 2"+ vwCustomerHourlyBillRateDataModelBean.getClientId());
+		  customerBillRateBean= new CustomerBillRateBean();
+          
+          customerBillRateBean.setLastUpdate(vwCustomerHourlyBillRateBean.getLastUpdate());
+          customerBillRateBean.setCustomerId(vwCustomerHourlyBillRateBean.getCustomerId());
+          customerBillRateBean.setUserId(vwCustomerHourlyBillRateBean.getUserId());
+          customerBillRateBean.setClientId(vwCustomerHourlyBillRateBean.getClientId());
+          customerBillRateBean.setCustomerBillRateId(vwCustomerHourlyBillRateBean.getCustomerBillRateId());
+          customerBillRateBean.setBillRate(vwCustomerHourlyBillRateBean.getBillRate());
+		  batchSave.add( customerBillRateBean);
+		  
+		  Log.debug("Table.saveChanges 2"+ vwCustomerHourlyBillRateBean.getClientId());
 		  
 	  }
 		store.commitChanges();
 		saveCustomerBillRateBeanBatch( batchSave );
-		
+  }
+ 
+  
+  public void saveOldChangesGetNewRates(Integer custId_){
+
+	  	saveRateChanges();
 		getCustomerRates(custId_);
 		
   }
@@ -642,7 +659,79 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   		});
     }
     
+    public void addCustomer(){
+    	CustomerBean customerTableModelBean  = new CustomerBean();
+		customerTableModelBean.setActiveYn("Y");
+		customerTableModelBean.setMonthlyBillRate(0D);
+		customerTableModelBean.setBillType("HOURLY");
+		customerTableModelBean.setNote("");
+		customerTableModelBean.setClientSinceDt(new java.util.Date());
+		customerTableModelBean.setEmail("");
+		customerTableModelBean.setFax("");
+		customerTableModelBean.setHomePhone("");
+		customerTableModelBean.setWorkPhone("");
+		customerTableModelBean.setZip("");
+		customerTableModelBean.setState("");
+		customerTableModelBean.setCity("");
+		customerTableModelBean.setAddress("");
+		customerTableModelBean.setLastName("!!New");
+		customerTableModelBean.setFirstName("_");
+		customerTableModelBean.setLastUpdate(new java.util.Date());
+		customerTableModelBean.setClientId(0);
+		customerTableModelBean.setCustomerId(0);
+		customerView.getStore().insert(customerTableModelBean, 0);
+        Record record = customerView.getStore().getRecord(customerView.getStore().getAt(0));
+        record.set("firstName","Customer");
+        customerView.getStore().sort("lastName", SortDir.ASC);
+        customerView.getGrid().getSelectionModel().select(0, false);
+        saveAllChanges();
+    }
+    
+    public void setCustomerList(ArrayList<CustomerBean> customerBeans_){
+    	//Log.debug("Set Customer List Called " );
+    	  List <CustomerBean> customerTableModelDataList = new ArrayList <CustomerBean>();
+    	  for(int ndx = 0; ndx<customerBeans_.size(); ndx++){
+    		  
+    		  customerTableModelDataList.add(new CustomerBean(customerBeans_.get(ndx)));
+    	  }
+    	  customerView.getStore().removeAll();
+    	  customerView.getStore().add(customerTableModelDataList);
 
+    }
+    
+    
+    public void updateSelectedBeansinStore(ArrayList<CustomerBean> customerResult_) {
+    	int ndxStore;
+    	try{
+    		for(int ndx =0;ndx<customerResult_.size();ndx++){
+    			
+    			for(ndxStore =0;ndx < customerView.getStore().getCount();ndxStore++){
+    				if(customerView.getStore().getAt(ndxStore).get("customerId").equals(customerResult_.get(ndx).getCustomerId())){
+    					customerView.getStore().getAt(ndxStore).setBean( customerResult_.get(ndx));
+    					//Log.debug("match found: "+ customerResult_.get(ndx).getCustomerId());
+    					break;
+    					
+    				}else if(customerView.getStore().getAt(ndxStore).get("customerId").equals(0) 
+    						&& customerView.getStore().getAt(ndxStore).get("lastName").equals(customerResult_.get(ndx).getLastName()) 
+    						&& customerView.getStore().getAt(ndxStore).get("firstName").equals(customerResult_.get(ndx).getFirstName())){
+    					customerView.getStore().getAt(ndxStore).setBean( customerResult_.get(ndx));
+    					//Log.debug("match found: "+ customerResult_.get(ndx).getCustomerId());
+    					getCustomerRates( customerResult_.get(ndx).getCustomerId());
+    					break;
+    				}else{
+    					Log.debug("mistmatch" + customerView.getStore().getAt(ndxStore).get("customerId") );
+    				}
+    				
+    			}
+    			
+    		
+    			
+    		}
+    	}catch(NullPointerException e){
+    		
+    	}
+    	
+    }
 
 
 }
