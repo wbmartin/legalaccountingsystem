@@ -19,6 +19,7 @@ import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.view.table.CustomerTable;
+import com.martinanalytics.legaltime.client.view.table.FollowupTableCustomerPerspective;
 import com.martinanalytics.legaltime.client.view.table.VwCustomerHourlyBillRateTable;
 import com.martinanalytics.legaltime.client.widget.AppContainer;
 import com.martinanalytics.legaltime.client.widget.GXTValidator;
@@ -108,6 +109,7 @@ public class CustomerView extends AppEventProducer{
 	private	List<ColumnConfig> configs = new ArrayList<ColumnConfig>(); 
 	private ColumnModel cm;
 	private VwCustomerHourlyBillRateTable vwCustomerHourlyBillRateTable = new VwCustomerHourlyBillRateTable();
+	private FollowupTableCustomerPerspective  followupTableCustomerPerspective = new FollowupTableCustomerPerspective(); 
 
 	private final int LABEL_WIDTH =75;
 
@@ -255,7 +257,7 @@ class CustomerComposite extends Composite{
 		createFields();   
 		cp.setHeading("Customer Editor");  
 		cp.setFrame(true);
-		cp.setSize(800, 1000);  
+		cp.setSize(800, 585);  
 		cp.setLayout(new RowLayout(Orientation.HORIZONTAL)); 
 		cp.setScrollMode(Scroll.NONE);
 		cm = createColumnModel();
@@ -341,6 +343,7 @@ class CustomerComposite extends Composite{
 		  customerFormPanel.setScrollMode(Scroll.AUTO);
 		  cp.add(grid, new RowData(325	, 350));
 		  cp.add(customerFormPanel, new RowData(400, 350));
+		  cp.setBottomComponent(getFollowupTableCustomerPerspective());
 	      initWidget(cp);
 
 
@@ -349,7 +352,7 @@ class CustomerComposite extends Composite{
 	public void createFields(){
 
 
-		txtFirstName.setFieldLabel("FirstName");
+		txtFirstName.setFieldLabel("First Name");
 		txtFirstName.setName("firstName");
 		txtFirstName.setFireChangeEventOnSetValue(true);
 		//txtFirstName.setRegex("[0-9]+");
@@ -371,7 +374,7 @@ class CustomerComposite extends Composite{
 		getCustomerFormPanel().add(txtFirstName);	
 		
 
-		txtLastName.setFieldLabel("LastName");
+		txtLastName.setFieldLabel("Last Name");
 		txtLastName.setName("lastName");
 		getCustomerFormPanel().add(txtLastName);
 
@@ -402,11 +405,11 @@ class CustomerComposite extends Composite{
 		txtEmail.setName("email");
 		getCustomerFormPanel().add(txtEmail);
 
-		txtWorkPhone.setFieldLabel("WorkPhone");
+		txtWorkPhone.setFieldLabel("Work Phone");
 		txtWorkPhone.setName("workPhone");
 		getCustomerFormPanel().add(txtWorkPhone);
 
-		txtHomePhone.setFieldLabel("HomePhone");
+		txtHomePhone.setFieldLabel("Home Phone");
 		txtHomePhone.setName("homePhone");
 		getCustomerFormPanel().add(txtHomePhone);
 
@@ -448,7 +451,7 @@ class CustomerComposite extends Composite{
 
 		customerFormPanel.add(cboBillType);
 		
-		txtMonthlyBillRate.setFieldLabel("MonthlyBillRate");
+		txtMonthlyBillRate.setFieldLabel("Monthly Bill Rate");
 		txtMonthlyBillRate.setName("monthlyBillRate");
 		txtMonthlyBillRate.setRegex(GXTValidator.DOUBLE);
 		txtMonthlyBillRate.setAutoValidate(true);
@@ -457,24 +460,24 @@ class CustomerComposite extends Composite{
 		customerFormPanel.add(getVwCustomerHourlyBillRateTable());
 //------------------------------------
 
-		txtLastUpdate.setFieldLabel("LastUpdate");
+		txtLastUpdate.setFieldLabel("Last Update");
 		txtLastUpdate.setName("lastUpdate");
 		getCustomerFormPanel().add(txtLastUpdate);
 		txtLastUpdate.setVisible(false);
 
 
-		txtClientId.setFieldLabel("ClientId");
+		txtClientId.setFieldLabel("Client Id");
 		txtClientId.setName("clientId");
 		getCustomerFormPanel().add(txtClientId);
 		txtClientId.setVisible(false);
 
 
-		txtCustomerId.setFieldLabel("CustomerId");
+		txtCustomerId.setFieldLabel("Customer Id");
 		txtCustomerId.setName("customerId");
 		getCustomerFormPanel().add(txtCustomerId);
 		txtCustomerId.setVisible(false);
 	
-		txtActiveYn.setFieldLabel("ActiveYn");
+		txtActiveYn.setFieldLabel("Active Yn");
 		txtActiveYn.setName("activeYn");
 		txtActiveYn.setFireChangeEventOnSetValue(true);
 		getCustomerFormPanel().add(txtActiveYn);
@@ -520,7 +523,7 @@ public ColumnModel createColumnModel(){
     column = new ColumnConfig();
     
     column.setId("lastName");  
-    column.setHeader("LastName");  
+    column.setHeader("Last Name");  
     column.setWidth(100);  
 //    final TextField<String> ttxtLastName = new TextField<String>();  
 //    ttxtLastName.setAllowBlank(false);  
@@ -538,7 +541,7 @@ public ColumnModel createColumnModel(){
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Begin FirstName Column=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     column = new ColumnConfig(); 
     column.setId("firstName");  
-    column.setHeader("FirstName");  
+    column.setHeader("First Name");  
     column.setWidth(100);  
 //    final TextField<String> ttxtFirstName = new TextField<String>();  
 //    ttxtFirstName.setAllowBlank(false);  
@@ -618,6 +621,13 @@ public ContentPanel getCp() {
  */
 public Grid<CustomerBean> getGrid() {
 	return grid;
+}
+
+/**
+ * @return the followupTableCustomerPerspective
+ */
+public FollowupTableCustomerPerspective getFollowupTableCustomerPerspective() {
+	return followupTableCustomerPerspective;
 }
 
 

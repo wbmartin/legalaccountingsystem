@@ -9,5 +9,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Mail"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PostgresPool"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DatePicker"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JasperReports"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

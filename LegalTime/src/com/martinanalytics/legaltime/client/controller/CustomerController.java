@@ -22,12 +22,15 @@ import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBillRateBean;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
+import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerHourlyBillRateBean;
 import com.martinanalytics.legaltime.client.model.CustomerBillRateService;
 import com.martinanalytics.legaltime.client.model.CustomerBillRateServiceAsync;
 import com.martinanalytics.legaltime.client.model.CustomerService;
 import com.martinanalytics.legaltime.client.model.CustomerServiceAsync;
+import com.martinanalytics.legaltime.client.model.FollowupService;
+import com.martinanalytics.legaltime.client.model.FollowupServiceAsync;
 import com.martinanalytics.legaltime.client.model.VwCustomerHourlyBillRateService;
 import com.martinanalytics.legaltime.client.model.VwCustomerHourlyBillRateServiceAsync;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
@@ -58,6 +61,8 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   private UserProfile userProfile;  			// User Properties
   private MasterController masterController;		// Overarching Controller
   private java.util.Date lastUpdateHolder;  //Holder variables for timestamps
+  private final FollowupServiceAsync followupService = 
+		GWT.create(FollowupService.class); 		// primary GWT remote Service
 /**
  * Primary constructor, only called by getInstance, hence protected
  * @param masterController_
@@ -130,6 +135,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 	}else if (e_.getName().equals("CustomerChange"	)){
 		Integer custId = (Integer)e_.getPayLoad();
 		saveOldChangesGetNewRates(custId);
+		 selectFollowupBeansForCustomer(custId);
 	
 	}else if (e_.getName().equals(	"RefreshBillRates")){
 		Integer custId = (Integer)e_.getPayLoad();
@@ -732,6 +738,46 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     	}
     	
     }
+    
+    
+    
+    
+    
+    /**
+     * Provides a standard template to retrieve beans from the server.  
+     * The results are handled through the onSuccess method in the AsynchCallback.
+     * this function also uses the userProfile Singleton to send authorization credentials.
+     * @param whereClause_  a string beginning with "where" using standard sql syntax appropriate for the table to filter the beans
+     * @param orderByClause a string beginning with "order by" using standard sql syntax appropriate alter the order of the beans
+     */
+     private void selectFollowupBeansForCustomer(Integer custId_ ){
+    	final String whereClause ="where customer_id = " + custId_;
+    	final String orderByClause = "order by due_dt";
+    	final java.util.Date startTime = new java.util.Date();
+    		followupService.selectFollowup(userProfile, whereClause, orderByClause, 
+    				new AsyncCallback<ArrayList<FollowupBean>>(){
+    					public void onFailure(Throwable caught) {
+    						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+    								AppPref.SERVER_ERROR + caught.getMessage());
+    						masterController.getAppContainer().setTransactionResults(
+    							"Retrieving Followup Failed"
+    							, (new java.util.Date().getTime() -startTime.getTime()));
+    						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause + " | Orderby attempted " + orderByClause );
+
+    					}
+    		
+    					public void onSuccess(ArrayList<FollowupBean> followupResult) {
+    						masterController.getAppContainer().addSysLogMessage("Select Followup received ok-  Where Attempted: " 
+    							+ whereClause + " | Orderby attempted " + orderByClause );
+    						masterController.getAppContainer().setTransactionResults(
+    							"Successfully Retrieved Followup listing"
+    							, (new java.util.Date().getTime() - startTime.getTime()));
+    						customerView.getFollowupTableCustomerPerspective().setList(followupResult);
+    						
+    					}
+    		});
+    	  }
+
 
 
 }

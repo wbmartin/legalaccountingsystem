@@ -76,4 +76,16 @@
 <!-- ============================= -->
 
 
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>followupServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.FollowupServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>followupServlet</servlet-name> 
+        <url-pattern>/legaltime/followup</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
 </web-app>
