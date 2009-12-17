@@ -27,6 +27,7 @@ public class MasterController implements AppEventListener{
 	 private CustomerController customerController;
 	 private VwCustomerHourlyBillRateController vwCustomerHourlyBillRateController;
 	 private CustomerBillRateController customerBillRateController;
+	 private FollowupController followupController;
 	
 	 
 	 public MasterController(){
@@ -39,13 +40,16 @@ public class MasterController implements AppEventListener{
 		 appContainer = AppContainer.getInstance();
 		 appContainer.getNotifier().addAppEventListener(this);
 		 
-			customerController =  CustomerController.getInstance(this);
-			itemWidgets.put(AppPages.CUSTOMER_PAGE, customerController.getCustomerView().getCustomerComposite());
-			vwCustomerHourlyBillRateController =  VwCustomerHourlyBillRateController.getInstance(this);
-			itemWidgets.put(AppPages.VW_USER_GRANT_PAGE, vwCustomerHourlyBillRateController.getVwCustomerHourlyBillRateView().getVwCustomerHourlyBillRateComposite());
-			
-			 customerBillRateController =  CustomerBillRateController.getInstance(this);
-			 itemWidgets.put(AppPages.CUSTOMER_BILL_RATE_PAGE, customerBillRateController.getCustomerBillRateView().getCustomerBillRateComposite());
+		 customerController =  CustomerController.getInstance(this);
+		 itemWidgets.put(AppPages.CUSTOMER_PAGE, customerController.getCustomerView().getCustomerComposite());
+		 vwCustomerHourlyBillRateController =  VwCustomerHourlyBillRateController.getInstance(this);
+		 itemWidgets.put(AppPages.VW_USER_GRANT_PAGE, vwCustomerHourlyBillRateController.getVwCustomerHourlyBillRateView().getVwCustomerHourlyBillRateComposite());
+
+		 customerBillRateController =  CustomerBillRateController.getInstance(this);
+		 itemWidgets.put(AppPages.CUSTOMER_BILL_RATE_PAGE, customerBillRateController.getCustomerBillRateView().getCustomerBillRateComposite());
+
+		 followupController =  FollowupController.getInstance(this);
+		 itemWidgets.put(AppPages.FOLLOWUP_PAGE, followupController.getFollowupView().getFollowupComposite());
 			 
 	 }
 	 
