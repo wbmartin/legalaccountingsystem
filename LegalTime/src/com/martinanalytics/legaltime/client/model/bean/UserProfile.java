@@ -17,7 +17,10 @@ public class UserProfile implements Serializable {
 	static private UserProfile instance = null;
 	private java.util.Date sessionTimeOut;
 
-	protected UserProfile() {
+	/**
+	 * Warning, you should probably use Get Instance
+	 */
+	public UserProfile() {
 		securityGrant = new ArrayList<String>();
 		setSessionId("");
 		setUserId("");

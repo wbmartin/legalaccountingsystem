@@ -11,10 +11,13 @@ import com.extjs.gxt.ui.client.event.KeyListener;
 import com.extjs.gxt.ui.client.event.Listener;
 
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
+//import com.extjs.gxt.ui.client.widget.Window;
+
 //import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.FormLayout;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -25,6 +28,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import com.martinanalytics.legaltime.client.AppEvent.AppEventProducer;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
+import com.martinanalytics.legaltime.client.widget.ReportUtil;
 import com.martinanalytics.legaltime.client.AppPages;
 import com.martinanalytics.legaltime.client.AppPref;
 
@@ -119,6 +123,7 @@ private class LoginViewComposite extends Composite{
 		hpButtons.add(sendButton);
 		sendButton.addStyleName("CENTER");
 		vpPrimary.add(hpButtons);
+	
 		vpPrimary.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		initWidget(vpPrimary);
 	}

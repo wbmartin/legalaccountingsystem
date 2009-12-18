@@ -28,6 +28,7 @@ public class MasterController implements AppEventListener{
 	 private VwCustomerHourlyBillRateController vwCustomerHourlyBillRateController;
 	 private CustomerBillRateController customerBillRateController;
 	 private FollowupController followupController;
+	 private VwCustomerFollowupController vwCustomerFollowupController;
 	
 	 
 	 public MasterController(){
@@ -50,7 +51,10 @@ public class MasterController implements AppEventListener{
 
 		 followupController =  FollowupController.getInstance(this);
 		 itemWidgets.put(AppPages.FOLLOWUP_PAGE, followupController.getFollowupView().getFollowupComposite());
-			 
+		
+		 vwCustomerFollowupController =  VwCustomerFollowupController.getInstance(this);
+			itemWidgets.put(AppPages.VW_CUSTOMER_FOLLOWUP_PAGE, vwCustomerFollowupController.getVwCustomerFollowupView().getVwCustomerFollowupComposite());
+
 	 }
 	 
 	 public Composite getPage(String page_){

@@ -23,6 +23,7 @@ import com.martinanalytics.legaltime.client.view.table.FollowupTableCustomerPers
 import com.martinanalytics.legaltime.client.view.table.VwCustomerHourlyBillRateTable;
 import com.martinanalytics.legaltime.client.widget.AppContainer;
 import com.martinanalytics.legaltime.client.widget.GXTValidator;
+import com.martinanalytics.legaltime.client.widget.ReportUtil;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
@@ -305,6 +306,17 @@ class CustomerComposite extends Composite{
 		      }
 		    });
 		    toolBar.add(saveCustomers);
+		    //---------------------
+			Button test = new Button("Test");
+			toolBar.add(test);
+			test.addListener(Events.Select, new Listener<ComponentEvent>() {
+			      public void handleEvent(ComponentEvent be) {
+			    	  Log.debug("new window called");
+			    	  //Window.open("./BasicServlet", "ReportWindow","");//status=0,toolbar=0,location=0,menubar=0,directories=0
+			    	  Log.debug("userProfile" + userProfile.getUserId());
+			    	  ReportUtil.showReport("./BasicServlet",userProfile);
+			        }
+			      });
 		    //--------------------
 		    Button cancelChanges =new Button("Cancel Changes");
 		    cancelChanges.setBorders(true);
