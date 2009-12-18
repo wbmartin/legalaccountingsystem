@@ -7,5 +7,5 @@ public class AppPages {
 	public static final String CUSTOMER_BILL_RATE_PAGE = "CustomerBillRatePage";
 	public static final String VW_USER_GRANT_PAGE = "VwUserGrantPage";
 	public static final String FOLLOWUP_PAGE = "FollowupPage";
-	
+	public static final String VW_CUSTOMER_FOLLOWUP_PAGE = "VwCustomerFollowupPage";
 }

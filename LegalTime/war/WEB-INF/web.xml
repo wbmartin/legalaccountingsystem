@@ -88,4 +88,29 @@
     </servlet-mapping> 
 <!-- ============================= -->
 
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>vwCustomerFollowupServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.VwCustomerFollowupServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>vwCustomerFollowupServlet</servlet-name> 
+        <url-pattern>/legaltime/vwCustomerFollowup</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>BasicServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.rpt.BasicServlet</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>BasicServlet</servlet-name> 
+        <url-pattern>/legaltime/BasicServlet</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
 </web-app>
