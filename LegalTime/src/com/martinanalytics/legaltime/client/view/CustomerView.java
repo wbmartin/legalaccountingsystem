@@ -262,16 +262,16 @@ class CustomerComposite extends Composite{
 		cp.setLayout(new RowLayout(Orientation.HORIZONTAL)); 
 		cp.setScrollMode(Scroll.NONE);
 		cm = createColumnModel();
-		grid = new Grid<CustomerBean>(getStore(), cm);
+		grid = new Grid<CustomerBean>(store, cm);
 		
 		customerFormPanel.setScrollMode(Scroll.NONE);
 		formBindings = new FormBinding(getCustomerFormPanel(), true);
-		formBindings.setStore((Store<CustomerBean>) getGrid().getStore()); 
+		formBindings.setStore((Store<CustomerBean>) grid.getStore()); 
 		formBindings.removeFieldBinding((formBindings.getBinding(cboBillType)));
 		formBindings.addFieldBinding(new SimpleComboBoxFieldBinding(cboBillType, "billType"));
 //-----------------------
-		getGrid().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
-		getGrid().getSelectionModel().addListener(Events.SelectionChange,  
+		grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
+		grid.getSelectionModel().addListener(Events.SelectionChange,  
 				new Listener<SelectionChangedEvent<CustomerBean>>() {  
 					public void handleEvent(SelectionChangedEvent<CustomerBean> be) {  
 						if (be.getSelection().size() > 0) {  
@@ -334,7 +334,7 @@ class CustomerComposite extends Composite{
   
 			    	  txtActiveYn.setValue("N");
 			    	  store.filter("activeYn","Y");
-			    	  getGrid().getSelectionModel().select(0, false);
+			    	  grid.getSelectionModel().select(0, false);
 			    	  
 			      }
 			    });

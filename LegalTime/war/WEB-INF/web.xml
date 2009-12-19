@@ -113,4 +113,16 @@
     </servlet-mapping> 
 <!-- ============================= -->
 
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>userInfoServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.UserInfoServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>userInfoServlet</servlet-name> 
+        <url-pattern>/legaltime/userInfo</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
 </web-app>

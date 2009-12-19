@@ -45,12 +45,12 @@ public class BasicServlet extends HttpServlet {
         boolean success = false;
         JasperPrint jasperPrint;
         java.util.HashMap params = new java.util.HashMap();
-       
-        
-        InputStream jasperFile = this.getServletContext().getResourceAsStream("/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/Followup.jasper");
+        InputStream jasperFile = this.getServletContext().getResourceAsStream(
+        		"/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/Followup.jasper");
         try {
 			jasperPrint = JasperFillManager.fillReport(
-			    jasperFile, params,new JRBeanCollectionDataSource(beans));
+			    jasperFile, params,new JRBeanCollectionDataSource(beans,false));
+			
 			ServletOutputStream outputStream = response.getOutputStream();
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        JRPdfExporter exporter = new JRPdfExporter();

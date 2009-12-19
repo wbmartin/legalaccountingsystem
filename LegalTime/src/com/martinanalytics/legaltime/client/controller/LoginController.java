@@ -12,6 +12,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
+import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.AppPages;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.model.ApplicationSecurityService;
@@ -34,6 +35,7 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 		GWT.create(ApplicationSecurityService.class); // Remote GWT Service
 	private UserProfile userProfile; //User properties, not a direct DB bean
 	private MasterController masterController; //connects all the controllers
+	private AppNotifyObject notifier;
 	
 	/**
 	 * Singleton getInstance
@@ -58,6 +60,7 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 		//loginView.getTxtUserId().addKeyUpHandler(this);
 		loginView.addAppEventListener(this);
 		userProfile = UserProfile.getInstance();
+		notifier = new AppNotifyObject();
 	}
 	/**
 	 * Get Method for LoginView, primarily used to get members
@@ -128,7 +131,8 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 							masterController.getAppContainer().setTransactionResults(
 									"Successful Login"
 									, (new java.util.Date().getTime() -startTime.getTime()));
-
+							notifier.notifyAppEvent(this, "SuccessfulLogin");
+							
 								
 						}else{
 							masterController.notifyUserOfSystemError("Sorry...","I couldn't validate your credentials.  Please try again.");
@@ -150,6 +154,18 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 			attemptAuthorization();
 		}
 	
+	}
+	/**
+	 * @param notifier the notifier to set
+	 */
+	public void setNotifier(AppNotifyObject notifier) {
+		this.notifier = notifier;
+	}
+	/**
+	 * @return the notifier
+	 */
+	public AppNotifyObject getNotifier() {
+		return notifier;
 	}
 	
 
