@@ -363,7 +363,7 @@ public class FollowupController implements AppEventListener, ClickHandler, Chang
 
 
     try{
-	followupBean_.setAssignedUserId(followupView.getTxtAssignedUserId().getValue());
+	//followupBean_.setAssignedUserId(followupView.getCboAssignedUserId().getValueField());
     }catch(Exception e){
 		
     }
@@ -484,7 +484,7 @@ public class FollowupController implements AppEventListener, ClickHandler, Chang
  * updates the bean parameter with values in the UI
  */
   public void synchDisplayToBean(FollowupBean followupBean_){
- 	followupView.getTxtAssignedUserId().setValue(followupBean_.getAssignedUserId());
+ 	//followupView.getCboAssignedUserId().setValueField(followupBean_.getAssignedUserId());
  
 
 

@@ -10,6 +10,7 @@ import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.widget.AppContainer;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPages;
+import com.martinanalytics.legaltime.client.model.UserInfoCache;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 
 import com.martinanalytics.legaltime.client.view.LoginView;
@@ -29,13 +30,14 @@ public class MasterController implements AppEventListener{
 	 private CustomerBillRateController customerBillRateController;
 	 private FollowupController followupController;
 	 private VwCustomerFollowupController vwCustomerFollowupController;
+	 private UserInfoController userInfoController;
 	
 	 
 	 public MasterController(){
 		 userProfile = UserProfile.getInstance();
 		 loginController = LoginController.getInstance(this);
 		 itemWidgets.put(AppPages.LOGIN_PAGE, loginController.getLoginView().getLoginViewComposite());
-	
+		 loginController.getNotifier().addAppEventListener(this);
 
 		 
 		 appContainer = AppContainer.getInstance();
@@ -53,8 +55,10 @@ public class MasterController implements AppEventListener{
 		 itemWidgets.put(AppPages.FOLLOWUP_PAGE, followupController.getFollowupView().getFollowupComposite());
 		
 		 vwCustomerFollowupController =  VwCustomerFollowupController.getInstance(this);
-			itemWidgets.put(AppPages.VW_CUSTOMER_FOLLOWUP_PAGE, vwCustomerFollowupController.getVwCustomerFollowupView().getVwCustomerFollowupComposite());
+		 itemWidgets.put(AppPages.VW_CUSTOMER_FOLLOWUP_PAGE, vwCustomerFollowupController.getVwCustomerFollowupView().getVwCustomerFollowupComposite());
 
+		 userInfoController =  UserInfoController.getInstance(this);
+		 itemWidgets.put(AppPages.USER_INFO_PAGE, userInfoController.getUserInfoView().getUserInfoComposite());
 	 }
 	 
 	 public Composite getPage(String page_){
@@ -87,6 +91,8 @@ public class MasterController implements AppEventListener{
 		}else if(e_.getName().equals("REQUEST_SCROLL_TO_TOP")){
 			//appContainer.getMainPanel().setScrollPosition(0);
 			//Log.debug("Scroll Postion: " + appContainer.getMainPanel().getScrollPosition());
+		}else if(e_.getName().equals("SuccessfulLogin")){
+			UserInfoCache.refreshCache();
 		}else{
 			Log.debug("Unexpected App Message" + e_.getName());
 		}

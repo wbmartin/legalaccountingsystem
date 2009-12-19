@@ -4,12 +4,22 @@ package com.martinanalytics.legaltime.client.view.table;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+import com.allen_sauer.gwt.log.client.Log;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
+import com.extjs.gxt.ui.client.Style.SelectionMode;
+import com.extjs.gxt.ui.client.Style.SortDir;
+import com.extjs.gxt.ui.client.binding.FormBinding;
+import com.extjs.gxt.ui.client.binding.SimpleComboBoxFieldBinding;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.store.Record;
+import com.extjs.gxt.ui.client.store.Store;
 import com.extjs.gxt.ui.client.util.DateWrapper;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
@@ -23,6 +33,8 @@ import com.extjs.gxt.ui.client.widget.grid.CheckColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
+import com.extjs.gxt.ui.client.widget.grid.Grid;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
@@ -30,27 +42,125 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Element;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
+import com.martinanalytics.legaltime.client.model.bean.UserInfoBean;
+import com.martinanalytics.legaltime.client.view.FollowupView;
 import com.extjs.gxt.ui.client.event.ButtonEvent; 
+import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.ComponentEvent;
+import com.extjs.gxt.ui.client.binding.FormBinding;
 
 
 
 public class FollowupTableCustomerPerspective extends LayoutContainer {
 	final ListStore<FollowupBean> store = new ListStore<FollowupBean>(); 
 	private AppNotifyObject notifier;
+	FormBinding formBindings;
+	FollowupView followupView ;
+	final Dialog followupEditorDialog ;
+	List<ColumnConfig> configs= new ArrayList<ColumnConfig>();
+	ColumnModel cm =new ColumnModel(configs);
+	Grid<FollowupBean> grid= new Grid<FollowupBean>(store, cm);
+	
+	
 	public FollowupTableCustomerPerspective(){
 		notifier = new AppNotifyObject();
+		followupView = new FollowupView();
+		
+		followupEditorDialog = new Dialog();
+	
+		
+		
+		formBindings = new FormBinding(followupView.getFollowupFormPanel(), true);
+		formBindings.removeFieldBinding(formBindings.getBinding(followupView.getCboAssignedUserId()));
+		
+		//formBindings.
+	     grid.getView().setEmptyText("No Open Tasks");
+		    grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
+		    
+			grid.getSelectionModel().addListener(Events.SelectionChange,  
+					new Listener<SelectionChangedEvent<FollowupBean>>() {  
+						public void handleEvent(SelectionChangedEvent<FollowupBean> be) { 
+							Log.debug("Followupcostomertable selection detected");
+							if (be.getSelection().size() > 0) {  
+								formBindings.bind((ModelData) be.getSelection().get(0));
+								followupView.populateAssignedUserCBO(true);
+//								for(int ndx =0; ndx < followupView.getLbtest().getItemCount();ndx++){
+//									if(followupView.getLbtest().getValue(ndx).equals(be.getSelection().get(0).getAssignedUserId())){
+//										followupView.getLbtest().setSelectedIndex(ndx);
+//										break;
+//									}
+//								}
+								followupView.getLbtest().setSelected(be.getSelection().get(0).getAssignedUserId());
+								
+								followupView.getCboAssignedUserId().setRawValue(be.getSelection().get(0).getAssignedUserId());
+								//followupView.getCboAssignedUserId().setRawValue("bmartin");
+								//followupView.getCboAssignedUserId().repaint();
+								followupEditorDialog.show();
+								
+								
+								//followupView.getCboAssignedUserId().setValueField(be.getSelection().get(0).getAssignedUserId());
+//								for(int ndx =0; ndx < followupView.getUserInfoBeanStore().getCount();ndx++){
+//									if(followupView.getUserInfoBeanStore().getAt(ndx).getUserId().equals(be.getSelection().get(0).getAssignedUserId())){
+//										followupView.getCboAssignedUserId().select
+//										
+//										Log.debug("testing match" +ndx);
+//										break;
+//									}
+//								}
+							} else {  
+								formBindings.unbind();  
+							}  
+						}  
+			});  
+		    grid.setBorders(true);
+	     
+	     formBindings.setStore( grid.getStore());
+		
+		  BorderLayout layout = new BorderLayout(); 
+    	  followupEditorDialog.setLayout(layout);
+    	  followupEditorDialog.add(followupView.getFollowupFormPanel());
+        
+    	  followupEditorDialog.setWidth(500);
+    	  followupEditorDialog.setModal(true);
+    	  followupEditorDialog.setButtons(Dialog.OKCANCEL);
+    	  followupEditorDialog.setHideOnButtonClick(true);
+    	  followupEditorDialog.setClosable(false);
+    	  followupEditorDialog.getButtonById(Dialog.CANCEL).addSelectionListener(new SelectionListener<ButtonEvent>() { 
+
+    		  @Override  
+    		  public void componentSelected(ButtonEvent ce) { 
+    			  store.rejectChanges();
+    			  formBindings.unbind();
+    		  }
+    	  }
+
+    	  );
+    	  followupEditorDialog.getButtonById(Dialog.OK).addSelectionListener(new SelectionListener<ButtonEvent>() { 
+
+    		  @Override  
+    		  public void componentSelected(ButtonEvent ce) { 
+    			  //grid.getSelectionModel().getSelectedItem().setAssignedUserId(followupView.getCboAssignedUserId().getRawValue());
+    			  
+    			  Record record = store.getRecord(grid.getSelectionModel().getSelectedItem());
+    		        record.set("assignedUserId",followupView.getCboAssignedUserId().getRawValue());
+    			  formBindings.unbind();
+    		  }
+    	  }
+
+    	  );
+    	  
 	}
 	  @Override  
 	  protected void onRender(Element parent, int index) {  
 	    super.onRender(parent, index);  
 	  
 	    setLayout(new FlowLayout(10));  
-	    List<ColumnConfig> configs = new ArrayList<ColumnConfig>();  
+	    
 	  
 	    ColumnConfig column; 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-Begin AssignedUserId Column=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -127,7 +237,8 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	    column.setId("dueDt");  
 	    column.setHeader("Due");  
 	    column.setDateTimeFormat(DateTimeFormat.getShortDateFormat());
-	    column.setWidth(100);  
+	    column.setWidth(100);
+
 //	    final TextField<String> ttxtDueDt = new TextField<String>();  
 //	    ttxtDueDt.setAllowBlank(false);  
 //	    ttxtDueDt.addListener(Events.OnFocus,new Listener<ComponentEvent>() {
@@ -210,47 +321,58 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 
 	   
 	  
-	    ColumnModel cm = new ColumnModel(configs);  
-	  
+
+	     
 	    ContentPanel cp = new ContentPanel();  
-	    cp.setHeading("Edit Followup");  
+	    cp.setHeading("Customer Followup");
+
 	    cp.setFrame(true);  
 	    //cp.setIcon(Examples.ICONS.table());  
 	    cp.setSize(750, 150);  
 	    cp.setLayout(new FitLayout());  
 	  
-	    final EditorGrid<FollowupBean> grid = new EditorGrid<FollowupBean>(store, cm);  
-	    //grid.setAutoExpandColumn("");  
-	    grid.setBorders(true);  
-	    //grid.addPlugin(checkColumn);  
+
+	     
+	   
 	    cp.add(grid);  
 	  
-	    ToolBar toolBar = new ToolBar();  
+	    ToolBar toolBar = new ToolBar(); 
+
+	    
 	    Button add = new Button("Add Followup");  
 	    add.addSelectionListener(new SelectionListener<ButtonEvent>() {  
 	  
 	      @Override  
 	      public void componentSelected(ButtonEvent ce) {  
-	        
-	        FollowupBean followupBean  = new FollowupBean();
-
-		followupBean.setAssignedUserId("");
- 		followupBean.setFollowupDescription("");
- 		followupBean.setCloseDt(new java.util.Date());
- 		followupBean.setOpenDt(new java.util.Date());
- 		followupBean.setDueDt(new java.util.Date());
- 		followupBean.setLastUpdate(new java.util.Date());
- 		followupBean.setCustomerId(0);
- 		followupBean.setClientId(0);
- 		followupBean.setFollowupId(0);
-  	        grid.stopEditing();  
-	        store.insert(followupBean, 0);
-	        grid.startEditing(0, 0);  
+		    FollowupBean followupBean  = new FollowupBean();
+	  		followupBean.setAssignedUserId("");
+	   		followupBean.setFollowupDescription("!New");
+	   		followupBean.setCloseDt(null);
+	   		followupBean.setOpenDt(new java.util.Date());
+	   		followupBean.setDueDt(new java.util.Date());
+	   		followupBean.setLastUpdate(new java.util.Date());
+	   		followupBean.setCustomerId(0);
+	   		followupBean.setClientId(0);
+	   		followupBean.setFollowupId(0);
+	    	//grid.stopEditing();  
+	    	store.sort("followupDescription", SortDir.ASC);
+	  	    store.insert(followupBean, 0);
+	  	    //grid.startEditing(0, 0); 
+	  	    
+	  	  
+	  	    
+	  	   
+			
+			formBindings.bind(followupBean  );
+	    	  
+	    	
+	    	  followupEditorDialog.show();
+ 
 	      }  
 	  
 	    });  
-	  //  toolBar.add(add);  
-	  //  cp.setTopComponent(toolBar);  
+	    toolBar.add(add);  
+	   cp.setTopComponent(toolBar);  
 	    cp.setButtonAlign(HorizontalAlignment.CENTER);  
 //	    cp.addButton(new Button("Reset", new SelectionListener<ButtonEvent>() {  
 //	  
@@ -279,6 +401,9 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 		  }
 		  store.removeAll();
 		  store.add(followupTableModelDataList); 
+//		  if (followupBeans_.size()>0){
+//			  grid.getSelectionModel().select(0,false);
+//		  }
 		  
 	  }
 	  
@@ -305,6 +430,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	public void onAttach(){
 		super.onAttach();
 		notifier.notifyAppEvent(this, "FollowupTableOnAttach");
+		
 		
 	}
 
