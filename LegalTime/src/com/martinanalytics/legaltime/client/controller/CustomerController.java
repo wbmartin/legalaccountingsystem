@@ -135,7 +135,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 	}else if (e_.getName().equals("CustomerChange"	)){
 		Integer custId = (Integer)e_.getPayLoad();
 		saveOldChangesGetNewRates(custId);
-		 selectFollowupBeansForCustomer(custId);
+		saveFollowUpItemChanges();
+		selectFollowupBeansForCustomer(custId);
+		 
 	
 	}else if (e_.getName().equals(	"RefreshBillRates")){
 		Integer custId = (Integer)e_.getPayLoad();
@@ -541,10 +543,11 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   public void saveAllChanges(){
 	  ListStore<CustomerBean> store = customerView.getStore();
 	  List<Record> modified = store.getModifiedRecords();
-	  CustomerBean customerTableModelBean = new CustomerBean();
+	  CustomerBean customerTableModelBean;// = new CustomerBean();
 	  ArrayList<CustomerBean> batchSave = new ArrayList<CustomerBean>();
 	  for (Record r : modified) {
 		  Log.debug("Identified Modified Record");
+		  customerTableModelBean = new CustomerBean();
 		  customerTableModelBean.setProperties(r.getModel().getProperties());
 		  batchSave.add(customerTableModelBean);
 		  
@@ -554,6 +557,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 		saveCustomerBeanBatch( batchSave );
 		
 		saveRateChanges();
+		saveFollowUpItemChanges();
 	  
   }
   public void saveRateChanges(){
@@ -563,9 +567,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 	  ArrayList<CustomerBillRateBean> batchSave = new ArrayList<CustomerBillRateBean>();
 	  CustomerBillRateBean customerBillRateBean;// = new CustomerBillRateBean();
 	  for (Record r : modified) {
-		  Log.debug("Table.saveChange1: " + r.getModel().getProperties().get("clientId"));
+		  //Log.debug("Table.saveChange1: " + r.getModel().getProperties().get("clientId"));
 		  vwCustomerHourlyBillRateBean.setProperties(r.getModel().getProperties());
-		  Log.debug("SaveOld CHanges"+vwCustomerHourlyBillRateBean.getProperties().toString());
+		  //Log.debug("SaveOld CHanges"+vwCustomerHourlyBillRateBean.getProperties().toString());
 		  
 		  customerBillRateBean= new CustomerBillRateBean();
           
@@ -577,11 +581,37 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
           customerBillRateBean.setBillRate(vwCustomerHourlyBillRateBean.getBillRate());
 		  batchSave.add( customerBillRateBean);
 		  
-		  Log.debug("Table.saveChanges 2"+ vwCustomerHourlyBillRateBean.getClientId());
+		  //Log.debug("Table.saveChanges 2"+ vwCustomerHourlyBillRateBean.getClientId());
 		  
 	  }
 		store.commitChanges();
 		saveCustomerBillRateBeanBatch( batchSave );
+  }
+  
+  public void saveFollowUpItemChanges(){
+	  ListStore<FollowupBean> store = customerView.getFollowupTableCustomerPerspective().getStore();
+	  List<Record> modified = store.getModifiedRecords();
+	  FollowupBean followupBean = new FollowupBean();
+	  ArrayList<FollowupBean> batchSave = new ArrayList<FollowupBean>();
+	
+	  for (Record r : modified) {
+
+//		  vwCustomerHourlyBillRateBean.setProperties(r.getModel().getProperties());
+//		  Log.debug("SaveOld CHanges"+vwCustomerHourlyBillRateBean.getProperties().toString());
+//		  
+//		  customerBillRateBean= new CustomerBillRateBean();
+//          
+//          customerBillRateBean.setLastUpdate(vwCustomerHourlyBillRateBean.getLastUpdate());
+//          customerBillRateBean.setCustomerId(vwCustomerHourlyBillRateBean.getCustomerId());
+//          customerBillRateBean.setUserId(vwCustomerHourlyBillRateBean.getUserId());
+//          customerBillRateBean.setClientId(vwCustomerHourlyBillRateBean.getClientId());
+//          customerBillRateBean.setCustomerBillRateId(vwCustomerHourlyBillRateBean.getCustomerBillRateId());
+//          customerBillRateBean.setBillRate(vwCustomerHourlyBillRateBean.getBillRate());
+		  batchSave.add( (FollowupBean)r.getModel());
+		  
+	  }
+		store.commitChanges();
+		saveFollowupBeanBatch( batchSave );
   }
  
   
@@ -659,6 +689,31 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   							"Successfully saved Customer Batch"
   							, (new java.util.Date().getTime() - startTime.getTime()));
   					//customerView.updateSelectedBeansinStore(customerResult);
+  	
+  						
+  				}
+  		});
+    }
+    private void saveFollowupBeanBatch(ArrayList<FollowupBean> followupBeanList_){
+    	Log.debug("saveCustomerBillRateBeanBatch" + followupBeanList_.toString());
+  	final java.util.Date startTime = new java.util.Date();
+  	followupService.saveFollowupBeanBatch(userProfile, followupBeanList_, 
+  			new AsyncCallback<ArrayList<FollowupBean>>(){
+  				public void onFailure(Throwable caught) {
+  					Log.debug("customerBillRateService.saveCustomerBeanBatch Failed: " + caught);
+  					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+  							AppPref.SERVER_ERROR + caught.getMessage());
+  					masterController.getAppContainer().setTransactionResults(
+  						"Saving Customer Batch Failed"
+  						, (new java.util.Date().getTime() -startTime.getTime()));
+  				}
+  		
+  				public void onSuccess(ArrayList<FollowupBean> customerResult) {
+  					Log.debug("customerBillRateService.saveCustomerBeanBatch onSuccess: " + customerResult.toString());
+  					masterController.getAppContainer().setTransactionResults(
+  							"Successfully saved Customer Batch"
+  							, (new java.util.Date().getTime() - startTime.getTime()));
+  					customerView.getFollowupTableCustomerPerspective().updateSelectedBeansinStore(customerResult);
   	
   						
   				}
@@ -754,6 +809,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     	final String whereClause ="where customer_id = " + custId_;
     	final String orderByClause = "order by due_dt";
     	final java.util.Date startTime = new java.util.Date();
+    	customerView.getFollowupTableCustomerPerspective().setCurrentCustomerId(custId_);
     		followupService.selectFollowup(userProfile, whereClause, orderByClause, 
     				new AsyncCallback<ArrayList<FollowupBean>>(){
     					public void onFailure(Throwable caught) {

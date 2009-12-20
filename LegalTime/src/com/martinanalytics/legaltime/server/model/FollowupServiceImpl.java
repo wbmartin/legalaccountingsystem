@@ -32,22 +32,34 @@ public class FollowupServiceImpl extends RemoteServiceServlet
          * @return the updated bean
 	 */
 	public FollowupBean insertFollowupBean(UserProfile userProfile_, FollowupBean followupBean_){
-	  int ndx =1;
+	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
 	  String result;
 	  ArrayList<FollowupBean> resultList  = new ArrayList<FollowupBean>();
 	  try {
 		ps = databaseManager.getConnection().prepareStatement("select  assigned_user_id , followup_description , close_dt , open_dt , due_dt , last_update , customer_id , client_id , followup_id  from followup_iq('CHECK_AUTH',?,?,?,?,?,?,?,?,?);");
-		ps.setInt(ndx++, userProfile_.getClientId());
-		ps.setString(ndx++,  userProfile_.getUserId());
-		ps.setString(ndx++, userProfile_.getSessionId());
-		ps.setString(ndx++,followupBean_.getAssignedUserId() );
-  		ps.setString(ndx++,followupBean_.getFollowupDescription() );
-  		ps.setDate(ndx++, new java.sql.Date(followupBean_.getCloseDt().getTime()));
-  		ps.setDate(ndx++, new java.sql.Date(followupBean_.getOpenDt().getTime()));
-  		ps.setDate(ndx++, new java.sql.Date(followupBean_.getDueDt().getTime()));
-   		ps.setInt(ndx++,followupBean_.getCustomerId() );
+		ps.setInt(++ndx, userProfile_.getClientId());
+		ps.setString(++ndx,  userProfile_.getUserId());
+		ps.setString(++ndx, userProfile_.getSessionId());
+		ps.setString(++ndx,followupBean_.getAssignedUserId() );
+  		ps.setString(++ndx,followupBean_.getFollowupDescription() );
+  		try{
+  			ps.setDate(++ndx, new java.sql.Date(followupBean_.getCloseDt().getTime()));
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DATE);
+  		}
+  		try{
+  			ps.setDate(++ndx, new java.sql.Date(followupBean_.getOpenDt().getTime()));
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DATE);
+  		}
+  		try{
+  			ps.setDate(++ndx, new java.sql.Date(followupBean_.getDueDt().getTime()));
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DATE);
+  		}
+   		ps.setInt(++ndx,followupBean_.getCustomerId() );
      		rs =  ps.executeQuery();
 		
 		while(rs.next()){
@@ -69,24 +81,42 @@ public class FollowupServiceImpl extends RemoteServiceServlet
          * @return the updated bean
 	 */
 	public FollowupBean updateFollowupBean(UserProfile userProfile_, FollowupBean followupBean_){
-	  int ndx =1;
+	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
 	  String result;
 	  ArrayList<FollowupBean> resultList  = new ArrayList<FollowupBean>();
 	  try {
 		ps = databaseManager.getConnection().prepareStatement("select  assigned_user_id , followup_description , close_dt , open_dt , due_dt , last_update , customer_id , client_id , followup_id  from followup_uq('CHECK_AUTH',?,?,?,?,?,?,?,?,?,?,?);");
-		ps.setInt(ndx++,  userProfile_.getClientId());
-		ps.setString(ndx++,  userProfile_.getUserId());
-		ps.setString(ndx++, userProfile_.getSessionId());
-		ps.setString(ndx++,followupBean_.getAssignedUserId() );
-  		ps.setString(ndx++,followupBean_.getFollowupDescription() );
-  		ps.setDate(ndx++, new java.sql.Date(followupBean_.getCloseDt().getTime()));
-  		ps.setDate(ndx++, new java.sql.Date(followupBean_.getOpenDt().getTime()));
-  		ps.setDate(ndx++, new java.sql.Date(followupBean_.getDueDt().getTime()));
-  		ps.setTimestamp(ndx++, new java.sql.Timestamp(followupBean_.getLastUpdate().getTime()));
-  		ps.setInt(ndx++,followupBean_.getCustomerId() );
-   		ps.setInt(ndx++,followupBean_.getFollowupId() );
+		ps.setInt(++ndx,  userProfile_.getClientId());
+		ps.setString(++ndx,  userProfile_.getUserId());
+		ps.setString(++ndx, userProfile_.getSessionId());
+		ps.setString(++ndx,followupBean_.getAssignedUserId() );
+  		ps.setString(++ndx,followupBean_.getFollowupDescription() );
+  		try{
+  			ps.setDate(++ndx, new java.sql.Date(followupBean_.getCloseDt().getTime()));
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DATE);
+  		}
+  		try{
+  			ps.setDate(++ndx, new java.sql.Date(followupBean_.getOpenDt().getTime()));
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DATE);
+  		}
+  		try{
+  			ps.setDate(++ndx, new java.sql.Date(followupBean_.getDueDt().getTime()));
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DATE);
+  		}
+  		try{
+  			ps.setTimestamp(++ndx, new java.sql.Timestamp(followupBean_.getLastUpdate().getTime()));
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.TIMESTAMP);
+  		}
+
+	
+  		ps.setInt(++ndx,followupBean_.getCustomerId() );
+   		ps.setInt(++ndx,followupBean_.getFollowupId() );
    		rs =  ps.executeQuery();
 		
 		while(rs.next()){
@@ -180,16 +210,16 @@ public class FollowupServiceImpl extends RemoteServiceServlet
          * @return an arraylist of the beans
 	 */
 	public  FollowupBean getFollowupByPrKey(UserProfile userProfile_ , Integer followupId_ ){
-	  int ndx =1;
+	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
 	  FollowupBean result  = new FollowupBean();
 	  try {
 		ps = databaseManager.getConnection().prepareStatement("select  assigned_user_id , followup_description , close_dt , open_dt , due_dt , last_update , customer_id , client_id , followup_id  from followup_bypk('CHECK_AUTH',?,?,?, ? );");
-		ps.setInt(ndx++, userProfile_.getClientId());
-		ps.setString(ndx++,  userProfile_.getUserId());
-		ps.setString(ndx++, userProfile_.getSessionId());
-		ps.setInt(ndx++, followupId_);
+		ps.setInt(++ndx, userProfile_.getClientId());
+		ps.setString(++ndx,  userProfile_.getUserId());
+		ps.setString(++ndx, userProfile_.getSessionId());
+		ps.setInt(++ndx, followupId_);
 		rs =  ps.executeQuery();
 		if(rs.next()){
 		  result =(decodeRow(rs));

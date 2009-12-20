@@ -3,33 +3,48 @@ package com.martinanalytics.legaltime.client.widget;
 import java.util.ArrayList;
 
 import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.widget.form.LabelField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
+
 import com.google.gwt.user.client.ui.ListBox;
 
 
 public class DecentComboBox<D extends ModelData> extends Composite{
-	HorizontalPanel hp;
-	public Label lblCbo;
+	FlowPanel formItem;
+
+	public HTML lblCbo;
 	public ListBox cbo;
 	private String displayField;
 	private String valueField;
 	private ArrayList<D> list;
+	private Integer LabelWidth =150;
+	
 	public DecentComboBox(){
 		list = new ArrayList();
-		hp = new HorizontalPanel();
-		lblCbo = new Label();
-		hp.add(lblCbo);
-		cbo = new ListBox();
-		hp.add(cbo);
-		initWidget(hp);	
+		formItem = new FlowPanel();
+		formItem.setStyleName("x-form-item");
+		formItem.addStyleName("LEFT");
+		
+
+		formItem.addStyleName("combo");
+		
+		lblCbo = new HTML("<label  style='width:150px;' class='x-form-item-label'></label>");
+		formItem.add(lblCbo);
+		cbo = new ListBox(false);
+		cbo.setWidth("210px");
+		cbo.addStyleName("LEFT");
+		formItem.add(cbo);
+		initWidget(formItem);
+		
 	}
 	public void setLabelWidth(Integer width_){
-		lblCbo.setWidth(width_.toString()+"px");
+		LabelWidth = width_;
 	}
 	public void setFieldLabel(String text_){
-		lblCbo.setText(text_);
+		lblCbo.setHTML("<label  style='width:" + (LabelWidth +1) + "px;' class='x-form-item-label'>" + text_+"</label>");
 	}
 	public void setList(String displayField_, String valueField_, ArrayList<D> list_){
 		displayField = displayField_;
@@ -48,6 +63,10 @@ public class DecentComboBox<D extends ModelData> extends Composite{
 			}
 			
 		}
+	}
+	public String getSelectedValue(){
+		
+		return cbo.getValue(cbo.getSelectedIndex());
 	}
 	
 
