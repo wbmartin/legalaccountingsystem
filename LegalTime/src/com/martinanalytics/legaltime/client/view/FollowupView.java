@@ -43,8 +43,8 @@ public class FollowupView extends AppEventProducer{
 	private FormPanel followupFormPanel = new FormPanel();
 	private ContentPanel cp = new ContentPanel();  
 
-	private ComboBox<UserInfoBean> cboAssignedUserId = new ComboBox<UserInfoBean>();
-	private DecentComboBox<UserInfoBean> lbtest = new DecentComboBox<UserInfoBean>();
+	
+	private DecentComboBox<UserInfoBean> cboAssignedUser = new DecentComboBox<UserInfoBean>();
 	//private ListBox cboAssignedUserId = new ListBox();
 	
  	private TextField<String> txtFollowupDescription = new TextField<String>();
@@ -56,47 +56,18 @@ public class FollowupView extends AppEventProducer{
  	private NumberField nbrClientId = new NumberField();
  	private NumberField nbrFollowupId = new NumberField();
   	private FollowupComposite followupComposite;
-	private ListStore<UserInfoBean> userInfoBeanStore = new ListStore<UserInfoBean>();
-	//private ListBox lbtest = new ListBox();
+	//private ListStore<UserInfoBean> userInfoBeanStore = new ListStore<UserInfoBean>();
+
 	public FollowupView(){
 		userProfile = UserProfile.getInstance();
 		followupComposite =new FollowupComposite();
-		cboAssignedUserId.setFieldLabel("Owner");
-		cboAssignedUserId.setStore(userInfoBeanStore);
-		cboAssignedUserId.setDisplayField("userId");
-//		 ListView<UserInfoBean> lv = new ListView<UserInfoBean>();
-//         lv.setStore(cboAssignedUserId.getStore());
-//         lv.setLoadingText("LOADING");
-//         lv.setDisplayProperty("displayName");
-		
-		//cboAssignedUserId.setValueField("userId");
-//		cboAssignedUserId.setPropertyEditor(new ListModelPropertyEditor<UserInfoBean>() {
-//			   public String getStringValue(UserInfoBean value) {
-//			     return value.getDisplayName();
-//			   }
-//			 });
-//		cboAssignedUserId.getView().setModelProcessor(new ModelProcessor<UserInfoBean>() {
-//			   public UserInfoBean prepareData(UserInfoBean model) {
-//			     model.set("test", model.getDisplayName());
-//			     return model;
-//			   }
-//			 });
-		
-		
-		//cboAssignedUserId.setValueField("userId");
-		cboAssignedUserId.addStyleName("LEFT");
+
+
 		followupFormPanel.setLabelWidth(150);
 		followupFormPanel.setHeading("Follow up Editor");
 		followupFormPanel.addStyleName("LEFT");
 		
 		
-	}
-	/**
-	 * @return the txtAssignedUserId
-	 */
-	
-	public ComboBox<UserInfoBean> getCboAssignedUserId() {
-		return cboAssignedUserId;
 	}
 
 	/**
@@ -181,19 +152,10 @@ class FollowupComposite extends Composite{
 		initWidget(followupFormPanel);
 	}
 	public void createControls(){
-		lbtest.setFieldLabel("Owner");
-		lbtest.setLabelWidth(150);
-		followupFormPanel.add(lbtest);
-//---------------------------------------------------------------
-//		cboAssignedUserId.setFieldLabel("Assigned User Id");
-		cboAssignedUserId.setName("assignedUserId");
-//		cboAssignedUserId.setFireChangeEventOnSetValue(true);
-		//txtAssignedUserId.setRegex("");
-		//txtAssignedUserId.setAutoValidate(true);
-		//txtAssignedUserId.setAllowBlank(false);
-		//txtAssignedUserId.setVisible(false);
-		followupFormPanel.add(cboAssignedUserId);
-//---------------------------------------------------------------
+		cboAssignedUser.setLabelWidth(150);
+		cboAssignedUser.setFieldLabel("Owner:");
+		
+		followupFormPanel.add(cboAssignedUser);
 
 
 
@@ -336,35 +298,32 @@ public FormPanel getFollowupFormPanel() {
 //	}
 
 public void populateAssignedUserCBO(boolean force){
-	if(userInfoBeanStore.getCount()==0 || force)
-		userInfoBeanStore.removeAll();
-		userInfoBeanStore.add(UserInfoCache.getCache());
-		Log.debug("userinfo size:" + UserInfoCache.getCache().size());
-//		lbtest.clear();
-//		for(int ndx =0;ndx < UserInfoCache.getCache().size();ndx++){
-//			lbtest.addItem(UserInfoCache.getCache().get(ndx).getDisplayName(), UserInfoCache.getCache().get(ndx).getUserId());
-//		}
-		lbtest.setList("displayName", "userId", UserInfoCache.getCache());
-		//cboAssignedUserId.addStyleName("LEFT");
+	if(cboAssignedUser.cbo.getItemCount()==0 || force)
+//		userInfoBeanStore.removeAll();
+//		userInfoBeanStore.add(UserInfoCache.getCache());
+//		Log.debug("userinfo size:" + UserInfoCache.getCache().size());
+
+		cboAssignedUser.setList("displayName", "userId", UserInfoCache.getCache());
+
     }
-/**
- * @param userInfoBeanStore the userInfoBeanStore to set
- */
-public void setUserInfoBeanStore(ListStore<UserInfoBean> userInfoBeanStore) {
-	this.userInfoBeanStore = userInfoBeanStore;
-}
-/**
- * @return the userInfoBeanStore
- */
-public ListStore<UserInfoBean> getUserInfoBeanStore() {
-	return userInfoBeanStore;
-}
+///**
+// * @param userInfoBeanStore the userInfoBeanStore to set
+// */
+//public void setUserInfoBeanStore(ListStore<UserInfoBean> userInfoBeanStore) {
+//	this.userInfoBeanStore = userInfoBeanStore;
+//}
+///**
+// * @return the userInfoBeanStore
+// */
+//public ListStore<UserInfoBean> getUserInfoBeanStore() {
+//	return userInfoBeanStore;
+//}
 
 /**
- * @return the lbtest
+ * @return the cboAssignedUser
  */
-public DecentComboBox<UserInfoBean> getLbtest() {
-	return lbtest;
+public DecentComboBox<UserInfoBean> getCboAssignedUser() {
+	return cboAssignedUser;
 }
 
 }

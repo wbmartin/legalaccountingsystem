@@ -48,10 +48,31 @@ text-align: left;
     display: table-cell;
     vertical-align: middle;	
 }
+.INLINEDISPLAY{
+display: inline;
+}
 
 .LEFT{
 text-align: left;
 }
+SELECT{
+	border:1px solid #B5B8C8;
+	/*padding-bottom: 1px;                  
+	padding-left: 1px;                  
+	padding-right: 1px;                   
+	padding-top: 1px;
+	*/
+
+}
+
+.combo{
+	/*padding-bottom: 2px;                  
+	padding-left: 1px;                  
+	padding-right: 1px;                   
+	padding-top: 1px;
+	*/
+}
+
 #ApplicationTitle{
 	font-size: 3em;
 	color: blue;
@@ -69,6 +90,9 @@ font-size: 12px;
 
    
 
+}
+.spacer5px{
+padding-left: 10px;
 }
 /**
 .richtext-area{

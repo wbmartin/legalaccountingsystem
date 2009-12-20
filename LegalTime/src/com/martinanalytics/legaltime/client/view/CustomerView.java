@@ -263,7 +263,7 @@ class CustomerComposite extends Composite{
 		cp.setScrollMode(Scroll.NONE);
 		cm = createColumnModel();
 		grid = new Grid<CustomerBean>(store, cm);
-		
+		grid.setAutoExpandColumn("lastName");
 		customerFormPanel.setScrollMode(Scroll.NONE);
 		formBindings = new FormBinding(getCustomerFormPanel(), true);
 		formBindings.setStore((Store<CustomerBean>) grid.getStore()); 
@@ -323,6 +323,7 @@ class CustomerComposite extends Composite{
 		    cancelChanges.addListener(Events.Select, new Listener<ComponentEvent>() {
 			      public void handleEvent(ComponentEvent be) {
 		    	  store.rejectChanges();
+		    	  store.filter("activeYn","Y");
 		      }
 		    });
 		    toolBar.add(cancelChanges);

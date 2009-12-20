@@ -45,9 +45,11 @@ import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
 import com.martinanalytics.legaltime.client.model.bean.UserInfoBean;
+import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.view.FollowupView;
 import com.extjs.gxt.ui.client.event.ButtonEvent; 
 import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
+import com.extjs.gxt.ui.client.event.SelectionEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
@@ -65,6 +67,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	List<ColumnConfig> configs= new ArrayList<ColumnConfig>();
 	ColumnModel cm =new ColumnModel(configs);
 	Grid<FollowupBean> grid= new Grid<FollowupBean>(store, cm);
+	private int currentCustomerId;
 	
 	
 	public FollowupTableCustomerPerspective(){
@@ -76,7 +79,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 		
 		
 		formBindings = new FormBinding(followupView.getFollowupFormPanel(), true);
-		formBindings.removeFieldBinding(formBindings.getBinding(followupView.getCboAssignedUserId()));
+		
 		
 		//formBindings.
 	     grid.getView().setEmptyText("No Open Tasks");
@@ -89,34 +92,27 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 							if (be.getSelection().size() > 0) {  
 								formBindings.bind((ModelData) be.getSelection().get(0));
 								followupView.populateAssignedUserCBO(true);
-//								for(int ndx =0; ndx < followupView.getLbtest().getItemCount();ndx++){
-//									if(followupView.getLbtest().getValue(ndx).equals(be.getSelection().get(0).getAssignedUserId())){
-//										followupView.getLbtest().setSelectedIndex(ndx);
-//										break;
-//									}
-//								}
-								followupView.getLbtest().setSelected(be.getSelection().get(0).getAssignedUserId());
-								
-								followupView.getCboAssignedUserId().setRawValue(be.getSelection().get(0).getAssignedUserId());
-								//followupView.getCboAssignedUserId().setRawValue("bmartin");
-								//followupView.getCboAssignedUserId().repaint();
+								followupView.getCboAssignedUser().setSelected(be.getSelection().get(0).getAssignedUserId());
 								followupEditorDialog.show();
-								
-								
-								//followupView.getCboAssignedUserId().setValueField(be.getSelection().get(0).getAssignedUserId());
-//								for(int ndx =0; ndx < followupView.getUserInfoBeanStore().getCount();ndx++){
-//									if(followupView.getUserInfoBeanStore().getAt(ndx).getUserId().equals(be.getSelection().get(0).getAssignedUserId())){
-//										followupView.getCboAssignedUserId().select
-//										
-//										Log.debug("testing match" +ndx);
-//										break;
-//									}
-//								}
 							} else {  
 								formBindings.unbind();  
 							}  
 						}  
 			});  
+//		    grid.getSelectionModel().addListener(Events.SelectionChange,  
+//					new Listener<SelectionEvent<FollowupBean>>() {  
+//						public void handleEvent(SelectionEvent<FollowupBean> be) { 
+//							Log.debug("Followupcostomertable selection detected");
+//							//if (be.getSelection().size() > 0) {  
+//								formBindings.bind((ModelData) be.getModel());
+//								followupView.populateAssignedUserCBO(true);
+//								followupView.getCboAssignedUser().setSelected(be.getModel().getAssignedUserId());
+//								followupEditorDialog.show();
+////							} else {  
+////								formBindings.unbind();  
+////							}  
+//						}  
+//			});  
 		    grid.setBorders(true);
 	     
 	     formBindings.setStore( grid.getStore());
@@ -136,6 +132,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
     		  public void componentSelected(ButtonEvent ce) { 
     			  store.rejectChanges();
     			  formBindings.unbind();
+    			  grid.getSelectionModel().deselectAll();
     		  }
     	  }
 
@@ -147,8 +144,9 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
     			  //grid.getSelectionModel().getSelectedItem().setAssignedUserId(followupView.getCboAssignedUserId().getRawValue());
     			  
     			  Record record = store.getRecord(grid.getSelectionModel().getSelectedItem());
-    		        record.set("assignedUserId",followupView.getCboAssignedUserId().getRawValue());
+    		        record.set("assignedUserId",followupView.getCboAssignedUser().getSelectedValue());
     			  formBindings.unbind();
+    			  grid.getSelectionModel().deselectAll();
     		  }
     	  }
 
@@ -184,7 +182,8 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	    column = new ColumnConfig(); 
 	    column.setId("followupDescription");  
 	    column.setHeader("Description");  
-	    column.setWidth(450);  
+	    //column.setWidth(450);
+	    grid.setAutoExpandColumn("followupDescription");
 //	    final TextField<String> ttxtFollowupDescription = new TextField<String>();  
 //	    ttxtFollowupDescription.setAllowBlank(false);  
 //	    ttxtFollowupDescription.addListener(Events.OnFocus,new Listener<ComponentEvent>() {
@@ -345,13 +344,13 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	      @Override  
 	      public void componentSelected(ButtonEvent ce) {  
 		    FollowupBean followupBean  = new FollowupBean();
-	  		followupBean.setAssignedUserId("");
+	  		followupBean.setAssignedUserId(UserProfile.getInstance().getUserId());
 	   		followupBean.setFollowupDescription("!New");
 	   		followupBean.setCloseDt(null);
 	   		followupBean.setOpenDt(new java.util.Date());
 	   		followupBean.setDueDt(new java.util.Date());
 	   		followupBean.setLastUpdate(new java.util.Date());
-	   		followupBean.setCustomerId(0);
+	   		followupBean.setCustomerId(currentCustomerId);
 	   		followupBean.setClientId(0);
 	   		followupBean.setFollowupId(0);
 	    	//grid.stopEditing();  
@@ -399,8 +398,11 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 		  for(int ndx = 0; ndx<followupBeans_.size(); ndx++){
 			  followupTableModelDataList.add(followupBeans_.get(ndx));
 		  }
+		  store.setFiresEvents(false);
 		  store.removeAll();
 		  store.add(followupTableModelDataList); 
+		  store.setFiresEvents(true);
+		  grid.getView().refresh(false);
 //		  if (followupBeans_.size()>0){
 //			  grid.getSelectionModel().select(0,false);
 //		  }
@@ -449,6 +451,67 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	public ListStore<FollowupBean> getStore() {
 		return store;
 	}
+	
+	
+	
+
+    public void updateSelectedBeansinStore(ArrayList<FollowupBean> followupResult_) {
+   	int ndxStore;
+   	try{
+   		for(int ndx =0;ndx<followupResult_.size();ndx++){
+   			
+   			for(ndxStore =0;ndx < store.getCount();ndxStore++){
+   				if( store.getAt(ndxStore).get("followupId").equals(followupResult_.get(ndx).getFollowupId())  &&  store.getAt(ndxStore).get("clientId").equals(followupResult_.get(ndx).getClientId()) ){
+   					store.getAt(ndxStore).setBean( followupResult_.get(ndx));
+   					//Log.debug("match found: "+ followupResult_.get(ndx).getPK());
+   					break;
+   					
+   				}else if( store.getAt(ndxStore).get("followupId").equals(0) 						
+   						&& store.getAt(ndxStore).get("assignedUserId").equals(followupResult_.get(ndx).getAssignedUserId())
+						&& store.getAt(ndxStore).get("followupDescription").equals(followupResult_.get(ndx).getFollowupDescription())
+						&& store.getAt(ndxStore).get("closeDt").equals(followupResult_.get(ndx).getCloseDt())
+						&& store.getAt(ndxStore).get("openDt").equals(followupResult_.get(ndx).getOpenDt())
+						&& store.getAt(ndxStore).get("dueDt").equals(followupResult_.get(ndx).getDueDt())
+						//&& store.getAt(ndxStore).get("lastUpdate").equals(followupResult_.get(ndx).getLastUpdate())
+						&& store.getAt(ndxStore).get("customerId").equals(followupResult_.get(ndx).getCustomerId())
+						&& store.getAt(ndxStore).get("clientId").equals(followupResult_.get(ndx).getClientId())
+						//&& store.getAt(ndxStore).get("followupId").equals(followupResult_.get(ndx).getFollowupId())
+					){
+   					store.getAt(ndxStore).setBean( followupResult_.get(ndx));
+   					//Log.debug("match found: "+ followupResult_.get(ndx).getField());
+   					break;
+   				}else{
+   					//Log.debug("mistmatch" + customerView.getStore().getAt(ndxStore).get("customerId") );
+   				}
+   				
+   			}
+   			
+   		
+   			
+   		}
+   	}catch(NullPointerException e){
+   		
+   	}
+   	
+	
+	
+    }
+	/**
+	 * @param currentCustomerId the currentCustomerId to set
+	 */
+	public void setCurrentCustomerId(int currentCustomerId) {
+		this.currentCustomerId = currentCustomerId;
+	}
+	/**
+	 * @return the currentCustomerId
+	 */
+	public int getCurrentCustomerId() {
+		return currentCustomerId;
+	}
+	
+	
+	
+	
 
 }
 
