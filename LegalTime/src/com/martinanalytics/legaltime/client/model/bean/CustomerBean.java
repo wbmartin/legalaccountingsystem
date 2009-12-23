@@ -1,13 +1,10 @@
 
-
 package com.martinanalytics.legaltime.client.model.bean;
 
 
 
-
-
-import com.allen_sauer.gwt.log.client.Log;
 import com.extjs.gxt.ui.client.data.BaseModelData;
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 
 public class CustomerBean extends BaseModelData{
 
@@ -23,6 +20,8 @@ public class CustomerBean extends BaseModelData{
 		setBean(customerBean_);
 	}
 	public void setBean(CustomerBean customerBean_){
+		setContingencyRate(customerBean_.getContingencyRate());
+		setMortgageAmount(customerBean_.getMortgageAmount());
 		setActiveYn(customerBean_.getActiveYn());
 		setMonthlyBillRate(customerBean_.getMonthlyBillRate());
 		setBillType(customerBean_.getBillType());
@@ -39,12 +38,49 @@ public class CustomerBean extends BaseModelData{
 		setLastName(customerBean_.getLastName());
 		setFirstName(customerBean_.getFirstName());
 		setLastUpdate(customerBean_.getLastUpdate());
-		//Log.debug("SettingBean" + customerBean_.getClientId());
 		setClientId(customerBean_.getClientId());
 		setCustomerId(customerBean_.getCustomerId());
 
 	}
 	
+	public CustomerBean getStandardCustomerBean(){
+		CustomerBean customerBean = new CustomerBean();
+		customerBean.setContingencyRate(getContingencyRate());
+		customerBean.setMortgageAmount(getMortgageAmount());
+		customerBean.setActiveYn(getActiveYn());
+		customerBean.setMonthlyBillRate(getMonthlyBillRate());
+		customerBean.setBillType(getBillType());
+		customerBean.setNote(getNote());
+		customerBean.setClientSinceDt(getClientSinceDt());
+		customerBean.setEmail(getEmail());
+		customerBean.setFax(getFax());
+		customerBean.setHomePhone(getHomePhone());
+		customerBean.setWorkPhone(getWorkPhone());
+		customerBean.setZip(getZip());
+		customerBean.setState(getState());
+		customerBean.setCity(getCity());
+		customerBean.setAddress(getAddress());
+		customerBean.setLastName(getLastName());
+		customerBean.setFirstName(getFirstName());
+		customerBean.setLastUpdate(getLastUpdate());
+		customerBean.setClientId(getClientId());
+		customerBean.setCustomerId(getCustomerId());
+		return customerBean;
+	}
+	public Double getContingencyRate(){
+		return get("contingencyRate");
+	}
+	public void setContingencyRate( Double new_){
+		set("contingencyRate", new_);
+	}
+
+	public Double getMortgageAmount(){
+		return get("mortgageAmount");
+	}
+	public void setMortgageAmount( Double new_){
+		set("mortgageAmount", new_);
+	}
+
 	public String getActiveYn(){
 		return get("activeYn");
 	}
@@ -141,7 +177,6 @@ public class CustomerBean extends BaseModelData{
 	}
 	public void setLastName( String new_){
 		set("lastName", new_);
-		set("customerChooserDisplay", get("lastName") + ", " + get("firstName"));
 	}
 
 	public String getFirstName(){
@@ -149,7 +184,6 @@ public class CustomerBean extends BaseModelData{
 	}
 	public void setFirstName( String new_){
 		set("firstName", new_);
-		set("customerChooserDisplay", get("lastName") + ", " + get("firstName"));
 	}
 
 	public java.util.Date getLastUpdate(){
@@ -172,7 +206,6 @@ public class CustomerBean extends BaseModelData{
 	public void setCustomerId( Integer new_){
 		set("customerId", new_);
 	}
-	
 
 
 }
