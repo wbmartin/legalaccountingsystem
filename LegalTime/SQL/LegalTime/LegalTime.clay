@@ -319,6 +319,12 @@
 <column auto-increment="false" column-size="1" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ec7" mandatory="false" name="active_yn">
 <data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
 </column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6be921:125baf37337:-7f9e" mandatory="false" name="mortgage_amount">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="6be921:125baf37337:-7f9b" mandatory="false" name="contingency_rate">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
 </column-list>
 <primary-key id="4225af:125355e7aa2:-7ed9" name="PK_CUSTOMER">
 <primary-key-column name="customer_id"/>
@@ -586,7 +592,7 @@
 </fk-figure>
 <table-figure refid="4225af:125355e7aa2:-7efe" x="1301" y="27"/>
 <table-figure refid="4225af:125355e7aa2:-7ee4" x="210" y="745"/>
-<table-figure refid="4225af:125355e7aa2:-7eda" x="1368" y="697"/>
+<table-figure refid="4225af:125355e7aa2:-7eda" x="1400" y="697"/>
 <table-figure refid="4225af:125355e7aa2:-7eb1" x="1011" y="1015"/>
 <table-figure refid="4225af:125355e7aa2:-7ea3" x="233" y="3"/>
 <fk-figure refid="4225af:125355e7aa2:-7756">

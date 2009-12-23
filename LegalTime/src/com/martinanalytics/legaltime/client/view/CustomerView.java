@@ -83,6 +83,8 @@ import com.extjs.gxt.ui.client.Style;
 public class CustomerView extends AppEventProducer{
 	
 	UserProfile userProfile;
+	private NumberField nbrContingencyRate = new NumberField();
+ 	private NumberField nbrMortgageAmount = new NumberField();
 	private TextField<String> txtActiveYn = new TextField<String>();
 	private NumberField txtMonthlyBillRate = new NumberField();
 	private SimpleComboBox<String> cboBillType = new SimpleComboBox<String>();
@@ -118,6 +120,19 @@ public class CustomerView extends AppEventProducer{
 	public CustomerView(){
 		userProfile = UserProfile.getInstance();
 		customerComposite =new CustomerComposite();
+	}
+	/**
+	 * @return the nbrContingencyRate
+	 */
+	public NumberField getNbrContingencyRate() {
+		return nbrContingencyRate;
+	}
+
+	/**
+	 * @return the nbrMortgageAmount
+	 */
+	public NumberField getNbrMortgageAmount() {
+		return nbrMortgageAmount;
 	}
 	/**
 	 * @return the txtActiveYn
@@ -469,6 +484,32 @@ class CustomerComposite extends Composite{
 		txtMonthlyBillRate.setRegex(GXTValidator.DOUBLE);
 		txtMonthlyBillRate.setAutoValidate(true);
 		getCustomerFormPanel().add(txtMonthlyBillRate);
+		
+
+		//---------------------------------------------------------------
+				nbrContingencyRate.setFieldLabel("ContingencyRate");
+				nbrContingencyRate.setName("contingencyRate");
+				nbrContingencyRate.setRegex(GXTValidator.DOUBLE);
+				nbrContingencyRate.setFireChangeEventOnSetValue(true);
+				//nbrContingencyRate.setAllowBlank(false);
+				nbrContingencyRate.setAutoValidate(true);
+				//nbrContingencyRate.setVisible(false);
+				customerFormPanel.add(nbrContingencyRate);
+		//---------------------------------------------------------------
+
+
+
+		//---------------------------------------------------------------
+				nbrMortgageAmount.setFieldLabel("MortgageAmount");
+				nbrMortgageAmount.setName("mortgageAmount");
+				nbrMortgageAmount.setRegex(GXTValidator.DOUBLE);
+				nbrMortgageAmount.setFireChangeEventOnSetValue(true);
+				//nbrMortgageAmount.setAllowBlank(false);
+				nbrMortgageAmount.setAutoValidate(true);
+				//nbrMortgageAmount.setVisible(false);
+				customerFormPanel.add(nbrMortgageAmount);
+		//---------------------------------------------------------------
+
 
 		customerFormPanel.add(getVwCustomerHourlyBillRateTable());
 //------------------------------------
