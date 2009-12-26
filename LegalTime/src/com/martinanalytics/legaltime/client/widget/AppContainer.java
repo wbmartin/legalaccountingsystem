@@ -14,12 +14,15 @@ import java.util.ArrayList;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.extjs.gxt.ui.client.Style.Scroll;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.ComponentEvent;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.Status;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuBar;
 import com.extjs.gxt.ui.client.widget.menu.MenuBarItem;
@@ -31,6 +34,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
+import com.martinanalytics.legaltime.client.controller.LaborRegisterController;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPages;
 import com.martinanalytics.legaltime.client.AppPref;
@@ -44,6 +48,8 @@ public class AppContainer extends LayoutContainer {
 
 	final Dialog standardUserMessage = new Dialog();
 	final Dialog logMessagesDialog = new Dialog();
+	private  Dialog appWindowDialog = new Dialog();
+
 	private static AppContainer instance;
     private Status userMessage;
     private Status lastTranTime;
@@ -74,6 +80,17 @@ public class AppContainer extends LayoutContainer {
 		versionStatus = new Status();
 	    versionStatus.setText(AppPref.VERSION);
 		messageLog = new ArrayList<String>();
+		
+		createApplicationWindow();
+	}
+	public void createApplicationWindow() {
+
+		  BorderLayout layout = new BorderLayout(); 
+  	  appWindowDialog.setLayout(layout);
+
+      
+  
+		
 	}
 	public static AppContainer getInstance(){
 		if (instance == null){
@@ -84,8 +101,16 @@ public class AppContainer extends LayoutContainer {
   @Override
   protected void onRender(Element parent, int index) {
     super.onRender(parent, index);
+    MenuBar bar = new MenuBar();
+    bar.setBorders(true);
+    bar.setStyleAttribute("borderTop", "none");
+
+    
+
+    add(bar);
     
     Menu mnuFile = new Menu();
+    bar.add(new MenuBarItem("File", mnuFile));
     MenuItem miLogout = new MenuItem("Logout");
     miLogout.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
@@ -95,17 +120,30 @@ public class AppContainer extends LayoutContainer {
     miLogout.addStyleName("LEFT");
     mnuFile.add(miLogout);
     
-    Menu mnuMessage = new Menu();
-    MenuItem miCreateMessage= new MenuItem("Create");
-    mnuMessage.add(miCreateMessage);
-    miCreateMessage.addListener(Events.Select, new Listener<ComponentEvent>() {
+    Menu mnuCustomer = new Menu();
+    bar.add(new MenuBarItem("Customer", mnuCustomer));
+     
+    MenuItem miCustomerManager= new MenuItem("Customer Manager");
+    miCustomerManager.addStyleName("LEFT");
+    mnuCustomer.add(miCustomerManager);
+    miCustomerManager.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
-        	//History.newItem(AppPages.EMAIL_MSG_PAGE);
+        	History.newItem(AppPages.CUSTOMER_PAGE);
           }}
     );
+    
+    MenuItem miBillHours= new MenuItem("Bill Hours");
+    miBillHours.addStyleName("LEFT");
+    mnuCustomer.add(miBillHours);
+    miBillHours.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+        	notifier.notifyAppEvent(this, AppMsg.SHOW_LABOR_REGISTER_DIALOG);
+          }}
+    );
+    
     MenuItem miMsgHistory= new MenuItem("Message History");
     miMsgHistory.addStyleName("LEFT");
-    mnuMessage.add(miMsgHistory);
+    mnuCustomer.add(miMsgHistory);
     miMsgHistory.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
         	//History.newItem(AppPages.VW_SENT_EMAIL_PAGE);
@@ -113,7 +151,8 @@ public class AppContainer extends LayoutContainer {
     );
     
     Menu mnuList = new Menu();
-    
+    bar.add(new MenuBarItem("List", mnuList));
+
     MenuItem miListManager = new MenuItem("ListManager");
     miListManager.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
@@ -135,8 +174,8 @@ public class AppContainer extends LayoutContainer {
     miEmailManager.addStyleName("LEFT");
     mnuList.add(miEmailManager);
     
-Menu mnuHelp = new Menu();
-    
+    Menu mnuHelp = new Menu();
+    bar.add(new MenuBarItem("Help", mnuHelp));
     MenuItem miAbout = new MenuItem("About");
     miAbout.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
@@ -159,16 +198,8 @@ Menu mnuHelp = new Menu();
     mnuHelp.add(miViewLog);
 
     
-    MenuBar bar = new MenuBar();
-    bar.setBorders(true);
-    bar.setStyleAttribute("borderTop", "none");
-    bar.add(new MenuBarItem("File", mnuFile));
-    bar.add(new MenuBarItem("Message", mnuMessage));
-    bar.add(new MenuBarItem("List", mnuList));
-    bar.add(new MenuBarItem("Help", mnuHelp)); 
     
-
-    add(bar);    
+     
     mainPanel.setWidth("100%");
     mainPanel.setHeight("88%");
     mainPanel.setStyleName("MainApplicationScrollPanel");
@@ -251,6 +282,23 @@ public void displayLogMessages(){
 public void setMainPanel(ScrollPanel mainPanel) {
 	this.mainPanel = mainPanel;
 }
+public void clearMainPanel(){
+//	try{
+	mainPanel.clear();
+	//mainPanel.remove(mainPanel.getWidget());
+//	}catch(Exception e){
+//		
+//	}
+}
 
+/**
+ * @return the appWindowDialog
+ */
+public Dialog getAppWindowDialog() {
+	return appWindowDialog;
+}
+public void setAppWindowDialog(Dialog newDialog_) {
+	 appWindowDialog = newDialog_;
+}
 
 }

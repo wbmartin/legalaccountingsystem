@@ -17,9 +17,11 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
+import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBillRateBean;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
@@ -63,6 +65,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   private java.util.Date lastUpdateHolder;  //Holder variables for timestamps
   private final FollowupServiceAsync followupService = 
 		GWT.create(FollowupService.class); 		// primary GWT remote Service
+  private final AppNotifyObject notifier = new AppNotifyObject();
 /**
  * Primary constructor, only called by getInstance, hence protected
  * @param masterController_
@@ -200,6 +203,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 							"Successfully Retrieved Customer listing"
 							, (new java.util.Date().getTime() - startTime.getTime()));
 							setCustomerList(customerResult);
+							notifier.notifyAppEvent(this, AppMsg.CUSTOMER_CACHE_REFRESHED);
 					}
 		});
 	  }
@@ -695,12 +699,12 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   		});
     }
     private void saveFollowupBeanBatch(ArrayList<FollowupBean> followupBeanList_){
-    	Log.debug("saveCustomerBillRateBeanBatch" + followupBeanList_.toString());
+    	Log.debug("saveFollowupBeanBatch" + followupBeanList_.toString());
   	final java.util.Date startTime = new java.util.Date();
   	followupService.saveFollowupBeanBatch(userProfile, followupBeanList_, 
   			new AsyncCallback<ArrayList<FollowupBean>>(){
   				public void onFailure(Throwable caught) {
-  					Log.debug("customerBillRateService.saveCustomerBeanBatch Failed: " + caught);
+  					Log.debug("customerBillRateService.saveFollowupBeanBatch Failed: " + caught);
   					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
   							AppPref.SERVER_ERROR + caught.getMessage());
   					masterController.getAppContainer().setTransactionResults(
@@ -709,7 +713,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   				}
   		
   				public void onSuccess(ArrayList<FollowupBean> customerResult) {
-  					Log.debug("customerBillRateService.saveCustomerBeanBatch onSuccess: " + customerResult.toString());
+  					Log.debug("customerBillRateService.saveFollowupBeanBatch onSuccess: " + customerResult.toString());
   					masterController.getAppContainer().setTransactionResults(
   							"Successfully saved Customer Batch"
   							, (new java.util.Date().getTime() - startTime.getTime()));
@@ -750,13 +754,13 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     
     public void setCustomerList(ArrayList<CustomerBean> customerBeans_){
     	//Log.debug("Set Customer List Called " );
-    	  List <CustomerBean> customerTableModelDataList = new ArrayList <CustomerBean>();
-    	  for(int ndx = 0; ndx<customerBeans_.size(); ndx++){
-    		  
-    		  customerTableModelDataList.add(new CustomerBean(customerBeans_.get(ndx)));
-    	  }
+//    	  List <CustomerBean> customerTableModelDataList = new ArrayList <CustomerBean>();
+//    	  for(int ndx = 0; ndx<customerBeans_.size(); ndx++){
+//    		  
+//    		  customerTableModelDataList.add(new CustomerBean(customerBeans_.get(ndx)));
+//    	  }
     	  customerView.getStore().removeAll();
-    	  customerView.getStore().add(customerTableModelDataList);
+    	  customerView.getStore().add(customerBeans_);
 
     }
     
@@ -788,6 +792,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     		
     			
     		}
+    		notifier.notifyAppEvent(this, AppMsg.CUSTOMER_CACHE_REFRESHED);
     	}catch(NullPointerException e){
     		
     	}
@@ -833,6 +838,17 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     					}
     		});
     	  }
+     public ArrayList<CustomerBean> getCache(){
+    	 
+    	 return (ArrayList<CustomerBean>)customerView.getStore().getRange(0, customerView.getStore().getCount());
+     }
+
+	/**
+	 * @return the notifier
+	 */
+	public AppNotifyObject getNotifier() {
+		return notifier;
+	}
 
 
 

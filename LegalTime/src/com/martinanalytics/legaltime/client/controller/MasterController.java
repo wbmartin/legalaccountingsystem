@@ -31,10 +31,12 @@ public class MasterController implements AppEventListener{
 	 private FollowupController followupController;
 	 private VwCustomerFollowupController vwCustomerFollowupController;
 	 private UserInfoController userInfoController;
+	 private LaborRegisterController laborRegisterController;
 	
 	 
 	 public MasterController(){
 		 userProfile = UserProfile.getInstance();
+		 UserInfoCache.getNotifier().addAppEventListener(this);
 		 loginController = LoginController.getInstance(this);
 		 itemWidgets.put(AppPages.LOGIN_PAGE, loginController.getLoginView().getLoginViewComposite());
 		 loginController.getNotifier().addAppEventListener(this);
@@ -45,9 +47,12 @@ public class MasterController implements AppEventListener{
 		 
 		 customerController =  CustomerController.getInstance(this);
 		 itemWidgets.put(AppPages.CUSTOMER_PAGE, customerController.getCustomerView().getCustomerComposite());
+		 customerController.getNotifier().addAppEventListener(this);
+		 
 		 vwCustomerHourlyBillRateController =  VwCustomerHourlyBillRateController.getInstance(this);
 		 itemWidgets.put(AppPages.VW_USER_GRANT_PAGE, vwCustomerHourlyBillRateController.getVwCustomerHourlyBillRateView().getVwCustomerHourlyBillRateComposite());
-
+		 
+		 
 		 customerBillRateController =  CustomerBillRateController.getInstance(this);
 		 itemWidgets.put(AppPages.CUSTOMER_BILL_RATE_PAGE, customerBillRateController.getCustomerBillRateView().getCustomerBillRateComposite());
 
@@ -59,6 +64,10 @@ public class MasterController implements AppEventListener{
 
 		 userInfoController =  UserInfoController.getInstance(this);
 		 itemWidgets.put(AppPages.USER_INFO_PAGE, userInfoController.getUserInfoView().getUserInfoComposite());
+		 
+		 laborRegisterController =  LaborRegisterController.getInstance(this);
+		 itemWidgets.put(AppPages.LABOR_REGISTER_PAGE, laborRegisterController.getLaborRegisterView().getLaborRegisterComposite());
+
 	 }
 	 
 	 public Composite getPage(String page_){
@@ -93,6 +102,14 @@ public class MasterController implements AppEventListener{
 			//Log.debug("Scroll Postion: " + appContainer.getMainPanel().getScrollPosition());
 		}else if(e_.getName().equals("SuccessfulLogin")){
 			UserInfoCache.refreshCache();
+			
+		}else if(e_.getName().equals("USER_INFO_CACHE_REFRESHED")){
+			customerController.getCustomerView().getFollowupTableCustomerPerspective().getFollowupView().getCboAssignedUser().setList(UserInfoCache.getCache());
+			laborRegisterController.getLaborRegisterView().getCboUserId().setList(UserInfoCache.getCache());
+		}else if(e_.getName().equals(AppMsg.CUSTOMER_CACHE_REFRESHED)){
+			laborRegisterController.getLaborRegisterView().getCboCustomerId().setList(customerController.getCache());
+		}else if(e_.getName().equals(AppMsg.SHOW_LABOR_REGISTER_DIALOG)){
+			laborRegisterController.showBillableHoursDialog();
 		}else{
 			Log.debug("Unexpected App Message" + e_.getName());
 		}

@@ -125,4 +125,16 @@
     </servlet-mapping> 
 <!-- ============================= -->
 
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>laborRegisterServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.LaborRegisterServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>laborRegisterServlet</servlet-name> 
+        <url-pattern>/legaltime/laborRegister</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
 </web-app>
