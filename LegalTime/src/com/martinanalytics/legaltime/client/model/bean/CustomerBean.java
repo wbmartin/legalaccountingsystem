@@ -9,7 +9,8 @@ import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 public class CustomerBean extends BaseModelData{
 
 	/**
-	 * 
+	 * This Bean Class has been customized
+	 *   - Added Display Name
 	 */
 	private static final long serialVersionUID = 1846879214506300276L;
 	public CustomerBean(){
@@ -40,32 +41,40 @@ public class CustomerBean extends BaseModelData{
 		setLastUpdate(customerBean_.getLastUpdate());
 		setClientId(customerBean_.getClientId());
 		setCustomerId(customerBean_.getCustomerId());
+		setDisplayName(customerBean_.getDisplayName());
 
 	}
 	
-	public CustomerBean getStandardCustomerBean(){
-		CustomerBean customerBean = new CustomerBean();
-		customerBean.setContingencyRate(getContingencyRate());
-		customerBean.setMortgageAmount(getMortgageAmount());
-		customerBean.setActiveYn(getActiveYn());
-		customerBean.setMonthlyBillRate(getMonthlyBillRate());
-		customerBean.setBillType(getBillType());
-		customerBean.setNote(getNote());
-		customerBean.setClientSinceDt(getClientSinceDt());
-		customerBean.setEmail(getEmail());
-		customerBean.setFax(getFax());
-		customerBean.setHomePhone(getHomePhone());
-		customerBean.setWorkPhone(getWorkPhone());
-		customerBean.setZip(getZip());
-		customerBean.setState(getState());
-		customerBean.setCity(getCity());
-		customerBean.setAddress(getAddress());
-		customerBean.setLastName(getLastName());
-		customerBean.setFirstName(getFirstName());
-		customerBean.setLastUpdate(getLastUpdate());
-		customerBean.setClientId(getClientId());
-		customerBean.setCustomerId(getCustomerId());
-		return customerBean;
+//	public CustomerBean getStandardCustomerBean(){
+//		CustomerBean customerBean = new CustomerBean();
+//		customerBean.setContingencyRate(getContingencyRate());
+//		customerBean.setMortgageAmount(getMortgageAmount());
+//		customerBean.setActiveYn(getActiveYn());
+//		customerBean.setMonthlyBillRate(getMonthlyBillRate());
+//		customerBean.setBillType(getBillType());
+//		customerBean.setNote(getNote());
+//		customerBean.setClientSinceDt(getClientSinceDt());
+//		customerBean.setEmail(getEmail());
+//		customerBean.setFax(getFax());
+//		customerBean.setHomePhone(getHomePhone());
+//		customerBean.setWorkPhone(getWorkPhone());
+//		customerBean.setZip(getZip());
+//		customerBean.setState(getState());
+//		customerBean.setCity(getCity());
+//		customerBean.setAddress(getAddress());
+//		customerBean.setLastName(getLastName());
+//		customerBean.setFirstName(getFirstName());
+//		customerBean.setLastUpdate(getLastUpdate());
+//		customerBean.setClientId(getClientId());
+//		customerBean.setCustomerId(getCustomerId());
+//		return customerBean;
+//	}
+	
+	public String getDisplayName(){
+		return get("displayName");
+	}
+	public void setDisplayName(String displayName_){
+		set("displayName", displayName_);
 	}
 	public Double getContingencyRate(){
 		return get("contingencyRate");

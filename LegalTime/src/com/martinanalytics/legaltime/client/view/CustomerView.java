@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventProducer;
@@ -37,7 +38,7 @@ import com.extjs.gxt.ui.client.store.StoreFilter;
 
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.VerticalPanel;
+
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.extjs.gxt.ui.client.widget.form.DateField;
@@ -268,12 +269,11 @@ class CustomerComposite extends Composite{
 	public CustomerComposite(){
 		customerFormPanel.setFrame(true);
 		customerFormPanel.setHeaderVisible(false);
-		customerFormPanel.setWidth(600);
 		customerFormPanel.setLabelWidth(LABEL_WIDTH);
 		createFields();   
 		cp.setHeading("Customer Editor");  
 		cp.setFrame(true);
-		cp.setSize(800, 585);  
+		cp.setSize(800, 576);  
 		cp.setLayout(new RowLayout(Orientation.HORIZONTAL)); 
 		cp.setScrollMode(Scroll.NONE);
 		cm = createColumnModel();
@@ -366,13 +366,17 @@ class CustomerComposite extends Composite{
 		  grid.setBorders(true);  
 		  grid.setWidth(300);
 		  grid.setHeight(200);
-		  customerFormPanel.setWidth(400);
-		  customerFormPanel.setHeight(350);
+		  customerFormPanel.setWidth(463);
+		  //customerFormPanel.setHeight(350);
 		  customerFormPanel.setScrollMode(Scroll.AUTO);
-		  cp.add(grid, new RowData(325	, 350));
-		  cp.add(customerFormPanel, new RowData(400, 350));
-		  cp.setBottomComponent(getFollowupTableCustomerPerspective());
-	      initWidget(cp);
+		  cp.add(grid, new RowData(325	, 340));
+		  cp.add(customerFormPanel, new RowData(463, 340));
+		  
+		  cp.setBottomComponent(followupTableCustomerPerspective);
+		  //Must use Google's VerticalPanel, not EXTGWT
+		  VerticalPanel vp = new VerticalPanel();
+		  vp.add(cp);
+	      initWidget(vp);
 
 
 	}
@@ -459,6 +463,7 @@ class CustomerComposite extends Composite{
 		cboBillType.setName("billType");
 		cboBillType.add("MONTHLY");
 		cboBillType.add("HOURLY");
+		cboBillType.add("CONTINGENCY");
 		cboBillType.addStyleName("LEFT");
 		//cboBillType.set
 		cboBillType.addSelectionChangedListener(new SelectionChangedListener<SimpleComboValue<String>>() {
@@ -467,10 +472,16 @@ class CustomerComposite extends Composite{
 		      public void selectionChanged(SelectionChangedEvent<SimpleComboValue<String>> se) {
 		        if(se.getSelectedItem() == null || se.getSelectedItem().get("value").equals("HOURLY")){
 		        	txtMonthlyBillRate.setVisible(false);
-		        	getVwCustomerHourlyBillRateTable().setVisible(true);
+		        	vwCustomerHourlyBillRateTable.setVisible(true);
+		        	nbrContingencyRate.setVisible(false);
+		        }else if(se.getSelectedItem().get("value").equals("CONTINGENCY")){
+		        	txtMonthlyBillRate.setVisible(false);
+	        		getVwCustomerHourlyBillRateTable().setVisible(false);
+	        		nbrContingencyRate.setVisible(true);
 		        }else{
 		        		txtMonthlyBillRate.setVisible(true);
 		        		getVwCustomerHourlyBillRateTable().setVisible(false);
+		        		nbrContingencyRate.setVisible(false);
 		        
 		        }
 		      
@@ -487,7 +498,7 @@ class CustomerComposite extends Composite{
 		
 
 		//---------------------------------------------------------------
-				nbrContingencyRate.setFieldLabel("ContingencyRate");
+				nbrContingencyRate.setFieldLabel("Contingency Rate");
 				nbrContingencyRate.setName("contingencyRate");
 				nbrContingencyRate.setRegex(GXTValidator.DOUBLE);
 				nbrContingencyRate.setFireChangeEventOnSetValue(true);
@@ -500,7 +511,7 @@ class CustomerComposite extends Composite{
 
 
 		//---------------------------------------------------------------
-				nbrMortgageAmount.setFieldLabel("MortgageAmount");
+				nbrMortgageAmount.setFieldLabel("Mortgage Amount");
 				nbrMortgageAmount.setName("mortgageAmount");
 				nbrMortgageAmount.setRegex(GXTValidator.DOUBLE);
 				nbrMortgageAmount.setFireChangeEventOnSetValue(true);

@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.martinanalytics.legaltime.client.controller.MasterController;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 
@@ -20,6 +21,7 @@ public class LegalTime implements EntryPoint {
 	public LegalTime() {
 		masterController = new MasterController();
 		userProfile = UserProfile.getInstance();
+		//masterController.getAppContainer().getMainPanel().add(new SimplePanel());
 	}
 
 	/**
@@ -52,9 +54,10 @@ public class LegalTime implements EntryPoint {
 							RootPanel.get().clear();
 							RootPanel.get().add(masterController.getAppContainer());
 					}
-					masterController.getAppContainer().getMainPanel().clear();
+					//masterController.getAppContainer().getMainPanel().clear();
+					//masterController.getAppContainer().getMai
 					
-					masterController.getAppContainer().getMainPanel().add(masterController.getPage(event.getValue()));
+					masterController.getAppContainer().getMainPanel().setWidget(masterController.getPage(event.getValue()));
 					//RootPanel.get().add(masterController.getAppContainer());								
 				}
 

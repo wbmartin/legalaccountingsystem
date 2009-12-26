@@ -265,6 +265,7 @@ public class CustomerServiceImpl extends RemoteServiceServlet
           bean.setLastUpdate(rs.getTimestamp(18)); 
           bean.setClientId(rs.getInt(19));
           bean.setCustomerId(rs.getInt(20));
+          bean.setDisplayName(bean.getLastName() + ", " + bean.getFirstName());
           return bean;
         }
 

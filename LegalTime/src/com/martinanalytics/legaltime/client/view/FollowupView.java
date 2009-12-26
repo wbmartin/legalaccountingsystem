@@ -30,7 +30,8 @@ import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.ListView;
-import com.martinanalytics.legaltime.client.widget.DecentComboBox;
+import com.martinanalytics.legaltime.client.widget.AlternateComboBox;
+
 import com.martinanalytics.legaltime.client.widget.GXTValidator;
 
 
@@ -44,7 +45,7 @@ public class FollowupView extends AppEventProducer{
 	private ContentPanel cp = new ContentPanel();  
 
 	
-	private DecentComboBox<UserInfoBean> cboAssignedUser = new DecentComboBox<UserInfoBean>();
+	private AlternateComboBox<UserInfoBean> cboAssignedUser = new AlternateComboBox<UserInfoBean>("Owner", "userId", "assignedUserId", "displayName");
 	//private ListBox cboAssignedUserId = new ListBox();
 	
  	private TextField<String> txtFollowupDescription = new TextField<String>();
@@ -152,9 +153,8 @@ class FollowupComposite extends Composite{
 		initWidget(followupFormPanel);
 	}
 	public void createControls(){
-		cboAssignedUser.setLabelWidth(150);
-		cboAssignedUser.setFieldLabel("Owner:");
-		
+		//cboAssignedUser.setLabelWidth(150);
+		//cboAssignedUser.setup("Owner", "userId", "assignedUserId", "displayName");		
 		followupFormPanel.add(cboAssignedUser);
 
 
@@ -297,15 +297,15 @@ public FormPanel getFollowupFormPanel() {
 //		return followupTable;
 //	}
 
-public void populateAssignedUserCBO(boolean force){
-	if(cboAssignedUser.cbo.getItemCount()==0 || force)
-//		userInfoBeanStore.removeAll();
-//		userInfoBeanStore.add(UserInfoCache.getCache());
+//public void populateAssignedUserCBO(boolean force){
+//	if(cboAssignedUser.getItemCount()==0 || force)
+////		userInfoBeanStore.removeAll();
+////		userInfoBeanStore.add(UserInfoCache.getCache());
 //		Log.debug("userinfo size:" + UserInfoCache.getCache().size());
-
-		cboAssignedUser.setList("displayName", "userId", UserInfoCache.getCache());
-
-    }
+//
+//		cboAssignedUser.add(UserInfoCache.getCache());
+//
+//    }
 ///**
 // * @param userInfoBeanStore the userInfoBeanStore to set
 // */
@@ -322,7 +322,7 @@ public void populateAssignedUserCBO(boolean force){
 /**
  * @return the cboAssignedUser
  */
-public DecentComboBox<UserInfoBean> getCboAssignedUser() {
+public AlternateComboBox<UserInfoBean> getCboAssignedUser() {
 	return cboAssignedUser;
 }
 

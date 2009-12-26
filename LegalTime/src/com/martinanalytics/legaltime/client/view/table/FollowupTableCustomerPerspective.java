@@ -47,6 +47,8 @@ import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
 import com.martinanalytics.legaltime.client.model.bean.UserInfoBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.view.FollowupView;
+import com.martinanalytics.legaltime.client.widget.AlternateComboBox;
+import com.martinanalytics.legaltime.client.widget.AlternateComboBoxBinding;
 import com.extjs.gxt.ui.client.event.ButtonEvent; 
 import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
 import com.extjs.gxt.ui.client.event.SelectionEvent;
@@ -62,7 +64,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	final ListStore<FollowupBean> store = new ListStore<FollowupBean>(); 
 	private AppNotifyObject notifier;
 	FormBinding formBindings;
-	FollowupView followupView ;
+	private FollowupView followupView ;
 	final Dialog followupEditorDialog ;
 	List<ColumnConfig> configs= new ArrayList<ColumnConfig>();
 	ColumnModel cm =new ColumnModel(configs);
@@ -91,8 +93,8 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 							Log.debug("Followupcostomertable selection detected");
 							if (be.getSelection().size() > 0) {  
 								formBindings.bind((ModelData) be.getSelection().get(0));
-								followupView.populateAssignedUserCBO(true);
-								followupView.getCboAssignedUser().setSelected(be.getSelection().get(0).getAssignedUserId());
+								
+								//followupView.getCboAssignedUser().setValue(be.getSelection().get(0).getAssignedUserId());
 								followupEditorDialog.show();
 							} else {  
 								formBindings.unbind();  
@@ -116,6 +118,9 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 		    grid.setBorders(true);
 	     
 	     formBindings.setStore( grid.getStore());
+	     //formBindings.removeFieldBinding(formBindings.getBinding(followupView.getCboAssignedUser()));
+	     //formBindings.addFieldBinding(new AlternateComboBoxBinding(followupView.getCboAssignedUser(), "assignedUserId"));
+	     AlternateComboBoxBinding.swapBinding(formBindings, followupView.getCboAssignedUser());
 		
 		  BorderLayout layout = new BorderLayout(); 
     	  followupEditorDialog.setLayout(layout);
@@ -143,8 +148,8 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
     		  public void componentSelected(ButtonEvent ce) { 
     			  //grid.getSelectionModel().getSelectedItem().setAssignedUserId(followupView.getCboAssignedUserId().getRawValue());
     			  
-    			  Record record = store.getRecord(grid.getSelectionModel().getSelectedItem());
-    		        record.set("assignedUserId",followupView.getCboAssignedUser().getSelectedValue());
+    			  //Record record = store.getRecord(grid.getSelectionModel().getSelectedItem());
+    		      //  record.set("assignedUserId",followupView.getCboAssignedUser().getSelectedValue());
     			  formBindings.unbind();
     			  grid.getSelectionModel().deselectAll();
     		  }
@@ -327,7 +332,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 
 	    cp.setFrame(true);  
 	    //cp.setIcon(Examples.ICONS.table());  
-	    cp.setSize(750, 150);  
+	    cp.setSize(775, 145);  
 	    cp.setLayout(new FitLayout());  
 	  
 
@@ -432,6 +437,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	public void onAttach(){
 		super.onAttach();
 		notifier.notifyAppEvent(this, "FollowupTableOnAttach");
+
 		
 		
 	}
@@ -507,6 +513,18 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	 */
 	public int getCurrentCustomerId() {
 		return currentCustomerId;
+	}
+	/**
+	 * @param followupView the followupView to set
+	 */
+	public void setFollowupView(FollowupView followupView) {
+		this.followupView = followupView;
+	}
+	/**
+	 * @return the followupView
+	 */
+	public FollowupView getFollowupView() {
+		return followupView;
 	}
 	
 	

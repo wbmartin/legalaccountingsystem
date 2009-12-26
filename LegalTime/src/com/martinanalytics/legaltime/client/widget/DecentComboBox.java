@@ -21,6 +21,7 @@ public class DecentComboBox<D extends ModelData> extends Composite{
 	private String valueField;
 	private ArrayList<D> list;
 	private Integer LabelWidth =150;
+	private String fieldName;
 	
 	public DecentComboBox(){
 		list = new ArrayList();
@@ -67,6 +68,18 @@ public class DecentComboBox<D extends ModelData> extends Composite{
 	public String getSelectedValue(){
 		
 		return cbo.getValue(cbo.getSelectedIndex());
+	}
+	/**
+	 * @param fieldName the fieldName to set
+	 */
+	public void setName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+	/**
+	 * @return the fieldName
+	 */
+	public String getName() {
+		return fieldName;
 	}
 	
 

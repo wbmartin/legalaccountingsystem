@@ -121,6 +121,7 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 		
 					public void onSuccess(SecurityUserBean result) {
 						Log.debug("AttemptAuthorization.onSuccess received: " + result);
+						loginView.getSendButton().setEnabled(true);
 						if (result.getClientId() !=0 && result.getSessionId() !=null){
 							userProfile.setUserId(result.getUserId());
 							userProfile.incrementSessionTimeOut();

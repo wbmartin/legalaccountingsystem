@@ -101,7 +101,7 @@ public class UserProfile implements Serializable {
 		boolean result = false;
 		java.util.Date now = new java.util.Date();
 		try {
-			Log.debug("Session timeout during check: " + sessionTimeOut);
+			
 			if (sessionTimeOut.compareTo(now) > 0 && sessionId != null) {
 				result = true;
 			}
@@ -114,6 +114,7 @@ public class UserProfile implements Serializable {
 
 		if (result == false) {
 			setSessionId(null);
+			Log.debug("Session timeout during check: " + sessionTimeOut);
 		}
 		return result;
 	}
