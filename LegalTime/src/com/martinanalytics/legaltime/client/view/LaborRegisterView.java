@@ -51,9 +51,7 @@ public class LaborRegisterView extends AppEventProducer{
 	private FormBinding formBindings; 
 	private final ListStore<LaborRegisterBean> store = new ListStore<LaborRegisterBean>();
 	//-----------------------
-	
-	//private DecentComboBox<UserInfoBean> cboUserId = new DecentComboBox<UserInfoBean>();
-	//private TextField<String> txtUserId = new TextField<String>();
+
  	private NumberField nbrInvoiceId = new NumberField();
  	private NumberField nbrBillRate = new NumberField();
  	private TextField<Boolean> txtInvoiceable = new TextField<Boolean>();
@@ -64,9 +62,12 @@ public class LaborRegisterView extends AppEventProducer{
  	private TextField<String> txtDescription = new TextField<String>();
  	private DateField dtfLastUpdate = new DateField();
  	//private NumberField nbrCustomerId = new NumberField();
- 	private AlternateComboBox<CustomerBean> cboCustomerId = new AlternateComboBox<CustomerBean>("Customer","customerId", "CustomerId", "displayName");
+ 	private AlternateComboBox<CustomerBean> cboCustomerId = new AlternateComboBox<CustomerBean>("Customer","customerId", "customerId", "displayName");
  	private NumberField nbrClientId = new NumberField();
  	private NumberField nbrLaborRegisterId = new NumberField();
+
+	final RadioGroup rgHours = new RadioGroup();
+	final RadioGroup rgMinutes = new RadioGroup();
   	private LaborRegisterComposite laborRegisterComposite;
 	 AlternateComboBox<UserInfoBean> cboUserId = new AlternateComboBox<UserInfoBean>("Billing Person", "userId","userId","displayName");
 	public LaborRegisterView(){
@@ -74,13 +75,12 @@ public class LaborRegisterView extends AppEventProducer{
 		laborRegisterComposite =new LaborRegisterComposite();
 //-----------------------		
 		formBindings = new FormBinding(laborRegisterFormPanel, true);
-		AlternateComboBoxBinding.swapBinding(formBindings, cboCustomerId);
-		AlternateComboBoxBinding.swapBinding(formBindings, cboUserId);
+		AlternateComboBoxBinding bindCustId = new AlternateComboBoxBinding(formBindings, cboCustomerId);
+		AlternateComboBoxBinding binduserId = new AlternateComboBoxBinding(formBindings, cboCustomerId);
+//		AlternateComboBoxBinding.swapBinding(formBindings, cboCustomerId);
+//		AlternateComboBoxBinding.swapBinding(formBindings, cboUserId);
 		formBindings.setStore(store); 
-//		formBindings.removeFieldBinding((formBindings.getBinding(cboBillType)));
-//		formBindings.addFieldBinding(new SimpleComboBoxFieldBinding(cboBillType, "billType"));
-		//formBindings.addFieldBinding(new f)
-		
+
 //-----------------------
 	}
 	/**
@@ -199,7 +199,7 @@ class LaborRegisterComposite extends Composite{
 
 	//	initWidget(vpPrimary);
 		VerticalPanel vp = new VerticalPanel();
-
+		
 		  vp.add(laborRegisterFormPanel);
 	      initWidget(vp);
 //		initWidget(laborRegisterFormPanel);
@@ -214,7 +214,7 @@ class LaborRegisterComposite extends Composite{
 		dtfActivityDate.setAllowBlank(false);
 		dtfActivityDate.setFireChangeEventOnSetValue(true);
 		//dtfActivityDate.setRegex("");	
-		//dtfActivityDate.setAutoValidate(true);
+		dtfActivityDate.setAutoValidate(false);
 		//dtfActivityDate.setVisible(false);
 		laborRegisterFormPanel.add(dtfActivityDate);
 //---------------------------------------------------------------
@@ -229,9 +229,11 @@ class LaborRegisterComposite extends Composite{
 //				nbrCustomerId.setAutoValidate(true);
 //				nbrCustomerId.setVisible(false);
 		cboCustomerId.setAllowBlank(false);
+		cboCustomerId.setForceSelection(true);
+		
 		laborRegisterFormPanel.add(cboCustomerId);
 //---------------------------------------------------------------
-		final RadioGroup rgHours = new RadioGroup();
+
 		rgHours.setFieldLabel("Hours");
 		rgHours.setSelectionRequired(true);
 		laborRegisterFormPanel.add(rgHours);
@@ -287,7 +289,7 @@ class LaborRegisterComposite extends Composite{
 //ADD Minute Chooser Here		
 
 
-		final RadioGroup rgMinutes = new RadioGroup();
+
 		rgMinutes.setSelectionRequired(true);
 		rgMinutes.setFieldLabel("Minutes");
 		
@@ -337,53 +339,67 @@ class LaborRegisterComposite extends Composite{
 		laborRegisterFormPanel.add(rgMinutes);
 //---------------------------------------------------------------	
 		cboUserId.setAllowBlank(false);
+		cboUserId.setForceSelection(true);
+		
 		  laborRegisterFormPanel.add(cboUserId);
 //---------------------------------------------------------------		
 		  
+
+//---------------------------------------------------------------
+		txtDescription.setFieldLabel("Description");
+		txtDescription.setName("description");
+		txtDescription.setFireChangeEventOnSetValue(true);
+		txtDescription.setHeight(200);
+		//txtDescription.setRegex("");
+		txtDescription.setAutoValidate(false);
+		txtDescription.setAllowBlank(false);
+		//txtDescription.setVisible(false);
+		laborRegisterFormPanel.add(txtDescription);
+		
+//---------------------------------------------------------------
 		  
 		  
 		//---------------------------------------------------------------
 //			nbrMinuteCount.setFieldLabel("MinuteCount");
-//			nbrMinuteCount.setName("minuteCount");
+			nbrMinuteCount.setName("minuteCount");
+			nbrMinuteCount.setPropertyEditorType(Integer.class);
+			
 //			nbrMinuteCount.setRegex(GXTValidator.DOUBLE);
-//			nbrMinuteCount.setFireChangeEventOnSetValue(true);
+			nbrMinuteCount.setFireChangeEventOnSetValue(true);
 //			//nbrMinuteCount.setAllowBlank(false);
 //			nbrMinuteCount.setAutoValidate(true);
-//			nbrMinuteCount.setVisible(false);
-//			laborRegisterFormPanel.add(nbrMinuteCount);
+			nbrMinuteCount.setVisible(false);
+			laborRegisterFormPanel.add(nbrMinuteCount);
 	//---------------------------------------------------------------
 
 
 
-	//---------------------------------------------------------------
-			txtDescription.setFieldLabel("Description");
-			txtDescription.setName("description");
-			txtDescription.setFireChangeEventOnSetValue(true);
-			txtDescription.setHeight(200);
-			//txtDescription.setRegex("");
-			txtDescription.setAutoValidate(true);
-			txtDescription.setAllowBlank(false);
-			//txtDescription.setVisible(false);
-			laborRegisterFormPanel.add(txtDescription);
-			
-	//---------------------------------------------------------------
 
-		final HiddenField<Integer> hfMinuteCount = new HiddenField<Integer>();
-		hfMinuteCount.setName("minuteCount");
-		laborRegisterFormPanel.add(hfMinuteCount);	
 //---------------------------------------------------------------
-			Button cmdRecordHours = new Button("Record");
-			cmdRecordHours.addSelectionListener(new SelectionListener<ButtonEvent>() {  
-				  
-			      @Override  
-			      public void componentSelected(ButtonEvent ce) { 
-			    	  Integer minuteCount = Integer.parseInt(rgHours.getValue().getBoxLabel())* 60 + Integer.parseInt(rgMinutes.getValue().getBoxLabel()) ;
-			    	  hfMinuteCount.setValue( minuteCount);
+//					nbrBillRate.setFieldLabel("BillRate");
+					nbrBillRate.setName("billRate");
+//					nbrBillRate.setRegex(GXTValidator.DOUBLE);
+					nbrBillRate.setFireChangeEventOnSetValue(true);
+//					//nbrBillRate.setAllowBlank(false);
+//					nbrBillRate.setAutoValidate(true);
+					nbrBillRate.setVisible(false);
+					laborRegisterFormPanel.add(nbrBillRate);
+//---------------------------------------------------------------
 
-			    	 
-			      //Log.debug("storecoutn:" + store.getCount());
-			      }
-			});
+			
+//---------------------------------------------------------------
+//			Button cmdRecordHours = new Button("Record");
+//			cmdRecordHours.addSelectionListener(new SelectionListener<ButtonEvent>() {  
+//				  
+//			      @Override  
+//			      public void componentSelected(ButtonEvent ce) { 
+//			    	  Integer minuteCount = Integer.parseInt(rgHours.getValue().getBoxLabel())* 60 + Integer.parseInt(rgMinutes.getValue().getBoxLabel()) ;
+//			    	  hfMinuteCount.setValue( minuteCount);
+//
+//			    	 
+//			      //Log.debug("storecoutn:" + store.getCount());
+//			      }
+//			});
 			//laborRegisterFormPanel.add(cmdRecordHours);
 
 
@@ -414,17 +430,6 @@ class LaborRegisterComposite extends Composite{
 //---------------------------------------------------------------
 
 
-
-//---------------------------------------------------------------
-//		nbrBillRate.setFieldLabel("BillRate");
-//		nbrBillRate.setName("billRate");
-//		nbrBillRate.setRegex(GXTValidator.DOUBLE);
-//		nbrBillRate.setFireChangeEventOnSetValue(true);
-//		//nbrBillRate.setAllowBlank(false);
-//		nbrBillRate.setAutoValidate(true);
-//		//nbrBillRate.setVisible(false);
-//		laborRegisterFormPanel.add(nbrBillRate);
-//---------------------------------------------------------------
 
 
 
@@ -509,6 +514,7 @@ class LaborRegisterComposite extends Composite{
 
 
 	}
+
 	public void onAttach(){
 		super.onAttach();
 		notifyAppEvent(this, "LaborRegisterViewOnAttach");
@@ -519,6 +525,15 @@ class LaborRegisterComposite extends Composite{
 		notifyAppEvent(this, "LaborRegisterViewOnDetach");
 	}
 
+}
+public void updateCalcValues(){
+	 Integer minuteCount = Integer.parseInt(rgHours.getValue().getBoxLabel())* 60 + Integer.parseInt(rgMinutes.getValue().getBoxLabel()) ;
+	  nbrMinuteCount.setValue( minuteCount);
+	  Double bRate = cboUserId.getValue().get("defaultBillRate");
+	  nbrBillRate.setValue(bRate);
+	  //Log.debug("BillRate: "+ nbrBillRate.getValue());
+	  //Log.debug("minuteCount: "+ nbrMinuteCount.getValue());
+	 
 }
 
 /**

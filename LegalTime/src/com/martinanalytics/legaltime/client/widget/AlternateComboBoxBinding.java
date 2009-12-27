@@ -15,9 +15,11 @@ public class AlternateComboBoxBinding extends FieldBinding {
 	   * @param field the simple combo box
 	   * @param property the property name
 	   */
-	  public AlternateComboBoxBinding(AlternateComboBox field, String bindField) {
-	    super(field, bindField);
+	  public AlternateComboBoxBinding(FormBinding formBindings_, AlternateComboBox field) {
+	    super(field, field.getName());
 	    this.simpleComboBox = field;
+	    formBindings_.removeFieldBinding(formBindings_.getBinding(field));
+		formBindings_.addFieldBinding(this);
 	  }
 
 	  @Override
@@ -36,15 +38,7 @@ public class AlternateComboBoxBinding extends FieldBinding {
 	    return ret;
 	  }
 
-	public static void swapBinding(FormBinding formBindings_,
-			AlternateComboBox cboAssignedUser_) {
-		
-			formBindings_.removeFieldBinding(formBindings_.getBinding(cboAssignedUser_));
-			formBindings_.addFieldBinding(new AlternateComboBoxBinding(cboAssignedUser_, cboAssignedUser_.getName()));
-
-		
-	}
-
+	
 	}
 
 

@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventProducer;
 import com.martinanalytics.legaltime.client.model.UserInfoCache;
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.UserInfoBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.google.gwt.user.client.ui.Label;
@@ -44,6 +45,7 @@ public class FollowupView extends AppEventProducer{
 	private FormPanel followupFormPanel = new FormPanel();
 	private ContentPanel cp = new ContentPanel();  
 
+
 	
 	private AlternateComboBox<UserInfoBean> cboAssignedUser = new AlternateComboBox<UserInfoBean>("Owner", "userId", "assignedUserId", "displayName");
 	//private ListBox cboAssignedUserId = new ListBox();
@@ -53,10 +55,11 @@ public class FollowupView extends AppEventProducer{
  	private DateField dtfOpenDt = new DateField();
  	private DateField dtfDueDt = new DateField();
  	private DateField dtfLastUpdate = new DateField();
- 	private NumberField nbrCustomerId = new NumberField();
+ 	private AlternateComboBox<CustomerBean> cboCustomerId = new AlternateComboBox<CustomerBean>("Customer","customerId","customerId","displayName");
  	private NumberField nbrClientId = new NumberField();
  	private NumberField nbrFollowupId = new NumberField();
   	private FollowupComposite followupComposite;
+  	
 	//private ListStore<UserInfoBean> userInfoBeanStore = new ListStore<UserInfoBean>();
 
 	public FollowupView(){
@@ -109,8 +112,8 @@ public class FollowupView extends AppEventProducer{
 	/**
 	 * @return the nbrCustomerId
 	 */
-	public NumberField getNbrCustomerId() {
-		return nbrCustomerId;
+	public AlternateComboBox<CustomerBean> getCboCustomerId() {
+		return cboCustomerId;
 	}
 
 	/**
@@ -154,10 +157,12 @@ class FollowupComposite extends Composite{
 	}
 	public void createControls(){
 		//cboAssignedUser.setLabelWidth(150);
-		//cboAssignedUser.setup("Owner", "userId", "assignedUserId", "displayName");		
+		//cboAssignedUser.setup("Owner", "userId", "assignedUserId", "displayName");
+		cboAssignedUser.setFireChangeEventOnSetValue(true);
 		followupFormPanel.add(cboAssignedUser);
 
-
+		cboCustomerId.setFireChangeEventOnSetValue(true);
+		followupFormPanel.add(cboCustomerId);
 
 //---------------------------------------------------------------
 		txtFollowupDescription.setFieldLabel("Description");
@@ -325,6 +330,8 @@ public FormPanel getFollowupFormPanel() {
 public AlternateComboBox<UserInfoBean> getCboAssignedUser() {
 	return cboAssignedUser;
 }
+
+
 
 }
 

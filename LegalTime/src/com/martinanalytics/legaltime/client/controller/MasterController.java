@@ -108,6 +108,7 @@ public class MasterController implements AppEventListener{
 			laborRegisterController.getLaborRegisterView().getCboUserId().setList(UserInfoCache.getCache());
 		}else if(e_.getName().equals(AppMsg.CUSTOMER_CACHE_REFRESHED)){
 			laborRegisterController.getLaborRegisterView().getCboCustomerId().setList(customerController.getCache());
+			followupController.getFollowupView().getCboCustomerId().setList(customerController.getCache());
 		}else if(e_.getName().equals(AppMsg.SHOW_LABOR_REGISTER_DIALOG)){
 			laborRegisterController.showBillableHoursDialog();
 		}else{

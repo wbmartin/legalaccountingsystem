@@ -141,6 +141,17 @@ public class AppContainer extends LayoutContainer {
           }}
     );
     
+    MenuItem miFollowupManager= new MenuItem("Followup Manager");
+    miFollowupManager.addStyleName("LEFT");
+    mnuCustomer.add(miFollowupManager);
+    miFollowupManager.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+        	History.newItem(  AppPages.VW_CUSTOMER_FOLLOWUP_PAGE);
+          }}
+    );
+    
+  
+    
     MenuItem miMsgHistory= new MenuItem("Message History");
     miMsgHistory.addStyleName("LEFT");
     mnuCustomer.add(miMsgHistory);

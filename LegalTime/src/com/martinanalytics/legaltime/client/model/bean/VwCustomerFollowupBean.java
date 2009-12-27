@@ -20,43 +20,66 @@ public class VwCustomerFollowupBean extends BaseModelData{
 		setBean(vwCustomerFollowupBean_);
 	}
 	public void setBean(VwCustomerFollowupBean vwCustomerFollowupBean_){
-		setClientId(vwCustomerFollowupBean_.getClientId());
-		setCustomerId(vwCustomerFollowupBean_.getCustomerId());
+		setUsrDisplay(vwCustomerFollowupBean_.getUsrDisplay());
+		setDisplayName(vwCustomerFollowupBean_.getDisplayName());
 		setLastName(vwCustomerFollowupBean_.getLastName());
 		setFirstName(vwCustomerFollowupBean_.getFirstName());
+		setAssignedUserId(vwCustomerFollowupBean_.getAssignedUserId());
 		setFollowupDescription(vwCustomerFollowupBean_.getFollowupDescription());
 		setCloseDt(vwCustomerFollowupBean_.getCloseDt());
 		setOpenDt(vwCustomerFollowupBean_.getOpenDt());
 		setDueDt(vwCustomerFollowupBean_.getDueDt());
+		setLastUpdate(vwCustomerFollowupBean_.getLastUpdate());
+		setCustomerId(vwCustomerFollowupBean_.getCustomerId());
+		setClientId(vwCustomerFollowupBean_.getClientId());
 		setFollowupId(vwCustomerFollowupBean_.getFollowupId());
 
 	}
 	
 	public VwCustomerFollowupBean getStandardVwCustomerFollowupBean(){
 		VwCustomerFollowupBean vwCustomerFollowupBean = new VwCustomerFollowupBean();
-		vwCustomerFollowupBean.setClientId(getClientId());
-		vwCustomerFollowupBean.setCustomerId(getCustomerId());
+		vwCustomerFollowupBean.setUsrDisplay(getUsrDisplay());
+		vwCustomerFollowupBean.setDisplayName(getDisplayName());
 		vwCustomerFollowupBean.setLastName(getLastName());
 		vwCustomerFollowupBean.setFirstName(getFirstName());
+		vwCustomerFollowupBean.setAssignedUserId(getAssignedUserId());
 		vwCustomerFollowupBean.setFollowupDescription(getFollowupDescription());
 		vwCustomerFollowupBean.setCloseDt(getCloseDt());
 		vwCustomerFollowupBean.setOpenDt(getOpenDt());
 		vwCustomerFollowupBean.setDueDt(getDueDt());
+		vwCustomerFollowupBean.setLastUpdate(getLastUpdate());
+		vwCustomerFollowupBean.setCustomerId(getCustomerId());
+		vwCustomerFollowupBean.setClientId(getClientId());
 		vwCustomerFollowupBean.setFollowupId(getFollowupId());
 		return vwCustomerFollowupBean;
 	}
-	public Integer getClientId(){
-		return get("clientId");
+	
+	public FollowupBean getFollowupBean(){
+		 FollowupBean followupBean = new FollowupBean();
+			followupBean.setAssignedUserId(getAssignedUserId());
+			followupBean.setFollowupDescription(getFollowupDescription());
+			followupBean.setCloseDt(getCloseDt());
+			followupBean.setOpenDt(getOpenDt());
+			followupBean.setDueDt(getDueDt());
+			followupBean.setLastUpdate(getLastUpdate());
+			followupBean.setCustomerId(getCustomerId());
+			followupBean.setClientId(getClientId());
+			followupBean.setFollowupId(getFollowupId());
+		 
+		 return followupBean;
 	}
-	public void setClientId( Integer new_){
-		set("clientId", new_);
+	public String getUsrDisplay(){
+		return get("usrDisplay");
+	}
+	public void setUsrDisplay( String new_){
+		set("usrDisplay", new_);
 	}
 
-	public Integer getCustomerId(){
-		return get("customerId");
+	public String getDisplayName(){
+		return get("displayName");
 	}
-	public void setCustomerId( Integer new_){
-		set("customerId", new_);
+	public void setDisplayName( String new_){
+		set("displayName", new_);
 	}
 
 	public String getLastName(){
@@ -71,6 +94,13 @@ public class VwCustomerFollowupBean extends BaseModelData{
 	}
 	public void setFirstName( String new_){
 		set("firstName", new_);
+	}
+
+	public String getAssignedUserId(){
+		return get("assignedUserId");
+	}
+	public void setAssignedUserId( String new_){
+		set("assignedUserId", new_);
 	}
 
 	public String getFollowupDescription(){
@@ -99,6 +129,27 @@ public class VwCustomerFollowupBean extends BaseModelData{
 	}
 	public void setDueDt( java.util.Date new_){
 		set("dueDt", new_);
+	}
+
+	public java.util.Date getLastUpdate(){
+		return get("lastUpdate");
+	}
+	public void setLastUpdate( java.util.Date new_){
+		set("lastUpdate", new_);
+	}
+
+	public Integer getCustomerId(){
+		return get("customerId");
+	}
+	public void setCustomerId( Integer new_){
+		set("customerId", new_);
+	}
+
+	public Integer getClientId(){
+		return get("clientId");
+	}
+	public void setClientId( Integer new_){
+		set("clientId", new_);
 	}
 
 	public Integer getFollowupId(){

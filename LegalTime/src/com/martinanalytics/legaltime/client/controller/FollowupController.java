@@ -2,6 +2,10 @@
 package com.martinanalytics.legaltime.client.controller;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.widget.Dialog;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -9,14 +13,18 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
+import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.FollowupService;
 import com.martinanalytics.legaltime.client.model.FollowupServiceAsync;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
 import com.martinanalytics.legaltime.client.view.FollowupView;
+import com.martinanalytics.legaltime.client.view.table.FollowupTableCustomerPerspective;
+
 import java.util.ArrayList;
 import com.martinanalytics.legaltime.client.widget.SimpleDateFormat;
 
@@ -35,6 +43,10 @@ public class FollowupController implements AppEventListener, ClickHandler, Chang
   private UserProfile userProfile;  			// User Properties
   private MasterController masterController;		// Overarching Controller
   private java.util.Date lastUpdateHolder;  //Holder variables for timestamps
+  private FollowupTableCustomerPerspective followupTableCustomerPerspective;
+	final Dialog followupEditorDialog = new Dialog();
+	private final AppNotifyObject notifier = new AppNotifyObject();
+	private String owner;
 /**
  * Primary constructor, only called by getInstance, hence protected
  * @param masterController_
@@ -45,7 +57,50 @@ public class FollowupController implements AppEventListener, ClickHandler, Chang
 	followupView.addAppEventListener(this);
 	//followupView.getFollowupTable().getNotifier().addAppEventListener(this);
 	userProfile = UserProfile.getInstance();
+	followupTableCustomerPerspective = new FollowupTableCustomerPerspective();
+	notifier.addAppEventListener(followupTableCustomerPerspective);
+	followupTableCustomerPerspective.getNotifier().addAppEventListener(this);
+	followupTableCustomerPerspective.setFollowupView(followupView);
+	createFollowupEditorDialog();
   }
+
+private void createFollowupEditorDialog() {
+	//
+	  BorderLayout layout = new BorderLayout(); 
+	  followupEditorDialog.setLayout(layout);
+	  followupEditorDialog.add(followupView.getFollowupFormPanel());
+  
+	  followupEditorDialog.setWidth(500);
+	  followupEditorDialog.setModal(true);
+	  followupEditorDialog.setButtons(Dialog.OKCANCEL);
+	  followupEditorDialog.setHideOnButtonClick(true);
+	  followupEditorDialog.setClosable(false);
+	  followupEditorDialog.getButtonById(Dialog.CANCEL).addSelectionListener(new SelectionListener<ButtonEvent>() { 
+
+		  @Override  
+		  public void componentSelected(ButtonEvent ce) { 
+			  notifier.notifyAppEvent(this, AppMsg.FOLLOWUP_EDITOR_CLOSING, owner);
+			  notifier.notifyAppEvent(this, AppMsg.FOLLOWUP_EDITOR_CANCELED,owner);
+			 
+		  }
+	  }
+
+	  );
+	  followupEditorDialog.getButtonById(Dialog.OK).addSelectionListener(new SelectionListener<ButtonEvent>() { 
+
+		  @Override  
+		  public void componentSelected(ButtonEvent ce) { 
+			  //grid.getSelectionModel().getSelectedItem().setAssignedUserId(followupView.getCboAssignedUserId().getRawValue());
+			  
+			  //Record record = store.getRecord(grid.getSelectionModel().getSelectedItem());
+		      //  record.set("assignedUserId",followupView.getCboAssignedUser().getSelectedValue());
+			  notifier.notifyAppEvent(this, AppMsg.FOLLOWUP_EDITOR_CLOSING, owner);
+		  }
+	  }
+
+	  );
+	
+}
 
 /**
  * Singleton getInstance
@@ -76,6 +131,10 @@ public class FollowupController implements AppEventListener, ClickHandler, Chang
          if (e_.getName().equals("FollowupViewOnAttach")){
 		
 	}else if(e_.getName().equals("FollowupViewOnDetach")){
+	}else if(e_.getName().equals(AppMsg.SHOW_FOLLOWUP_EDITOR)){
+		
+		Log.debug("FollowupController: " + owner);
+		showFollowupViewDialog((String)e_.getPayLoad());
 	}else if(e_.getName().equals("FollowupTableOnAttach")){		
 	}else if(e_.getName().equals("FollowupTableOnDetach")){		
 	
@@ -85,6 +144,17 @@ public class FollowupController implements AppEventListener, ClickHandler, Chang
 	
 	
   }
+
+public void showFollowupViewDialog(String owner_) {
+	owner = owner_;
+	if (owner.equals("CUSTOMER")){
+		followupView.getCboCustomerId().setVisible(false);
+	}else{
+		followupView.getCboCustomerId().setVisible(true);
+	}
+	followupEditorDialog.show();
+	
+}
 
 /**
  * Handles onClick actions from LoginView
@@ -356,173 +426,42 @@ public class FollowupController implements AppEventListener, ClickHandler, Chang
 		});
   }
 
+
 /**
- * updates the UI with the bean parameter
+ * @param followupTableCustomerPerspective the followupTableCustomerPerspective to set
  */
-  public void synchBeanToDisplay(FollowupBean followupBean_){
+public void setFollowupTableCustomerPerspective(
+		FollowupTableCustomerPerspective followupTableCustomerPerspective) {
+	this.followupTableCustomerPerspective = followupTableCustomerPerspective;
+}
 
-
-    try{
-	//followupBean_.setAssignedUserId(followupView.getCboAssignedUserId().getValueField());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	followupBean_.setFollowupDescription(followupView.getTxtFollowupDescription().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	followupBean_.setCloseDt(followupView.getDtfCloseDt().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	followupBean_.setOpenDt(followupView.getDtfOpenDt().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	followupBean_.setDueDt(followupView.getDtfDueDt().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	followupBean_.setLastUpdate(followupView.getDtfLastUpdate().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	followupBean_.setCustomerId((Integer)followupView.getNbrCustomerId().getValue());
-    }catch(Exception e){
-		
-    }	
- 
-
-
-
-
-   
-
-
-    try{
-	followupBean_.setClientId((Integer)followupView.getNbrClientId().getValue());
-    }catch(Exception e){
-		
-    }	
- 
-
-
-
-
-   
-
-
-    try{
-	followupBean_.setFollowupId((Integer)followupView.getNbrFollowupId().getValue());
-    }catch(Exception e){
-		
-    }	
- 
-
-
-
-
-   
- 
-
-  }
 /**
- * updates the bean parameter with values in the UI
+ * @return the followupTableCustomerPerspective
  */
-  public void synchDisplayToBean(FollowupBean followupBean_){
- 	//followupView.getCboAssignedUserId().setValueField(followupBean_.getAssignedUserId());
- 
+public FollowupTableCustomerPerspective getFollowupTableCustomerPerspective() {
+	return followupTableCustomerPerspective;
+}
 
+/**
+ * @return the notifier
+ */
+public AppNotifyObject getNotifier() {
+	return notifier;
+}
 
- 	followupView.getTxtFollowupDescription().setValue(followupBean_.getFollowupDescription());
- 
+/**
+ * @param owner the owner to set
+ */
+public void setOwner(String owner) {
+	this.owner = owner;
+}
 
-
-	followupView.getDtfCloseDt().setValue(followupBean_.getCloseDt());
- 
-
-
-	followupView.getDtfOpenDt().setValue(followupBean_.getOpenDt());
- 
-
-
-	followupView.getDtfDueDt().setValue(followupBean_.getDueDt());
- 
-
-
-	followupView.getDtfLastUpdate().setValue(followupBean_.getLastUpdate());
- 
-
-
-	followupView.getNbrCustomerId().setValue(followupBean_.getCustomerId());
- 
-
-
-	followupView.getNbrClientId().setValue(followupBean_.getClientId());
- 
-
-
-	followupView.getNbrFollowupId().setValue(followupBean_.getFollowupId());
- 
-
-
-  }
-
-
+/**
+ * @return the owner
+ */
+public String getOwner() {
+	return owner;
+}
 }
 
 

@@ -37,6 +37,7 @@ import com.martinanalytics.legaltime.client.model.VwCustomerHourlyBillRateServic
 import com.martinanalytics.legaltime.client.model.VwCustomerHourlyBillRateServiceAsync;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.view.CustomerView;
+import com.martinanalytics.legaltime.client.view.table.FollowupTableCustomerPerspective;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   private final FollowupServiceAsync followupService = 
 		GWT.create(FollowupService.class); 		// primary GWT remote Service
   private final AppNotifyObject notifier = new AppNotifyObject();
+  
+  //
+  private FollowupController followupController;
 /**
  * Primary constructor, only called by getInstance, hence protected
  * @param masterController_
@@ -77,7 +81,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 	//customerView.getVwCustomerHourlyBillRateTable().getNotifier().addAppEventListener(masterController);
 	//customerView.getCustomerTable().getNotifier().addAppEventListener(this);
 	userProfile = UserProfile.getInstance();
+	followupController = FollowupController.getInstance(masterController_);
 	
+	customerView.setFollowupTableCustomerPerspective(followupController.getFollowupTableCustomerPerspective());
 //	customerView.getLstCustomerChooser().addListener(Events.OnClick,new Listener<ComponentEvent>() {
 //        public void handleEvent(ComponentEvent be) {
 //        	Log.debug("result: " + customerView.getCustomerFormPanel().isValid());
@@ -593,7 +599,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   }
   
   public void saveFollowUpItemChanges(){
-	  ListStore<FollowupBean> store = customerView.getFollowupTableCustomerPerspective().getStore();
+	  ListStore<FollowupBean> store = followupController.getFollowupTableCustomerPerspective().getStore();
 	  List<Record> modified = store.getModifiedRecords();
 	  FollowupBean followupBean = new FollowupBean();
 	  ArrayList<FollowupBean> batchSave = new ArrayList<FollowupBean>();
@@ -717,7 +723,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   					masterController.getAppContainer().setTransactionResults(
   							"Successfully saved Customer Batch"
   							, (new java.util.Date().getTime() - startTime.getTime()));
-  					customerView.getFollowupTableCustomerPerspective().updateSelectedBeansinStore(customerResult);
+  					followupController.getFollowupTableCustomerPerspective().updateSelectedBeansinStore(customerResult);
   	
   						
   				}
@@ -814,7 +820,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     	final String whereClause ="where customer_id = " + custId_;
     	final String orderByClause = "order by due_dt";
     	final java.util.Date startTime = new java.util.Date();
-    	customerView.getFollowupTableCustomerPerspective().setCurrentCustomerId(custId_);
+    	followupController.getFollowupTableCustomerPerspective().setCurrentCustomerId(custId_);
     		followupService.selectFollowup(userProfile, whereClause, orderByClause, 
     				new AsyncCallback<ArrayList<FollowupBean>>(){
     					public void onFailure(Throwable caught) {
@@ -833,7 +839,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     						masterController.getAppContainer().setTransactionResults(
     							"Successfully Retrieved Followup listing"
     							, (new java.util.Date().getTime() - startTime.getTime()));
-    						customerView.getFollowupTableCustomerPerspective().setList(followupResult);
+    						followupController.getFollowupTableCustomerPerspective().setList(followupResult);
     						
     					}
     		});
