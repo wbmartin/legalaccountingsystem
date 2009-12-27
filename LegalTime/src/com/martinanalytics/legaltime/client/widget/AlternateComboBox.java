@@ -13,6 +13,7 @@ public class AlternateComboBox<D extends ModelData> extends ComboBox{
 		//setDisplayField("value");
 	    setStore(new ListStore<SimpleComboValue<D>>());
 	    addStyleName("LEFT");
+	    setFireChangeEventOnSetValue(true);
 	}
 	
 	public AlternateComboBox(String labelText_, String comboValueToSynch_
@@ -30,7 +31,7 @@ public class AlternateComboBox<D extends ModelData> extends ComboBox{
 	}
 	
 	public void setKeyValue(Object value_){
-		Log.debug("decent:" + getValueField() + " " + value_ + " store coutn: " + store.getCount() );
+		//Log.debug("decent:" + getValueField() + " " + value_ + " store coutn: " + store.getCount() );
 		if(value_ != null){
 			for(int ndx =0; ndx< store.getCount();ndx++){
 				if(store.getAt(ndx).get(getValueField()).equals(value_)){
@@ -38,9 +39,14 @@ public class AlternateComboBox<D extends ModelData> extends ComboBox{
 				}
 				
 			}
+		}else{
+			clearSelections();
+			setValue(null);
 		}
 		
 	}
+	
+	
 	
 	
 	
@@ -77,7 +83,7 @@ public class AlternateComboBox<D extends ModelData> extends ComboBox{
 	  public D findModel(Object value) {
 		    D val = null;
 		    int ndx;
-		    Log.debug("Inside findModel getValue:" + getValue());
+		    //Log.debug("Inside findModel getValue:" + getValue());
 			for( ndx =0; ndx< store.getCount();ndx++){
 				if(store.getAt(ndx).get(getValueField()).equals(value)){
 					val = (D)store.getAt(ndx);
@@ -85,6 +91,7 @@ public class AlternateComboBox<D extends ModelData> extends ComboBox{
 				}
 				
 			}
+			if(ndx ==store.getCount()){clearSelections();}
 		    return val;
 		  }
 

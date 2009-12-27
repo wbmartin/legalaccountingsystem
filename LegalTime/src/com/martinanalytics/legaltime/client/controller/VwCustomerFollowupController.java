@@ -9,14 +9,20 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
+import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
+import com.martinanalytics.legaltime.client.model.FollowupService;
+import com.martinanalytics.legaltime.client.model.FollowupServiceAsync;
 import com.martinanalytics.legaltime.client.model.VwCustomerFollowupService;
 import com.martinanalytics.legaltime.client.model.VwCustomerFollowupServiceAsync;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
 import com.martinanalytics.legaltime.client.view.VwCustomerFollowupView;
+import com.martinanalytics.legaltime.client.view.table.VwCustomerFollowupTable;
+
 import java.util.ArrayList;
 import com.martinanalytics.legaltime.client.widget.SimpleDateFormat;
 
@@ -34,6 +40,10 @@ public class VwCustomerFollowupController implements AppEventListener, ClickHand
 	GWT.create(VwCustomerFollowupService.class); 		// primary GWT remote Service
   private UserProfile userProfile;  			// User Properties
   private MasterController masterController;		// Overarching Controller
+  private FollowupController followupController;
+  private VwCustomerFollowupTable vwCustomerFollowupTable;
+  private final FollowupServiceAsync followupService = 
+		GWT.create(FollowupService.class);
 
 /**
  * Primary constructor, only called by getInstance, hence protected
@@ -41,10 +51,17 @@ public class VwCustomerFollowupController implements AppEventListener, ClickHand
  */
   protected  VwCustomerFollowupController(MasterController masterController_){
 	masterController =masterController_;
-	vwCustomerFollowupView = new VwCustomerFollowupView();	
+	vwCustomerFollowupTable = new VwCustomerFollowupTable();
+	vwCustomerFollowupTable.getNotifier().addAppEventListener(this);
+	vwCustomerFollowupView = new VwCustomerFollowupView(vwCustomerFollowupTable);	
 	vwCustomerFollowupView.addAppEventListener(this);
+	
 	//vwCustomerFollowupView.getVwCustomerFollowupTable().getNotifier().addAppEventListener(this);
 	userProfile = UserProfile.getInstance();
+	followupController = FollowupController.getInstance(masterController_);
+	vwCustomerFollowupTable.setFollowupView(followupController.getFollowupView());
+	followupController.getNotifier().addAppEventListener(vwCustomerFollowupTable);
+	
   }
 
 /**
@@ -73,8 +90,13 @@ public class VwCustomerFollowupController implements AppEventListener, ClickHand
  */
 @Override
   public void onAppEventNotify(AppEvent e_) {
-         if (e_.getName().equals("VwCustomerFollowupViewOnAttach")){
-		
+    if (e_.getName().equals("VwCustomerFollowupViewOnAttach")){
+        	 selectVwCustomerFollowupBeans("", "");
+    }else if(e_.getName().equals(AppMsg.SHOW_FOLLOWUP_EDITOR)){
+    		followupController.showFollowupViewDialog("MANAGER");
+    		
+    }else if(e_.getName().equals("SaveChangesToVWCustomerFollowupTable")){
+    	
 	}else if(e_.getName().equals("VwCustomerFollowupViewOnDetach")){
 	}else if(e_.getName().equals("VwCustomerFollowupTableOnAttach")){		
 	}else if(e_.getName().equals("VwCustomerFollowupTableOnDetach")){		
@@ -132,6 +154,7 @@ public class VwCustomerFollowupController implements AppEventListener, ClickHand
 						masterController.getAppContainer().setTransactionResults(
 							"Successfully Retrieved VwCustomerFollowup listing"
 							, (new java.util.Date().getTime() - startTime.getTime()));
+						vwCustomerFollowupTable.setList(vwCustomerFollowupResult);
 						
 					}
 		});
@@ -328,165 +351,40 @@ public class VwCustomerFollowupController implements AppEventListener, ClickHand
 //	});
 //  }
 //
-///**
-// * Sends a batch of beans to the Server to be saved.  If the primary keys are null or empty, an insert will be processed.
-// * The results are handled through the onSuccess method in the AsynchCallback.
-// * @param vwCustomerFollowupBean_ the bean to save to the database
-// */
-//  private void saveVwCustomerFollowupBeanBatch(ArrayList<VwCustomerFollowupBean> vwCustomerFollowupBeanList_){
-//	final java.util.Date startTime = new java.util.Date();
-//	vwCustomerFollowupService.saveVwCustomerFollowupBeanBatch(userProfile, vwCustomerFollowupBeanList_, 
-//			new AsyncCallback<ArrayList<VwCustomerFollowupBean>>(){
-//				public void onFailure(Throwable caught) {
-//					Log.debug("vwCustomerFollowupService.saveVwCustomerFollowupBeanBatch Failed: " + caught);
-//					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-//							AppPref.SERVER_ERROR + caught.getMessage());
-//					masterController.getAppContainer().setTransactionResults(
-//						"Saving VwCustomerFollowup Batch Failed"
-//						, (new java.util.Date().getTime() -startTime.getTime()));
-//				}
-//		
-//				public void onSuccess(ArrayList<VwCustomerFollowupBean> vwCustomerFollowupResult) {
-//					Log.debug("vwCustomerFollowupService.saveVwCustomerFollowupBeanBatch onSuccess: " + vwCustomerFollowupResult.toString());
-//					masterController.getAppContainer().setTransactionResults(
-//							"Successfully saved VwCustomerFollowup Batch"
-//							, (new java.util.Date().getTime() - startTime.getTime()));
-//			
-//				}
-//		});
-//  }
-
 /**
- * updates the UI with the bean parameter
+ * Sends a batch of beans to the Server to be saved.  If the primary keys are null or empty, an insert will be processed.
+ * The results are handled through the onSuccess method in the AsynchCallback.
+ * @param vwCustomerFollowupBean_ the bean to save to the database
  */
-  public void synchBeanToDisplay(VwCustomerFollowupBean vwCustomerFollowupBean_){
-
-
-    try{
-	vwCustomerFollowupBean_.setLastName(vwCustomerFollowupView.getTxtLastName().getValue());
-    }catch(Exception e){
+  private void saveVwCustomerFollowupBeanBatch(ArrayList<VwCustomerFollowupBean> vwCustomerFollowupBeanList_){
+	final java.util.Date startTime = new java.util.Date();
+	ArrayList<FollowupBean> followupBeanList = new ArrayList<FollowupBean>();
+	for(int ndx =0; ndx<vwCustomerFollowupBeanList_.size();ndx++){
+		followupBeanList.add(vwCustomerFollowupBeanList_.get(ndx).getFollowupBean());
+	}
 		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	vwCustomerFollowupBean_.setFirstName(vwCustomerFollowupView.getTxtFirstName().getValue());
-    }catch(Exception e){
+	
+	followupService.saveFollowupBeanBatch(userProfile, followupBeanList, 
+			new AsyncCallback<ArrayList<FollowupBean>>(){
+				public void onFailure(Throwable caught) {
+					Log.debug("vwCustomerFollowupService.saveVwCustomerFollowupBeanBatch Failed: " + caught);
+					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+							AppPref.SERVER_ERROR + caught.getMessage());
+					masterController.getAppContainer().setTransactionResults(
+						"Saving VwCustomerFollowup Batch Failed"
+						, (new java.util.Date().getTime() -startTime.getTime()));
+				}
 		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	vwCustomerFollowupBean_.setFollowupDescription(vwCustomerFollowupView.getTxtFollowupDescription().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	vwCustomerFollowupBean_.setCloseDt(vwCustomerFollowupView.getDtfCloseDt().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	vwCustomerFollowupBean_.setOpenDt(vwCustomerFollowupView.getDtfOpenDt().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	vwCustomerFollowupBean_.setDueDt(vwCustomerFollowupView.getDtfDueDt().getValue());
-    }catch(Exception e){
-		
-    }
- 
-
-
-
-
-   
-
-
-    try{
-	vwCustomerFollowupBean_.setFollowupId((Integer)vwCustomerFollowupView.getNbrFollowupId().getValue());
-    }catch(Exception e){
-		
-    }	
- 
-
-
-
-
-   
- 
-
+				public void onSuccess(ArrayList<FollowupBean> followupResult) {
+					//Log.debug("vwCustomerFollowupService.saveVwCustomerFollowupBeanBatch onSuccess: " + followupResult.toString());
+					masterController.getAppContainer().setTransactionResults(
+							"Successfully saved VwCustomerFollowup Batch"
+							, (new java.util.Date().getTime() - startTime.getTime()));
+			
+				}
+		});
   }
-/**
- * updates the bean parameter with values in the UI
- */
-  public void synchDisplayToBean(VwCustomerFollowupBean vwCustomerFollowupBean_){
- 	vwCustomerFollowupView.getTxtLastName().setValue(vwCustomerFollowupBean_.getLastName());
- 
 
-
- 	vwCustomerFollowupView.getTxtFirstName().setValue(vwCustomerFollowupBean_.getFirstName());
- 
-
-
- 	vwCustomerFollowupView.getTxtFollowupDescription().setValue(vwCustomerFollowupBean_.getFollowupDescription());
- 
-
-
-	vwCustomerFollowupView.getDtfCloseDt().setValue(vwCustomerFollowupBean_.getCloseDt());
- 
-
-
-	vwCustomerFollowupView.getDtfOpenDt().setValue(vwCustomerFollowupBean_.getOpenDt());
- 
-
-
-	vwCustomerFollowupView.getDtfDueDt().setValue(vwCustomerFollowupBean_.getDueDt());
- 
-
-
-	vwCustomerFollowupView.getNbrFollowupId().setValue(vwCustomerFollowupBean_.getFollowupId());
- 
-
-
-  }
 
 
 }

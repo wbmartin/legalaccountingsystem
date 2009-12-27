@@ -623,6 +623,7 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 
   		  @Override  
   		  public void componentSelected(ButtonEvent ce) { 
+  			  laborRegisterView.updateCalcValues();
   			  saveAllChanges();
   			  addLaborRegisterBean();
   		  }
@@ -636,6 +637,7 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 		  @Override  
 		  public void componentSelected(ButtonEvent ce) { 
 			  laborRegisterDialog.setVisible(false);
+			  laborRegisterView.updateCalcValues();
 			  saveAllChanges();
 		  }
 	  }
@@ -657,10 +659,14 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 	  LaborRegisterBean bean = new LaborRegisterBean();
 	  bean.setDescription("");
 	  bean.setUserId(UserProfile.getInstance().getUserId());
-
+	  bean.setInvoiceable(true);
+	  //bean.setStartTime(new java.util.Date());
+	  //bean.setEndTime(new java.util.Date());
+	  laborRegisterView.getFormBindings().unbind();
+	  //laborRegisterView.getCboCustomerId().clearSelections();
 	  laborRegisterView.getStore().insert(bean, 0);
 	  laborRegisterView.getFormBindings().bind(laborRegisterView.getStore().getAt(0));
-	  laborRegisterView.getFormBindings().bind(laborRegisterView.getStore().getAt(0));
+
   }
 
   
@@ -675,6 +681,7 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
   		  laborRegisterBean = new LaborRegisterBean();
   		  laborRegisterBean.setProperties(r.getModel().getProperties());
   		  batchSave.add(laborRegisterBean);
+  		  Log.debug("Labor Register Controller Saving" + laborRegisterBean.getProperties().toString());
   		  
   		  
   	  }
@@ -684,6 +691,8 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
   		
   	  
     }
+  
+  
 
 }
 

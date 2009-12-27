@@ -1,15 +1,21 @@
 create or replace view vw_customer_followup AS 
 select 
-	followup.followup_id AS followup_id,
-	followup.due_dt AS due_dt,
-	followup.open_dt AS open_dt,
-	followup.close_dt AS close_dt,
-	followup.followup_description AS followup_description,
+	followup.followup_id,
+	followup.client_id ,
+	followup.customer_id ,
+	followup.last_update,
+	followup.due_dt,
+	followup.open_dt,
+	followup.close_dt,
+	followup.followup_description,
+	followup.assigned_user_id,
 	customer.first_name AS first_name,
 	customer.last_name AS last_name,
-	customer.customer_id as customer_id,
-	customer.client_id as client_id
-from (followup left join customer on((followup.customer_id = customer.customer_id))) 
+	customer.last_name ||', ' ||customer.first_name AS display_name,	 
+	usr.display_name as usr_display 
+from (followup left join customer on((followup.customer_id = customer.customer_id)))
+	  left join user_info as usr
+	     on followup.assigned_user_id =usr.user_id
 where followup.close_dt is null 
 order by followup.due_dt
 

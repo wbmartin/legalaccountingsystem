@@ -59,4 +59,15 @@ public static AppNotifyObject getNotifier() {
 	return notifier;
 }
 
+public static String getDisplayNameForUserId(String userId_) {
+	String result = "Not Found";
+	for(int ndx =0; ndx< cache.size();ndx++){
+		if(cache.get(ndx).getUserId().equals(userId_)){
+			result = cache.get(ndx).getDisplayName();
+			break;
+		}
+	}
+	return result;
+}
+
 }

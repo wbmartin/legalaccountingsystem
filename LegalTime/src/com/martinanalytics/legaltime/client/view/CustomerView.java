@@ -113,7 +113,7 @@ public class CustomerView extends AppEventProducer{
 	private	List<ColumnConfig> configs = new ArrayList<ColumnConfig>(); 
 	private ColumnModel cm;
 	private VwCustomerHourlyBillRateTable vwCustomerHourlyBillRateTable = new VwCustomerHourlyBillRateTable();
-	private FollowupTableCustomerPerspective  followupTableCustomerPerspective = new FollowupTableCustomerPerspective(); 
+	private FollowupTableCustomerPerspective  followupTableCustomerPerspective;// = new FollowupTableCustomerPerspective(); 
 
 	private final int LABEL_WIDTH =75;
 
@@ -372,7 +372,7 @@ class CustomerComposite extends Composite{
 		  cp.add(grid, new RowData(325	, 340));
 		  cp.add(customerFormPanel, new RowData(463, 340));
 		  
-		  cp.setBottomComponent(followupTableCustomerPerspective);
+		  
 		  //Must use Google's VerticalPanel, not EXTGWT
 		  VerticalPanel vp = new VerticalPanel();
 		  vp.add(cp);
@@ -693,6 +693,14 @@ public Grid<CustomerBean> getGrid() {
  */
 public FollowupTableCustomerPerspective getFollowupTableCustomerPerspective() {
 	return followupTableCustomerPerspective;
+}
+
+/**
+ * @return the followupTableCustomerPerspective
+ */
+public void setFollowupTableCustomerPerspective( FollowupTableCustomerPerspective followupTableCustomerPerspective_) {
+	 followupTableCustomerPerspective = followupTableCustomerPerspective_;
+	 cp.setBottomComponent(followupTableCustomerPerspective);
 }
 
 

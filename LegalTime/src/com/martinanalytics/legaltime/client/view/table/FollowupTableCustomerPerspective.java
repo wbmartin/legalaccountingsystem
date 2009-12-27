@@ -31,9 +31,11 @@ import com.extjs.gxt.ui.client.widget.form.ComboBox.TriggerAction;
 import com.extjs.gxt.ui.client.widget.grid.CellEditor;
 import com.extjs.gxt.ui.client.widget.grid.CheckColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
+import com.extjs.gxt.ui.client.widget.grid.ColumnData;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
+import com.extjs.gxt.ui.client.widget.grid.GridCellRenderer;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
@@ -41,7 +43,12 @@ import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Element;
+import com.martinanalytics.legaltime.client.AppMsg;
+import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
+import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
+import com.martinanalytics.legaltime.client.controller.CustomerController;
+import com.martinanalytics.legaltime.client.model.UserInfoCache;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
 import com.martinanalytics.legaltime.client.model.bean.UserInfoBean;
@@ -60,27 +67,28 @@ import com.extjs.gxt.ui.client.binding.FormBinding;
 
 
 
-public class FollowupTableCustomerPerspective extends LayoutContainer {
+public class FollowupTableCustomerPerspective extends LayoutContainer implements AppEventListener{
 	final ListStore<FollowupBean> store = new ListStore<FollowupBean>(); 
 	private AppNotifyObject notifier;
 	FormBinding formBindings;
 	private FollowupView followupView ;
-	final Dialog followupEditorDialog ;
+
 	List<ColumnConfig> configs= new ArrayList<ColumnConfig>();
 	ColumnModel cm =new ColumnModel(configs);
 	Grid<FollowupBean> grid= new Grid<FollowupBean>(store, cm);
 	private int currentCustomerId;
+	AlternateComboBoxBinding assignedUserBinding  ;
 	
 	
 	public FollowupTableCustomerPerspective(){
 		notifier = new AppNotifyObject();
-		followupView = new FollowupView();
+		//followupView = new FollowupView();
 		
-		followupEditorDialog = new Dialog();
+		
 	
 		
 		
-		formBindings = new FormBinding(followupView.getFollowupFormPanel(), true);
+		
 		
 		
 		//formBindings.
@@ -94,8 +102,8 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 							if (be.getSelection().size() > 0) {  
 								formBindings.bind((ModelData) be.getSelection().get(0));
 								
-								//followupView.getCboAssignedUser().setValue(be.getSelection().get(0).getAssignedUserId());
-								followupEditorDialog.show();
+								
+								notifier.notifyAppEvent(this, AppMsg.SHOW_FOLLOWUP_EDITOR,"CUSTOMER");
 							} else {  
 								formBindings.unbind();  
 							}  
@@ -117,45 +125,11 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 //			});  
 		    grid.setBorders(true);
 	     
-	     formBindings.setStore( grid.getStore());
+
 	     //formBindings.removeFieldBinding(formBindings.getBinding(followupView.getCboAssignedUser()));
 	     //formBindings.addFieldBinding(new AlternateComboBoxBinding(followupView.getCboAssignedUser(), "assignedUserId"));
-	     AlternateComboBoxBinding.swapBinding(formBindings, followupView.getCboAssignedUser());
+
 		
-		  BorderLayout layout = new BorderLayout(); 
-    	  followupEditorDialog.setLayout(layout);
-    	  followupEditorDialog.add(followupView.getFollowupFormPanel());
-        
-    	  followupEditorDialog.setWidth(500);
-    	  followupEditorDialog.setModal(true);
-    	  followupEditorDialog.setButtons(Dialog.OKCANCEL);
-    	  followupEditorDialog.setHideOnButtonClick(true);
-    	  followupEditorDialog.setClosable(false);
-    	  followupEditorDialog.getButtonById(Dialog.CANCEL).addSelectionListener(new SelectionListener<ButtonEvent>() { 
-
-    		  @Override  
-    		  public void componentSelected(ButtonEvent ce) { 
-    			  store.rejectChanges();
-    			  formBindings.unbind();
-    			  grid.getSelectionModel().deselectAll();
-    		  }
-    	  }
-
-    	  );
-    	  followupEditorDialog.getButtonById(Dialog.OK).addSelectionListener(new SelectionListener<ButtonEvent>() { 
-
-    		  @Override  
-    		  public void componentSelected(ButtonEvent ce) { 
-    			  //grid.getSelectionModel().getSelectedItem().setAssignedUserId(followupView.getCboAssignedUserId().getRawValue());
-    			  
-    			  //Record record = store.getRecord(grid.getSelectionModel().getSelectedItem());
-    		      //  record.set("assignedUserId",followupView.getCboAssignedUser().getSelectedValue());
-    			  formBindings.unbind();
-    			  grid.getSelectionModel().deselectAll();
-    		  }
-    	  }
-
-    	  );
     	  
 	}
 	  @Override  
@@ -171,6 +145,18 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	    column.setId("assignedUserId");  
 	    column.setHeader("Owner");  
 	    column.setWidth(100);  
+	    column.setRenderer(new GridCellRenderer(){
+
+			@Override
+			public Object render(ModelData model_, String property_,
+					ColumnData config_, int rowIndex_, int colIndex_,
+					ListStore store_, Grid grid_) {
+				// TODO Auto-generated method stub
+				//UserInfoCache.getDisplayNameForUserId()
+				return UserInfoCache.getDisplayNameForUserId((String)model_.get("assignedUserId"));
+			}
+	    	
+	    });
 //	    final TextField<String> ttxtAssignedUserId = new TextField<String>();  
 //	    ttxtAssignedUserId.setAllowBlank(false);  
 //	    ttxtAssignedUserId.addListener(Events.OnFocus,new Listener<ComponentEvent>() {
@@ -347,7 +333,8 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	    add.addSelectionListener(new SelectionListener<ButtonEvent>() {  
 	  
 	      @Override  
-	      public void componentSelected(ButtonEvent ce) {  
+	      public void componentSelected(ButtonEvent ce) { 
+	    	  notifier.notifyAppEvent(this, AppMsg.SHOW_FOLLOWUP_EDITOR,"CUSTOMER");
 		    FollowupBean followupBean  = new FollowupBean();
 	  		followupBean.setAssignedUserId(UserProfile.getInstance().getUserId());
 	   		followupBean.setFollowupDescription("!New");
@@ -369,8 +356,8 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 			
 			formBindings.bind(followupBean  );
 	    	  
-	    	
-	    	  followupEditorDialog.show();
+	    	notifier.notifyAppEvent(this, AppMsg.SHOW_FOLLOWUP_EDITOR,"CUSTOMER");
+	    	  
  
 	      }  
 	  
@@ -514,11 +501,27 @@ public class FollowupTableCustomerPerspective extends LayoutContainer {
 	public int getCurrentCustomerId() {
 		return currentCustomerId;
 	}
+	
+	@Override
+	public void onAppEventNotify(AppEvent e_) {
+		if(e_.getName().equals(AppMsg.FOLLOWUP_EDITOR_CLOSING) && ((String)e_.getPayLoad()).equals("CUSTOMER")){
+			  formBindings.unbind();
+			  grid.getSelectionModel().deselectAll();
+		}else if(e_.getName().equals(AppMsg.FOLLOWUP_EDITOR_CANCELED) && ((String)e_.getPayLoad()).equals("CUSTOMER")){
+			 store.rejectChanges();
+		}
+		
+	}
 	/**
 	 * @param followupView the followupView to set
 	 */
 	public void setFollowupView(FollowupView followupView) {
 		this.followupView = followupView;
+		formBindings = new FormBinding(followupView.getFollowupFormPanel(), true);
+		assignedUserBinding = new AlternateComboBoxBinding(formBindings, followupView.getCboAssignedUser()) ;
+		AlternateComboBoxBinding customerBinding = new AlternateComboBoxBinding (formBindings, followupView.getCboCustomerId());
+		//assignedUserBinding.swapBinding(formBindings);
+	     formBindings.setStore( grid.getStore());
 	}
 	/**
 	 * @return the followupView

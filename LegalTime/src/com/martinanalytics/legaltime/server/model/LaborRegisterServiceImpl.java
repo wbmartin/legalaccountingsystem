@@ -43,27 +43,55 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
 		ps.setString(++ndx,laborRegisterBean_.getUserId() );
-  		ps.setInt(++ndx,laborRegisterBean_.getInvoiceId() );
-  		ps.setDouble(++ndx,laborRegisterBean_.getBillRate() );
-  		ps.setBoolean(++ndx,laborRegisterBean_.getInvoiceable() );
+  		try{
+  			ps.setInt(++ndx,laborRegisterBean_.getInvoiceId());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
+  		try{
+  			ps.setDouble(++ndx, laborRegisterBean_.getBillRate());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DOUBLE);
+  		}
+  		try{
+  			ps.setBoolean(++ndx,laborRegisterBean_.getInvoiceable() );
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.BOOLEAN);
+  		}
+  		
   		try{
   			ps.setDate(++ndx, new java.sql.Date(laborRegisterBean_.getActivityDate().getTime()));
+  			//ps.setTimestamp(++ndx, new java.sql.Timestamp(new java.util.Date().getTime()));
   		}catch(NullPointerException nex){
   			ps.setNull(ndx, java.sql.Types.DATE);
   		}
   		try{
   			ps.setTimestamp(++ndx, new java.sql.Timestamp(laborRegisterBean_.getEndTime().getTime()));
   		}catch(NullPointerException nex){
-  			ps.setNull(ndx, java.sql.Types.TIMESTAMP);
+  			//ps.setNull(ndx, java.sql.Types.TIMESTAMP);
+  			ps.setTimestamp(ndx, new java.sql.Timestamp(0));
   		}
   		try{
   			ps.setTimestamp(++ndx, new java.sql.Timestamp(laborRegisterBean_.getStartTime().getTime()));
   		}catch(NullPointerException nex){
-  			ps.setNull(ndx, java.sql.Types.TIMESTAMP);
+  			ps.setTimestamp(ndx, new java.sql.Timestamp(0));
+  			//ps.setNull(ndx, java.sql.Types.TIMESTAMP);
+  			//ps.setObject(ndx, "cast(null as timestamp)");
   		}
-  		ps.setInt(++ndx,laborRegisterBean_.getMinuteCount() );
+  		try{
+  			ps.setInt(++ndx,laborRegisterBean_.getMinuteCount());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
   		ps.setString(++ndx,laborRegisterBean_.getDescription() );
-   		ps.setInt(++ndx,laborRegisterBean_.getCustomerId() );
+   		try{
+  			ps.setInt(++ndx,laborRegisterBean_.getCustomerId());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
+  		
+  		System.err.println("LaborRegisterService PS: " +ps.toString());
+
      		rs =  ps.executeQuery();
 		
 		while(rs.next()){
@@ -96,8 +124,16 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
 		ps.setString(++ndx,laborRegisterBean_.getUserId() );
-  		ps.setInt(++ndx,laborRegisterBean_.getInvoiceId() );
-  		ps.setDouble(++ndx,laborRegisterBean_.getBillRate() );
+  		try{
+  			ps.setInt(++ndx,laborRegisterBean_.getInvoiceId());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
+  		try{
+  			ps.setDouble(++ndx, laborRegisterBean_.getBillRate());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DOUBLE);
+  		}
   		ps.setBoolean(++ndx,laborRegisterBean_.getInvoiceable() );
   		try{
   			ps.setDate(++ndx, new java.sql.Date(laborRegisterBean_.getActivityDate().getTime()));
@@ -109,26 +145,32 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
   		}catch(NullPointerException nex){
   			ps.setNull(ndx, java.sql.Types.TIMESTAMP);
   		}
-
-	
   		try{
   			ps.setTimestamp(++ndx, new java.sql.Timestamp(laborRegisterBean_.getStartTime().getTime()));
   		}catch(NullPointerException nex){
   			ps.setNull(ndx, java.sql.Types.TIMESTAMP);
   		}
-
-	
-  		ps.setInt(++ndx,laborRegisterBean_.getMinuteCount() );
+  		try{
+  			ps.setInt(++ndx,laborRegisterBean_.getMinuteCount());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
   		ps.setString(++ndx,laborRegisterBean_.getDescription() );
   		try{
   			ps.setTimestamp(++ndx, new java.sql.Timestamp(laborRegisterBean_.getLastUpdate().getTime()));
   		}catch(NullPointerException nex){
   			ps.setNull(ndx, java.sql.Types.TIMESTAMP);
   		}
-
-	
-  		ps.setInt(++ndx,laborRegisterBean_.getCustomerId() );
-   		ps.setInt(++ndx,laborRegisterBean_.getLaborRegisterId() );
+  		try{
+  			ps.setInt(++ndx,laborRegisterBean_.getCustomerId());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
+   		try{
+  			ps.setInt(++ndx,laborRegisterBean_.getLaborRegisterId());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
    		rs =  ps.executeQuery();
 		
 		while(rs.next()){
@@ -263,7 +305,8 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
           bean.setStartTime(rs.getTimestamp(7)); 
           bean.setMinuteCount(rs.getInt(8));
           bean.setDescription(rs.getString(9));
-          bean.setLastUpdate(rs.getTimestamp(10)); 
+          bean.setLastUpdate(rs.getTimestamp(10));
+          if (bean.getLastUpdate().equals(new java.util.Date(0))){bean.setLastUpdate(null);}
           bean.setCustomerId(rs.getInt(11));
           bean.setClientId(rs.getInt(12));
           bean.setLaborRegisterId(rs.getInt(13));
