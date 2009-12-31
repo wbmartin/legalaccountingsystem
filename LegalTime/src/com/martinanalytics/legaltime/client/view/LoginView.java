@@ -5,17 +5,21 @@ package com.martinanalytics.legaltime.client.view;
 
 import com.allen_sauer.gwt.log.client.Log;
 
+import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.KeyListener;
 import com.extjs.gxt.ui.client.event.Listener;
 
+import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 //import com.extjs.gxt.ui.client.widget.Window;
 
 //import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.layout.CenterLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormLayout;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
@@ -94,37 +98,30 @@ private class LoginViewComposite extends Composite{
 		VerticalPanel vpPrimary = new VerticalPanel();
 		vpPrimary.setStyleName("LoginPanel");
 		sendButton.setStyleName("sendButton");
-
-		String textFieldWidth = "200px"; 
-		String labelWidth = "110px"; 
+		FormPanel loginFormPanel = new FormPanel();
+		loginFormPanel.setWidth(400);
+		loginFormPanel.setHeading("Login...");
+		
+		vpPrimary.setStyleName("CENTER");
+		
 		vpPrimary.add(new HTML("<h1 id ='ApplicationTitle'>" + AppPref.APPLICATION_NAME +" </h1>"));
-		HorizontalPanel hpUserName = new HorizontalPanel();
-		hpUserName.addStyleName("CENTER");
-		Label lblUserName = new Label("Username: ");
-		lblUserName.setWidth(labelWidth );
-		hpUserName.add(lblUserName);
-		txtUserId.setWidth(textFieldWidth);
-		hpUserName.add(txtUserId);
-		vpPrimary.add(hpUserName);
-		HorizontalPanel hpPassword = new HorizontalPanel();
-		hpPassword.addStyleName("CENTER");
-		Label lblPassword = new Label("Password: ");
-		lblPassword.setWidth(labelWidth );
-		hpPassword.add(lblPassword);
-		hpPassword.add(txtPassword);
-		txtPassword.setWidth(textFieldWidth);
-		vpPrimary.add(hpPassword);
-		Label lblVertSpacer1 = new Label();
-		lblVertSpacer1.setHeight("20px");
-		vpPrimary.add(lblVertSpacer1);
-		HorizontalPanel hpButtons = new HorizontalPanel();
-		hpButtons.addStyleName("CENTER");
-		hpButtons.setHorizontalAlign(HorizontalAlignment.CENTER);
-		hpButtons.add(sendButton);
-		sendButton.addStyleName("CENTER");
-		vpPrimary.add(hpButtons);
-	
-		vpPrimary.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
+		txtUserId.setFieldLabel("User Name");
+		loginFormPanel.add(txtUserId);
+
+		txtPassword.setFieldLabel("Password");
+		loginFormPanel.add(txtPassword);
+
+		loginFormPanel.addButton(sendButton);
+		loginFormPanel.setBorders(false);
+		
+		loginFormPanel.setButtonAlign(Style.HorizontalAlignment.CENTER);
+		ContentPanel cp = new ContentPanel(new CenterLayout());
+		cp.setBorders(false);
+		cp.setBodyBorder(false);
+		cp.setHeaderVisible(false);
+		cp.add(loginFormPanel);
+		vpPrimary.add(cp);
 		initWidget(vpPrimary);
 	}
 	public void onAttach(){

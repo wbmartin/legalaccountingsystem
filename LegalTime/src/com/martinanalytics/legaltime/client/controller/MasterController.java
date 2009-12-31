@@ -32,6 +32,7 @@ public class MasterController implements AppEventListener{
 	 private VwCustomerFollowupController vwCustomerFollowupController;
 	 private UserInfoController userInfoController;
 	 private LaborRegisterController laborRegisterController;
+	 private InvoiceManagerController invoiceManagerController;
 	
 	 
 	 public MasterController(){
@@ -67,6 +68,9 @@ public class MasterController implements AppEventListener{
 		 
 		 laborRegisterController =  LaborRegisterController.getInstance(this);
 		 itemWidgets.put(AppPages.LABOR_REGISTER_PAGE, laborRegisterController.getLaborRegisterView().getLaborRegisterComposite());
+
+		 invoiceManagerController =  InvoiceManagerController.getInstance(this);
+		 itemWidgets.put(AppPages.INVOICE_MANAGER_PAGE,  invoiceManagerController.getInvoiceManagerView().getInvoiceManagerViewComposite());
 
 	 }
 	 
@@ -106,9 +110,11 @@ public class MasterController implements AppEventListener{
 		}else if(e_.getName().equals("USER_INFO_CACHE_REFRESHED")){
 			customerController.getCustomerView().getFollowupTableCustomerPerspective().getFollowupView().getCboAssignedUser().setList(UserInfoCache.getCache());
 			laborRegisterController.getLaborRegisterView().getCboUserId().setList(UserInfoCache.getCache());
+			invoiceManagerController.getInvoiceManagerView().getLaborRegisterTable().getCboUserId().setList(UserInfoCache.getCache());
 		}else if(e_.getName().equals(AppMsg.CUSTOMER_CACHE_REFRESHED)){
 			laborRegisterController.getLaborRegisterView().getCboCustomerId().setList(customerController.getCache());
 			followupController.getFollowupView().getCboCustomerId().setList(customerController.getCache());
+			invoiceManagerController.getInvoiceManagerView().getCboCustomerId().setList(customerController.getCache());
 		}else if(e_.getName().equals(AppMsg.SHOW_LABOR_REGISTER_DIALOG)){
 			laborRegisterController.showBillableHoursDialog();
 		}else{

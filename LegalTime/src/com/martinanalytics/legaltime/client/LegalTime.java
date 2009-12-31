@@ -56,8 +56,8 @@ public class LegalTime implements EntryPoint {
 					}
 					//masterController.getAppContainer().getMainPanel().clear();
 					//masterController.getAppContainer().getMai
-					
-					masterController.getAppContainer().getMainPanel().setWidget(masterController.getPage(event.getValue()));
+					masterController.getAppContainer().setView(masterController.getPage(event.getValue()));
+					//masterController.getAppContainer().getMainPanel().setWidget(masterController.getPage(event.getValue()));
 					//RootPanel.get().add(masterController.getAppContainer());								
 				}
 

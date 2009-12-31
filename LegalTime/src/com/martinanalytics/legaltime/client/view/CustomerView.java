@@ -56,6 +56,7 @@ import com.extjs.gxt.ui.client.widget.form.FormPanel.LabelAlign;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.grid.Grid;
+import com.extjs.gxt.ui.client.widget.layout.CenterLayout;
 import com.extjs.gxt.ui.client.widget.layout.ColumnData;
 import com.extjs.gxt.ui.client.widget.layout.ColumnLayout;
 import com.extjs.gxt.ui.client.widget.layout.RowData;
@@ -272,6 +273,7 @@ class CustomerComposite extends Composite{
 		customerFormPanel.setLabelWidth(LABEL_WIDTH);
 		createFields();   
 		cp.setHeading("Customer Editor");  
+		
 		cp.setFrame(true);
 		cp.setSize(800, 576);  
 		cp.setLayout(new RowLayout(Orientation.HORIZONTAL)); 

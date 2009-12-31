@@ -484,23 +484,17 @@ public class VwCustomerFollowupTable extends LayoutContainer implements AppEvent
 	     formBindings.setStore( grid.getStore());
 	}
 	
-	
+	 
 	
 	
 	@Override
 	public void onAppEventNotify(AppEvent e_) {
 		if(e_.getName().equals(AppMsg.FOLLOWUP_EDITOR_CLOSING) && ((String)e_.getPayLoad()).equals("MANAGER")){
-			Log.debug("VWCustomerFollowup closing received");
-			  //formBindings.getModel();//.set("usrDisplay",followupView.getCboAssignedUser().getValue().get("displayName"));
 			  store.getRecord((VwCustomerFollowupBean)formBindings.getModel()).set("usrDisplay", followupView.getCboAssignedUser().getValue().get("displayName"));
 			  store.getRecord((VwCustomerFollowupBean)formBindings.getModel()).set("displayName", followupView.getCboCustomerId().getValue().get("displayName"));
 			  formBindings.unbind();
 			  grid.getSelectionModel().deselectAll();
-			  
-			  //Log.debug("customerfollowupview closing" + followupView.getCboAssignedUser().getValue().getProperties().toString());
-			  
-			  //notifier.notifyAppEvent(this, "SaveChangesToVWCustomerFollowupTable");
-			  
+			 
 		}else if(e_.getName().equals(AppMsg.FOLLOWUP_EDITOR_CANCELED) && ((String)e_.getPayLoad()).equals("MANAGER")){
 			 store.rejectChanges();
 		}

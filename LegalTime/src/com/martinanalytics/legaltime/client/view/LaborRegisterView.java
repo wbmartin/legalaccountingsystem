@@ -76,9 +76,7 @@ public class LaborRegisterView extends AppEventProducer{
 //-----------------------		
 		formBindings = new FormBinding(laborRegisterFormPanel, true);
 		AlternateComboBoxBinding bindCustId = new AlternateComboBoxBinding(formBindings, cboCustomerId);
-		AlternateComboBoxBinding binduserId = new AlternateComboBoxBinding(formBindings, cboCustomerId);
-//		AlternateComboBoxBinding.swapBinding(formBindings, cboCustomerId);
-//		AlternateComboBoxBinding.swapBinding(formBindings, cboUserId);
+		AlternateComboBoxBinding binduserId = new AlternateComboBoxBinding(formBindings, cboUserId);
 		formBindings.setStore(store); 
 
 //-----------------------

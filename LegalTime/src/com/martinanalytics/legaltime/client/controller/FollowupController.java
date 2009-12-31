@@ -148,9 +148,9 @@ private void createFollowupEditorDialog() {
 public void showFollowupViewDialog(String owner_) {
 	owner = owner_;
 	if (owner.equals("CUSTOMER")){
-		followupView.getCboCustomerId().setVisible(false);
+		followupView.getCboCustomerId().disable();
 	}else{
-		followupView.getCboCustomerId().setVisible(true);
+		followupView.getCboCustomerId().enable();
 	}
 	followupEditorDialog.show();
 	
