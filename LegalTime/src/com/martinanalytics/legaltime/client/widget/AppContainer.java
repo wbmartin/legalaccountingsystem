@@ -13,16 +13,21 @@ package com.martinanalytics.legaltime.client.widget;
 import java.util.ArrayList;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.ComponentEvent;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.Status;
+import com.extjs.gxt.ui.client.widget.VerticalPanel;
+
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
+import com.extjs.gxt.ui.client.widget.layout.CenterLayout;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuBar;
 import com.extjs.gxt.ui.client.widget.menu.MenuBarItem;
@@ -30,6 +35,7 @@ import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
@@ -56,10 +62,18 @@ public class AppContainer extends LayoutContainer {
     private Status versionStatus;
 
     private ArrayList<String> messageLog;
+    ContentPanel cp = new ContentPanel(new CenterLayout());
+    CenterLayout centerLayout = new CenterLayout();
+    //VerticalPanel vp = new VerticalPanel();
 	protected AppContainer(){
 		super();
 		setStyleName("AppContainer");
 		mainPanel = new ScrollPanel();
+		
+		//cp.setHeaderVisible(false);
+		//cp.setBodyBorder(false);
+		//cp.setBorders(false);
+		cp.setWidth(800);
 		
 		
 		notifier = new AppNotifyObject();
@@ -161,18 +175,18 @@ public class AppContainer extends LayoutContainer {
           }}
     );
     
-    Menu mnuList = new Menu();
-    bar.add(new MenuBarItem("List", mnuList));
+    Menu mnuBilling = new Menu();
+    bar.add(new MenuBarItem("Billing", mnuBilling));
 
-    MenuItem miListManager = new MenuItem("ListManager");
-    miListManager.addListener(Events.Select, new Listener<ComponentEvent>() {
+    MenuItem miInvoiceManager = new MenuItem("Invoice Manager");
+    miInvoiceManager.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
-        	//History.newItem(AppPages.EMAIL_LIST_PAGE);
+        	History.newItem(AppPages.INVOICE_MANAGER_PAGE);
         	
           }}
     );
-    miListManager.addStyleName("LEFT");
-    mnuList.add(miListManager);
+    miInvoiceManager.addStyleName("LEFT");
+    mnuBilling.add(miInvoiceManager);
     
  
     
@@ -183,7 +197,7 @@ public class AppContainer extends LayoutContainer {
           }}
     );
     miEmailManager.addStyleName("LEFT");
-    mnuList.add(miEmailManager);
+    mnuBilling.add(miEmailManager);
     
     Menu mnuHelp = new Menu();
     bar.add(new MenuBarItem("Help", mnuHelp));
@@ -214,6 +228,8 @@ public class AppContainer extends LayoutContainer {
     mainPanel.setWidth("100%");
     mainPanel.setHeight("88%");
     mainPanel.setStyleName("MainApplicationScrollPanel");
+    
+    //mainPanel.add(cp);
     add(mainPanel);
     
     //add(panel, new FlowData(10));
@@ -310,6 +326,22 @@ public Dialog getAppWindowDialog() {
 }
 public void setAppWindowDialog(Dialog newDialog_) {
 	 appWindowDialog = newDialog_;
+}
+public void setView(Composite page_) {
+//	cp.removeAll();
+//	cp.setLayout(centerLayout);
+//	cp.add(page_);
+//
+//	VerticalPanel vp = new VerticalPanel();
+//	vp.setWidth("100%");
+//	vp.setHorizontalAlign(HorizontalAlignment.CENTER);
+//	vp.add(cp);
+//	cp.setWidth("96%");
+	
+	mainPanel.setWidget(page_);
+	
+
+	
 }
 
 }

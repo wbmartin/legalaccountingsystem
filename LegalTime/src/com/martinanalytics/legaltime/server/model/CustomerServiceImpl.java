@@ -42,8 +42,17 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 		ps.setInt(++ndx, userProfile_.getClientId());
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
-		ps.setDouble(++ndx,customerBean_.getContingencyRate() );
-  		ps.setDouble(++ndx,customerBean_.getMortgageAmount() );
+
+		try{
+  			ps.setDouble(++ndx, customerBean_.getContingencyRate());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DOUBLE);
+  		}
+  		try{
+  			ps.setDouble(++ndx, customerBean_.getMortgageAmount());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DOUBLE);
+  		}
   		ps.setString(++ndx,customerBean_.getActiveYn() );
   		ps.setDouble(++ndx,customerBean_.getMonthlyBillRate() );
   		ps.setString(++ndx,customerBean_.getBillType() );
@@ -94,8 +103,16 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 		ps.setInt(++ndx,  userProfile_.getClientId());
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
-		ps.setDouble(++ndx,customerBean_.getContingencyRate() );
-  		ps.setDouble(++ndx,customerBean_.getMortgageAmount() );
+		try{
+  			ps.setDouble(++ndx, customerBean_.getContingencyRate());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DOUBLE);
+  		}
+  		try{
+  			ps.setDouble(++ndx, customerBean_.getMortgageAmount());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.DOUBLE);
+  		}
   		ps.setString(++ndx,customerBean_.getActiveYn() );
   		ps.setDouble(++ndx,customerBean_.getMonthlyBillRate() );
   		ps.setString(++ndx,customerBean_.getBillType() );

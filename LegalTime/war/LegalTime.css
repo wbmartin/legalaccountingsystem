@@ -6,6 +6,7 @@ h1 {
   font-size: 2em;
   font-weight: bold;
   color: #777777;
+  margin: 0 auto;
   margin: 40px 0px 70px;
   text-align: center;
 }
@@ -35,20 +36,14 @@ body {
 	margin-left: auto; 
 	margin-right: auto;
     display: table-cell;
-    vertical-align: middle;	
+    vertical-align: middle;
+    text-align: center;	
 }
 
 .AppContainer{
-text-align: left;
+	text-align: left;
 }
-.CENTER{
-	margin: 0 auto;
-	text-align: center;
-/*	margin-left: auto; 
-	margin-right: auto;*/
-    display: table-cell;
-    vertical-align: middle;	
-}
+
 .INLINEDISPLAY{
 display: inline;
 }
@@ -56,23 +51,7 @@ display: inline;
 .LEFT{
 text-align: left;
 }
-SELECT{
-	border:1px solid #B5B8C8;
-	/*padding-bottom: 1px;                  
-	padding-left: 1px;                  
-	padding-right: 1px;                   
-	padding-top: 1px;
-	*/
 
-}
-
-.combo{
-	/*padding-bottom: 2px;                  
-	padding-left: 1px;                  
-	padding-right: 1px;                   
-	padding-top: 1px;
-	*/
-}
 
 #ApplicationTitle{
 	font-size: 3em;
