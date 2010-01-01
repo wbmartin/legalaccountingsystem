@@ -16,27 +16,29 @@ DROP TABLE public.tran_type;
 CREATE TABLE public.tran_type (
        client_id INTEGER NOT NULL
      , tran_type VARCHAR(5) NOT NULL
-     , last_update TIMESTAMP DEFAULT now()
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now()
      , description VARCHAR(20)
 );
 
 CREATE TABLE public.user_info (
        user_id TEXT NOT NULL
      , client_id INTEGER NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now()
      , default_bill_rate DOUBLE PRECISION
+     , email_addr VARCHAR(255)
+     , display_name VARCHAR(25)
 );
 
 CREATE TABLE public.client_pref (
        client_id SERIAL NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , client_name TEXT
 );
 
 CREATE TABLE public.customer (
        customer_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , first_name VARCHAR(50)
      , last_name VARCHAR(50)
      , address TEXT
@@ -52,13 +54,15 @@ CREATE TABLE public.customer (
      , bill_type VARCHAR(25)
      , monthly_bill_rate DOUBLE PRECISION
      , active_yn CHAR(1)
+     , mortgage_amount DOUBLE PRECISION
+     , contingency_rate DOUBLE PRECISION
 );
 
 CREATE TABLE public.customer_account_register (
        client_account_register_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
      , customer_id INTEGER NOT NULL
-     , last_update TIMESTAMP DEFAULT now()
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now()
      , effective_dt CHAR(10)
      , description TEXT
      , tran_amt DOUBLE PRECISION
@@ -66,10 +70,10 @@ CREATE TABLE public.customer_account_register (
 );
 
 CREATE TABLE public.invoice (
-       invoice_id INTEGER NOT NULL
+       invoice_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
      , customer_id INTEGER NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , invoice_dt DATE
      , generated_dt DATE
      , invoice_total_amt DOUBLE PRECISION
@@ -80,7 +84,7 @@ CREATE TABLE public.expense_register (
        expense_register_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
      , customer_id INTEGER NOT NULL
-     , last_update TIMESTAMP DEFAULT now()
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now()
      , description TEXT
      , amount DOUBLE PRECISION
      , invoice_id INTEGER
@@ -91,7 +95,7 @@ CREATE TABLE public.labor_register (
        labor_register_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
      , customer_id INTEGER NOT NULL
-     , last_update TIMESTAMP DEFAULT now()
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now()
      , description TEXT
      , minute_count INTEGER
      , start_time TIMESTAMP
@@ -107,7 +111,7 @@ CREATE TABLE public.expense_invoice_item (
        expense_invoice_item_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
      , customer_id INTEGER NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , expense_dt DATE
      , expense_description TEXT
      , amount DOUBLE PRECISION
@@ -118,7 +122,7 @@ CREATE TABLE public.payment_log (
        payment_log_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
      , customer_id INTEGER NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , effective_dt DATE
      , description TEXT
      , amount DOUBLE PRECISION
@@ -130,27 +134,29 @@ CREATE TABLE public.labor_invoice_item (
        labor_invoice_item_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
      , customer_id INTEGER NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , activity_dt DATE
      , activity_description TEXT
      , user_id TEXT
      , invoice_id INTEGER NOT NULL
+     , hours_billed DOUBLE PRECISION
+     , bill_rate DOUBLE PRECISION
 );
 
 CREATE TABLE public.customer_bill_rate (
        customer_bill_rate_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
-     , customer_id INTEGER NOT NULL
-     , user_id TEXT NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
+     , customer_id INTEGER
+     , user_id TEXT
      , bill_rate DOUBLE PRECISION
 );
 
 CREATE TABLE public.followup (
        followup_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , customer_id INTEGER
-     , last_update TIMESTAMP
      , due_dt DATE
      , open_dt DATE
      , close_dt DATE
@@ -161,7 +167,7 @@ CREATE TABLE public.followup (
 CREATE TABLE public.sys_code (
        sys_code_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
-     , last_update TIMESTAMP
+     , last_update TIMESTAMP(3) WITHOUT TIME ZONE
      , code_type VARCHAR(5)
      , code_id VARCHAR(5)
      , description VARCHAR(255)
@@ -214,7 +220,7 @@ ALTER TABLE public.labor_invoice_item
 
 ALTER TABLE public.customer_bill_rate
   ADD CONSTRAINT PK_CUSTOMER_BILL_RATE
-      PRIMARY KEY (customer_bill_rate_id, client_id, customer_id, user_id);
+      PRIMARY KEY (customer_bill_rate_id, client_id);
 
 ALTER TABLE public.followup
   ADD CONSTRAINT PK_FOLLOWUP
@@ -290,12 +296,12 @@ ALTER TABLE public.payment_log
       REFERENCES public.invoice (invoice_id, client_id, customer_id);
 
 ALTER TABLE public.labor_invoice_item
-  ADD CONSTRAINT FK_labor_invoice_item_1
+  ADD CONSTRAINT FK_laborinvoiceitem_customer
       FOREIGN KEY (customer_id, client_id)
       REFERENCES public.customer (customer_id, client_id);
 
 ALTER TABLE public.labor_invoice_item
-  ADD CONSTRAINT FK_labor_invoice_item_2
+  ADD CONSTRAINT FK_laborinvoiceitem_invoice
       FOREIGN KEY (invoice_id, client_id, customer_id)
       REFERENCES public.invoice (invoice_id, client_id, customer_id);
 

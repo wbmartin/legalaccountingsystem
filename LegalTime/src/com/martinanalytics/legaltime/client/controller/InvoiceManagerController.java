@@ -2,6 +2,7 @@ package com.martinanalytics.legaltime.client.controller;
 
 import java.util.ArrayList;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
@@ -13,6 +14,7 @@ import com.martinanalytics.legaltime.client.model.bean.LaborRegisterBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.view.InvoiceManagerView;
 import com.martinanalytics.legaltime.client.view.LaborRegisterView;
+import com.martinanalytics.legaltime.client.view.table.LaborRegisterTable;
 
 public class InvoiceManagerController implements AppEventListener {
 	private static InvoiceManagerController instance=null;
@@ -24,6 +26,7 @@ public class InvoiceManagerController implements AppEventListener {
 		masterController = masterController_;
 		invoiceManagerView = new InvoiceManagerView();
 		invoiceManagerView.getNotifier().addAppEventListener(this);
+		invoiceManagerView.getLaborRegisterTable().getNotifier().addAppEventListener(this);
 	}
 	
 	public static InvoiceManagerController getInstance(MasterController masterController_){
@@ -57,7 +60,13 @@ public class InvoiceManagerController implements AppEventListener {
 	@Override
 	public void onAppEventNotify(AppEvent e_) {
 		if(e_.getName().equals("InvoiceManagerCustomerChanged")){
+			saveLaborRegisterBeanBatch(invoiceManagerView.getLaborRegisterTable().getList());
 			selectLaborRegisterBeans("where customer_id = "+ e_.getPayLoad(), "order by activity_date");
+		}else if(e_.getName().equals("GenerateInvoice")){
+			saveLaborRegisterBeanBatch(invoiceManagerView.getLaborRegisterTable().getList());
+			
+		}else if(e_.getName().equals("LaborRegisterTableOnDetach")){
+			saveLaborRegisterBeanBatch(invoiceManagerView.getLaborRegisterTable().getList());
 		}
 		
 	}
@@ -97,5 +106,35 @@ public class InvoiceManagerController implements AppEventListener {
 						}
 			});
 		  }
+
+
+	 /**
+	  * Sends a batch of beans to the Server to be saved.  If the primary keys are null or empty, an insert will be processed.
+	  * The results are handled through the onSuccess method in the AsynchCallback.
+	  * @param laborRegisterBean_ the bean to save to the database
+	  */
+	   private void saveLaborRegisterBeanBatch(ArrayList<LaborRegisterBean> laborRegisterBeanList_){
+	 	final java.util.Date startTime = new java.util.Date();
+	 	laborRegisterService.saveLaborRegisterBeanBatch(UserProfile.getInstance(), laborRegisterBeanList_, 
+	 			new AsyncCallback<ArrayList<LaborRegisterBean>>(){
+	 				public void onFailure(Throwable caught) {
+	 					Log.debug("laborRegisterService.saveLaborRegisterBeanBatch Failed: " + caught);
+	 					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+	 							AppPref.SERVER_ERROR + caught.getMessage());
+	 					masterController.getAppContainer().setTransactionResults(
+	 						"Saving LaborRegister Batch Failed"
+	 						, (new java.util.Date().getTime() -startTime.getTime()));
+	 				}
+	 		
+	 				public void onSuccess(ArrayList<LaborRegisterBean> laborRegisterResult) {
+	 					Log.debug("laborRegisterService.saveLaborRegisterBeanBatch onSuccess: " + laborRegisterResult.toString());
+	 					masterController.getAppContainer().setTransactionResults(
+	 							"Successfully saved LaborRegister Batch"
+	 							, (new java.util.Date().getTime() - startTime.getTime()));
+	 					
+	 			
+	 				}
+	 		});
+	   }
 
 }

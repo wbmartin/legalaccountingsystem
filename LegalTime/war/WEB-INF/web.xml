@@ -137,4 +137,19 @@
     </servlet-mapping> 
 <!-- ============================= -->
 
+
+
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>invoiceServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.InvoiceServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>invoiceServlet</servlet-name> 
+        <url-pattern>/legaltime/invoice</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+
 </web-app>

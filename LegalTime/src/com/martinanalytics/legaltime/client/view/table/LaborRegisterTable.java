@@ -4,6 +4,7 @@ package com.martinanalytics.legaltime.client.view.table;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.store.ListStore;
@@ -35,6 +36,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Element;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.model.UserInfoCache;
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.LaborRegisterBean;
 import com.martinanalytics.legaltime.client.model.bean.UserInfoBean;
 import com.martinanalytics.legaltime.client.widget.AlternateComboBox;
@@ -256,7 +258,7 @@ public class LaborRegisterTable extends LayoutContainer {
 		    column = new ColumnConfig(); 
 		    column.setId("Total");  
 		    column.setHeader("Total");
-		    column.setNumberFormat(NumberFormat.getFormat("$0.00"));
+		    //column.setNumberFormat(NumberFormat.getFormat("$0.00"));
 		    column.setRenderer(new GridCellRenderer(){
 
 				@Override
@@ -264,7 +266,8 @@ public class LaborRegisterTable extends LayoutContainer {
 						ColumnData config_, int rowIndex_, int colIndex_,
 						ListStore store_, Grid grid_) {
 					Double total = ((Integer)model_.get("minuteCount"))* ((Double)model_.get("billRate"))/60;
-					return total;
+					
+					return NumberFormat.getFormat("$0.00").format(total);
 				}
 		    	
 		    });
@@ -432,7 +435,14 @@ public class LaborRegisterTable extends LayoutContainer {
 	      public void componentSelected(ButtonEvent ce) {  
 	        store.rejectChanges();  
 	      }  
-	    }));  
+	    }));
+	    cp.addButton(new Button("Generate Invoice", new SelectionListener<ButtonEvent>() {  
+	  	  
+		      @Override  
+		      public void componentSelected(ButtonEvent ce) {  
+		        notifier.notifyAppEvent(this, "GenerateInvoice") ;
+		      }  
+		    })); 
 	  
 //	    cp.addButton(new Button("Save", new SelectionListener<ButtonEvent>() {  
 //	  
@@ -447,38 +457,53 @@ public class LaborRegisterTable extends LayoutContainer {
 	  }  
 	  
 	  public void setList(ArrayList<LaborRegisterBean> laborRegisterBeans_ ){
-		  List <LaborRegisterBean> laborRegisterTableModelDataList = new ArrayList <LaborRegisterBean>();
-		  for(int ndx = 0; ndx<laborRegisterBeans_.size(); ndx++){
-			  laborRegisterTableModelDataList.add(laborRegisterBeans_.get(ndx));
-		  }
+//		  List <LaborRegisterBean> laborRegisterTableModelDataList = new ArrayList <LaborRegisterBean>();
+//		  for(int ndx = 0; ndx<laborRegisterBeans_.size(); ndx++){
+//			  laborRegisterTableModelDataList.add(laborRegisterBeans_.get(ndx));
+//		  }
+		  Log.debug("setlist laborregistertable: " + laborRegisterBeans_.get(0).getInvoiceId());
 		  store.setFiresEvents(false);
 		  store.removeAll();
-		  store.add(laborRegisterTableModelDataList); 
+		  //store.add(laborRegisterTableModelDataList); 
+		  store.add((List <LaborRegisterBean>)laborRegisterBeans_);
 		  store.setFiresEvents(true);
 		  grid.getView().refresh(false);
 
 		  
 	  }
-	  
-	  public void saveChanges(){
+	  public ArrayList<LaborRegisterBean> getList(){		  
 		  List<Record> modified = store.getModifiedRecords();
-		  LaborRegisterBean laborRegisterBean = new LaborRegisterBean();
-		  ArrayList<LaborRegisterBean> batchSave = new ArrayList<LaborRegisterBean>();
+		  LaborRegisterBean laborRegisterBean;// = new CustomerBean();
+		  ArrayList<LaborRegisterBean> arrayList = new ArrayList<LaborRegisterBean>();
 		  for (Record r : modified) {
+			  //Log.debug("Identified Modified Record");
+			  laborRegisterBean = new LaborRegisterBean();
 			  laborRegisterBean.setProperties(r.getModel().getProperties());
-			  batchSave.add(laborRegisterBean);
-			  
-			  
+			  //Log.debug("LaborRegisterTable Modified Record: " + laborRegisterBean.getInvoiceId());
+			  arrayList.add(laborRegisterBean);
 		  }
- 		store.commitChanges();
-		notifier.notifyAppEvent(this, "SaveLaborRegisterBatch", batchSave );
-		  
+		  return arrayList;
 	  }
+	  
+//	  public void saveChanges(){
+//		  List<Record> modified = store.getModifiedRecords();
+//		  LaborRegisterBean laborRegisterBean = new LaborRegisterBean();
+//		  ArrayList<LaborRegisterBean> batchSave = new ArrayList<LaborRegisterBean>();
+//		  for (Record r : modified) {
+//			  laborRegisterBean.setProperties(r.getModel().getProperties());
+//			  batchSave.add(laborRegisterBean);
+//			  
+//			  
+//		  }
+// 		store.commitChanges();
+//		notifier.notifyAppEvent(this, "SaveLaborRegisterBatch", batchSave );
+//		  
+//	  }
 	
 	public void onDetach(){
 		super.onDetach();
-		saveChanges();
-			notifier.notifyAppEvent(this, "LaborRegisterTableOnAttach");
+		
+			notifier.notifyAppEvent(this, "LaborRegisterTableOnDetach");
 	}
 	public void onAttach(){
 		super.onAttach();

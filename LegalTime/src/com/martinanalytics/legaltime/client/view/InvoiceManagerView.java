@@ -6,6 +6,7 @@ import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Html;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.view.table.LaborRegisterTable;
@@ -86,11 +87,13 @@ public class InvoiceManagerView {
 		public InvoiceManagerViewComposite(){
 			FormPanel cp = new FormPanel();
 			cp.setHeading("Invoice Manager");
+			cp.setWidth(800);
 			cboCustomerId.setFieldLabel("Customer");
 			cp.add(getCboCustomerId());
 			cp.add(laborRegisterTable);
-			
-			initWidget(cp);
+			VerticalPanel vp = new VerticalPanel();
+			vp.add(cp);
+			initWidget(vp);
 		}
 		
 	}
