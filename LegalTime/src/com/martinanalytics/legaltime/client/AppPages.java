@@ -11,4 +11,5 @@ public class AppPages {
 	public static final String USER_INFO_PAGE = "UserInfoPage";
 	public static final String LABOR_REGISTER_PAGE = "LaborRegisterPage";
 	public static final String INVOICE_MANAGER_PAGE = "InvoiceManagerPage";
+	public static final String INVOICE_PAGE = "InvoicePage";
 }

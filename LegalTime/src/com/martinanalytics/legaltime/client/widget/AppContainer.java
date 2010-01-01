@@ -64,12 +64,12 @@ public class AppContainer extends LayoutContainer {
     private ArrayList<String> messageLog;
     ContentPanel cp = new ContentPanel(new CenterLayout());
     CenterLayout centerLayout = new CenterLayout();
-    //VerticalPanel vp = new VerticalPanel();
+    VerticalPanel vp = new VerticalPanel();
 	protected AppContainer(){
 		super();
 		setStyleName("AppContainer");
 		mainPanel = new ScrollPanel();
-		
+		mainPanel.setWidget(vp);
 		//cp.setHeaderVisible(false);
 		//cp.setBodyBorder(false);
 		//cp.setBorders(false);
@@ -339,6 +339,8 @@ public void setView(Composite page_) {
 //	cp.setWidth("96%");
 	
 	mainPanel.setWidget(page_);
+	//vp.removeAll();
+	//vp.add(page_);
 	
 
 	

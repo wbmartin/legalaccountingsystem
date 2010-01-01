@@ -88,8 +88,8 @@
 <column auto-increment="false" column-size="3" decimal-digits="0" default-value="now()" id="4225af:125355e7aa2:-7f39" mandatory="false" name="last_update">
 <data-type name="TIMESTAMP" selected-variant-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
 </column>
-<column auto-increment="false" column-size="10" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f38" mandatory="false" name="effective_dt">
-<data-type name="CHAR" selected-variant-pattern="CHAR(%n)"/>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f38" mandatory="false" name="effective_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f37" mandatory="false" name="description">
 <data-type name="TEXT" selected-variant-pattern="TEXT"/>
@@ -142,6 +142,9 @@
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7f03" mandatory="false" name="invoiceable">
 <data-type name="BOOL" selected-variant-pattern="BOOL"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1de1cbc:125ea9ce384:-7f24" mandatory="false" name="expense_dt">
+<data-type name="DATE" selected-variant-pattern="DATE"/>
 </column>
 </column-list>
 <primary-key id="4225af:125355e7aa2:-7f0e" name="PK_EXPENSE_REGISTER">
@@ -339,7 +342,7 @@
 <table id="4225af:125355e7aa2:-7eb1" name="invoice">
 <column-list>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7ead" mandatory="true" name="invoice_id">
-<data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
+<data-type name="SERIAL" selected-variant-pattern="SERIAL"/>
 </column>
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-7eab" mandatory="true" name="client_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
@@ -453,6 +456,12 @@
 <column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="4225af:125355e7aa2:-79cb" mandatory="true" name="invoice_id">
 <data-type name="INTEGER" selected-variant-pattern="INTEGER"/>
 </column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1de1cbc:125ea9ce384:-7f3c" mandatory="false" name="hours_billed">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
+<column auto-increment="false" column-size="0" decimal-digits="0" default-value="" id="1de1cbc:125ea9ce384:-7f3b" mandatory="false" name="bill_rate">
+<data-type name="DOUBLE PRECISION" selected-variant-pattern="DOUBLE PRECISION"/>
+</column>
 </column-list>
 <primary-key id="4225af:125355e7aa2:-7e92" name="PK_LABOR_INVOICE_ITEM">
 <primary-key-column name="labor_invoice_item_id"/>
@@ -460,11 +469,11 @@
 <primary-key-column name="customer_id"/>
 </primary-key>
 <foreign-key-list>
-<foreign-key id="4225af:125355e7aa2:-7caf" name="FK_labor_invoice_item_1" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key id="4225af:125355e7aa2:-7caf" name="FK_laborinvoiceitem_customer" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_CUSTOMER" referenced-table="customer" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
 <foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>
 <foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
 </foreign-key>
-<foreign-key id="4225af:125355e7aa2:-79cd" name="FK_labor_invoice_item_2" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_INVOICE" referenced-table="invoice" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
+<foreign-key id="4225af:125355e7aa2:-79cd" name="FK_laborinvoiceitem_invoice" on-delete="UNSPECIFIED" on-update="UNSPECIFIED" referenced-key="PK_INVOICE" referenced-table="invoice" referenced-table-schema="public" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="">
 <foreign-key-column column-name="invoice_id" referenced-key-column-name="invoice_id"/>
 <foreign-key-column column-name="client_id" referenced-key-column-name="client_id"/>
 <foreign-key-column column-name="customer_id" referenced-key-column-name="customer_id"/>

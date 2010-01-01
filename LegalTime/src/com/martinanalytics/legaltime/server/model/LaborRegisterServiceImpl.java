@@ -294,24 +294,38 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
          * @param rs the result set to be converted
 	 * @return the LaborRegisterBean that was converted
          */
- 	public LaborRegisterBean decodeRow(ResultSet rs) throws SQLException{
-          LaborRegisterBean bean = new LaborRegisterBean();
-          bean.setUserId(rs.getString(1));
-          bean.setInvoiceId(rs.getInt(2));
-          bean.setBillRate(rs.getDouble(3));
-          bean.setInvoiceable(rs.getBoolean(4));
-          bean.setActivityDate(rs.getDate(5));
-          bean.setEndTime(rs.getTimestamp(6)); 
-          bean.setStartTime(rs.getTimestamp(7)); 
-          bean.setMinuteCount(rs.getInt(8));
-          bean.setDescription(rs.getString(9));
-          bean.setLastUpdate(rs.getTimestamp(10));
-          if (bean.getLastUpdate().equals(new java.util.Date(0))){bean.setLastUpdate(null);}
-          bean.setCustomerId(rs.getInt(11));
-          bean.setClientId(rs.getInt(12));
-          bean.setLaborRegisterId(rs.getInt(13));
-          return bean;
-        }
+	public LaborRegisterBean decodeRow(ResultSet rs) throws SQLException{
+		  java.util.Date nullDate = new java.util.Date(0);
+	          LaborRegisterBean bean = new LaborRegisterBean();
+	          bean.setUserId(rs.getString(1));
+		    if(rs.wasNull()){bean.setUserId(null);}
+	          bean.setInvoiceId(rs.getInt(2));
+		    if(rs.wasNull()){bean.setInvoiceId(null);}
+	          bean.setBillRate(rs.getDouble(3));
+		    if(rs.wasNull()){bean.setBillRate(null);}
+	          bean.setInvoiceable(rs.getBoolean(4));
+		    if(rs.wasNull()){bean.setInvoiceable(null);}
+	          bean.setActivityDate(rs.getDate(5));
+		    if(rs.wasNull()){bean.setActivityDate(null);}
+	          bean.setEndTime(rs.getTimestamp(6));
+	            if(bean.getEndTime().equals(nullDate)){bean.setEndTime(null);} 
+	          bean.setStartTime(rs.getTimestamp(7));
+	            if(bean.getStartTime().equals(nullDate)){bean.setStartTime(null);} 
+	          bean.setMinuteCount(rs.getInt(8));
+		    if(rs.wasNull()){bean.setMinuteCount(null);}
+	          bean.setDescription(rs.getString(9));
+		    if(rs.wasNull()){bean.setDescription(null);}
+	          bean.setLastUpdate(rs.getTimestamp(10));
+	            if(bean.getLastUpdate().equals(nullDate)){bean.setLastUpdate(null);} 
+	          bean.setCustomerId(rs.getInt(11));
+		    if(rs.wasNull()){bean.setCustomerId(null);}
+	          bean.setClientId(rs.getInt(12));
+		    if(rs.wasNull()){bean.setClientId(null);}
+	          bean.setLaborRegisterId(rs.getInt(13));
+		    if(rs.wasNull()){bean.setLaborRegisterId(null);}
+	          return bean;
+	        }
+
 
 	/**
 	 * Convert a result set a bean

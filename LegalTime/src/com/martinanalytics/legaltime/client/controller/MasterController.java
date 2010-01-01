@@ -33,6 +33,7 @@ public class MasterController implements AppEventListener{
 	 private UserInfoController userInfoController;
 	 private LaborRegisterController laborRegisterController;
 	 private InvoiceManagerController invoiceManagerController;
+	 private InvoiceController invoiceController;
 	
 	 
 	 public MasterController(){
@@ -72,6 +73,8 @@ public class MasterController implements AppEventListener{
 		 invoiceManagerController =  InvoiceManagerController.getInstance(this);
 		 itemWidgets.put(AppPages.INVOICE_MANAGER_PAGE,  invoiceManagerController.getInvoiceManagerView().getInvoiceManagerViewComposite());
 
+		 invoiceController =  InvoiceController.getInstance(this);
+			itemWidgets.put(AppPages.INVOICE_PAGE, invoiceController.getInvoiceView().getInvoiceComposite());
 	 }
 	 
 	 public Composite getPage(String page_){
