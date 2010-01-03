@@ -308,5 +308,46 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 		}
 		return  invoiceBeanList_;
 	}
+	
+
+	/**
+	 * delete a record from the database
+	 * @param userProfile_ the credentials to use for authentication and authorization
+	 * @param invoiceBean_ the bean to delete, only primary keys value
+         * @return true if the delete was successful
+	 */
+	public Integer createInvoiceFromEligibleTrans(UserProfile userProfile_, Integer customerId_, java.util.Date invoiceDt_){
+	  int ndx =1;
+	  PreparedStatement ps;
+	  ResultSet rs;
+	  
+	  Integer newInvoiceId = 0;
+	  //ArrayList<InvoiceBean> resultList  = new ArrayList<InvoiceBean>();
+	  try {
+		
+		ps = databaseManager.getConnection().prepareStatement("select * from create_customer_invoice_all_eligible('CHECK_AUTH',?,?,?, ?, ?);");
+		ps.setInt(ndx++,  userProfile_.getClientId());
+		ps.setString(ndx++,  userProfile_.getUserId());
+		ps.setString(ndx++, userProfile_.getSessionId());
+		ps.setInt(ndx++, customerId_ );
+    	ps.setDate(ndx++,new java.sql.Date(invoiceDt_.getTime()));
+   		
+		rs =  ps.executeQuery();
+		
+		while(rs.next()){
+			newInvoiceId = rs.getInt(1);
+		}
+	  }catch (Exception e) {	
+		e.printStackTrace();
+		newInvoiceId = -1;
+		throw new GWTServerException("Deleting Invoice Record Failed", e);
+	  }
+
+
+	  return newInvoiceId;
+
+	
+	}
+
 
 }

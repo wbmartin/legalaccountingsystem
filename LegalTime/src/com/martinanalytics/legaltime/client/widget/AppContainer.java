@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.controller.LaborRegisterController;
+import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPages;
 import com.martinanalytics.legaltime.client.AppPref;
@@ -166,14 +167,14 @@ public class AppContainer extends LayoutContainer {
     
   
     
-    MenuItem miMsgHistory= new MenuItem("Message History");
-    miMsgHistory.addStyleName("LEFT");
-    mnuCustomer.add(miMsgHistory);
-    miMsgHistory.addListener(Events.Select, new Listener<ComponentEvent>() {
-        public void handleEvent(ComponentEvent be) {
-        	//History.newItem(AppPages.VW_SENT_EMAIL_PAGE);
-          }}
-    );
+//    MenuItem miMsgHistory= new MenuItem("Message History");
+//    miMsgHistory.addStyleName("LEFT");
+//    mnuCustomer.add(miMsgHistory);
+//    miMsgHistory.addListener(Events.Select, new Listener<ComponentEvent>() {
+//        public void handleEvent(ComponentEvent be) {
+//        	//History.newItem(AppPages.VW_SENT_EMAIL_PAGE);
+//          }}
+//    );
     
     Menu mnuBilling = new Menu();
     bar.add(new MenuBarItem("Billing", mnuBilling));
@@ -190,14 +191,27 @@ public class AppContainer extends LayoutContainer {
     
  
     
-    MenuItem miEmailManager = new MenuItem("Email Addresses");
-    miEmailManager.addListener(Events.Select, new Listener<ComponentEvent>() {
+//    MenuItem miEmailManager = new MenuItem("Email Addresses");
+//    miEmailManager.addListener(Events.Select, new Listener<ComponentEvent>() {
+//        public void handleEvent(ComponentEvent be) {
+//        	//History.newItem(AppPages.RECIPIENT_PAGE);
+//          }}
+//    );
+//    miEmailManager.addStyleName("LEFT");
+//    mnuBilling.add(miEmailManager);
+    
+    Menu mnuReport = new Menu();
+    bar.add(new MenuBarItem("Reports", mnuReport));
+    MenuItem miClientAddressLabels = new MenuItem("Client Address Labels");
+    mnuReport.add(miClientAddressLabels);
+    miClientAddressLabels.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
-        	//History.newItem(AppPages.RECIPIENT_PAGE);
+        	ReportUtil.showReport("./ClientAddressLabelServlet",UserProfile.getInstance(), null);
+        	
           }}
     );
-    miEmailManager.addStyleName("LEFT");
-    mnuBilling.add(miEmailManager);
+    
+    
     
     Menu mnuHelp = new Menu();
     bar.add(new MenuBarItem("Help", mnuHelp));

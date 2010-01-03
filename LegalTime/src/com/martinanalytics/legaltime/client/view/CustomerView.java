@@ -4,6 +4,7 @@ package com.martinanalytics.legaltime.client.view;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -306,6 +307,16 @@ class CustomerComposite extends Composite{
 		//------------------
 	      
 		ToolBar toolBar = new ToolBar();  
+		Button test = new Button("test");
+		test.addListener(Events.Select, new Listener<ComponentEvent>() {
+			public void handleEvent(ComponentEvent be) {
+				HashMap params = new HashMap();
+				params.put("invoiceId", 17);
+				ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
+			}  
+		    });
+		
+		toolBar.add(test); 
 		Button addCustomer = new Button("Add Customer");  
 		addCustomer.setBorders(true);
 		addCustomer.addListener(Events.Select, new Listener<ComponentEvent>() {
@@ -324,16 +335,16 @@ class CustomerComposite extends Composite{
 		    });
 		    toolBar.add(saveCustomers);
 		    //---------------------
-			Button test = new Button("Test");
-			toolBar.add(test);
-			test.addListener(Events.Select, new Listener<ComponentEvent>() {
-			      public void handleEvent(ComponentEvent be) {
-			    	  Log.debug("new window called");
-			    	  //Window.open("./BasicServlet", "ReportWindow","");//status=0,toolbar=0,location=0,menubar=0,directories=0
-			    	  Log.debug("userProfile" + userProfile.getUserId());
-			    	  ReportUtil.showReport("./BasicServlet",userProfile);
-			        }
-			      });
+//			Button test = new Button("Test");
+//			toolBar.add(test);
+//			test.addListener(Events.Select, new Listener<ComponentEvent>() {
+//			      public void handleEvent(ComponentEvent be) {
+//			    	  Log.debug("new window called");
+//			    	  //Window.open("./BasicServlet", "ReportWindow","");//status=0,toolbar=0,location=0,menubar=0,directories=0
+//			    	  Log.debug("userProfile" + userProfile.getUserId());
+//			    	  ReportUtil.showReport("./BasicServlet",userProfile);
+//			        }
+//			      });
 		    //--------------------
 		    Button cancelChanges =new Button("Cancel Changes");
 		    cancelChanges.setBorders(true);

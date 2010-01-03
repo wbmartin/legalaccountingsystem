@@ -15,5 +15,6 @@ public interface InvoiceService extends RemoteService{
 	 ArrayList<InvoiceBean> selectInvoice(UserProfile userProfile_, String whereClause_, String OrderByClause_);
 	 ArrayList<InvoiceBean> saveInvoiceBeanBatch(UserProfile userProfile_, ArrayList<InvoiceBean> invoiceBeanList_);
 	 InvoiceBean getInvoiceByPrKey(UserProfile userProfile_ , Integer invoiceId_ , Integer customerId_ );
+	  Integer createInvoiceFromEligibleTrans(UserProfile userProfile_, Integer customerId_, java.util.Date invoiceDt_);
 
 }

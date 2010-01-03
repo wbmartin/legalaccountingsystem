@@ -103,13 +103,13 @@
 
 <!-- ============================= -->
     <servlet> 
-        <servlet-name>BasicServlet</servlet-name> 
-        <servlet-class>com.martinanalytics.legaltime.server.rpt.BasicServlet</servlet-class> 
+        <servlet-name>ClientAddressLabelServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.rpt.addresslabels.ClientAddressLabelServlet</servlet-class> 
     </servlet> 
  
     <servlet-mapping> 
-        <servlet-name>BasicServlet</servlet-name> 
-        <url-pattern>/legaltime/BasicServlet</url-pattern> 
+        <servlet-name>ClientAddressLabelServlet</servlet-name> 
+        <url-pattern>/legaltime/ClientAddressLabelServlet</url-pattern> 
     </servlet-mapping> 
 <!-- ============================= -->
 
@@ -148,6 +148,42 @@
     <servlet-mapping> 
         <servlet-name>invoiceServlet</servlet-name> 
         <url-pattern>/legaltime/invoice</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>expenseRegisterServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.ExpenseRegisterServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>expenseRegisterServlet</servlet-name> 
+        <url-pattern>/legaltime/expenseRegister</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>vwInvoiceDisplayServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.VwInvoiceDisplayServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>vwInvoiceDisplayServlet</servlet-name> 
+        <url-pattern>/legaltime/vwInvoiceDisplay</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>InvoiceReportServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.rpt.invoice.InvoiceReportServlet</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>InvoiceReportServlet</servlet-name> 
+        <url-pattern>/legaltime/InvoiceReportServlet</url-pattern> 
     </servlet-mapping> 
 <!-- ============================= -->
 

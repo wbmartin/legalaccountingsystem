@@ -17,8 +17,7 @@ public interface InvoiceServiceAsync{
 	void  deleteInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_, AsyncCallback<Boolean> result);
 	void  selectInvoice(UserProfile userProfile_, String whereByClause_, String orderByClause_, AsyncCallback<ArrayList<InvoiceBean>> callback);
 	void  saveInvoiceBeanBatch(UserProfile userProfile_, ArrayList<InvoiceBean> invoiceBeanList_, AsyncCallback<ArrayList<InvoiceBean>> callback);
-
 	void  getInvoiceByPrKey(UserProfile userProfile_ , Integer invoiceId_ , Integer customerId_ , AsyncCallback<InvoiceBean> callback);
-
+	void createInvoiceFromEligibleTrans(UserProfile userProfile_, Integer customerId_, java.util.Date invoiceDt_,AsyncCallback<Integer> callback);
 
 }

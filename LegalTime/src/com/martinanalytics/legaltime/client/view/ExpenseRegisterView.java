@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventProducer;
-import com.martinanalytics.legaltime.client.model.bean.InvoiceBean;
+import com.martinanalytics.legaltime.client.model.bean.ExpenseRegisterBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -26,60 +26,57 @@ import com.extjs.gxt.ui.client.widget.form.SimpleComboBox;
 import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.martinanalytics.legaltime.client.view.table.InvoiceTable;
 import com.martinanalytics.legaltime.client.widget.GXTValidator;
 import com.martinanalytics.legaltime.client.model.bean.LaborRegisterBean;
 
-public class InvoiceView extends AppEventProducer{
+public class ExpenseRegisterView extends AppEventProducer{
 	
 	private UserProfile userProfile;
-	private FormPanel invoiceFormPanel ;
+	private FormPanel expenseRegisterFormPanel ;
 	private ContentPanel cp = new ContentPanel();  
-	private FormBinding formBindings; 
-	private final ListStore<InvoiceBean> store = new ListStore<InvoiceBean>();
 
-	private NumberField nbrPrevBalanceDue = new NumberField();
- 	private NumberField nbrInvoiceTotalAmt = new NumberField();
- 	private DateField dtfGeneratedDt = new DateField();
- 	private DateField dtfInvoiceDt = new DateField();
+	private TextField<Boolean> txtInvoiceable = new TextField<Boolean>();
+ 	private NumberField nbrInvoiceId = new NumberField();
+ 	private NumberField nbrAmount = new NumberField();
+ 	private TextField<String> txtDescription = new TextField<String>();
  	private DateField dtfLastUpdate = new DateField();
  	private NumberField nbrCustomerId = new NumberField();
  	private NumberField nbrClientId = new NumberField();
- 	private NumberField nbrInvoiceId = new NumberField();
-  	private InvoiceComposite invoiceComposite;
-  	private InvoiceTable invoiceTable;
-	public InvoiceView(){
+ 	private NumberField nbrExpenseRegisterId = new NumberField();
+  	private ExpenseRegisterComposite expenseRegisterComposite;
+	private FormBinding formBindings;
+	private final ListStore<ExpenseRegisterBean> store = new ListStore<ExpenseRegisterBean>();
+	public ExpenseRegisterView(){
 		userProfile = UserProfile.getInstance();
-		invoiceTable = new InvoiceTable();
-		 invoiceFormPanel = new FormPanel();
-		 invoiceComposite =new InvoiceComposite();
+		expenseRegisterComposite =new ExpenseRegisterComposite();
+		 expenseRegisterFormPanel = new FormPanel();
 	}
 	/**
-	 * @return the nbrPrevBalanceDue
+	 * @return the txtInvoiceable
 	 */
-	public NumberField getNbrPrevBalanceDue() {
-		return nbrPrevBalanceDue;
-	}
-
-	/**
-	 * @return the nbrInvoiceTotalAmt
-	 */
-	public NumberField getNbrInvoiceTotalAmt() {
-		return nbrInvoiceTotalAmt;
+	public TextField<Boolean> getTxtInvoiceable() {
+		return txtInvoiceable;
 	}
 
 	/**
-	 * @return the dtfGeneratedDt
+	 * @return the nbrInvoiceId
 	 */
-	public DateField getDtfGeneratedDt() {
-		return dtfGeneratedDt;
+	public NumberField getNbrInvoiceId() {
+		return nbrInvoiceId;
 	}
 
 	/**
-	 * @return the dtfInvoiceDt
+	 * @return the nbrAmount
 	 */
-	public DateField getDtfInvoiceDt() {
-		return dtfInvoiceDt;
+	public NumberField getNbrAmount() {
+		return nbrAmount;
+	}
+
+	/**
+	 * @return the txtDescription
+	 */
+	public TextField<String> getTxtDescription() {
+		return txtDescription;
 	}
 
 	/**
@@ -104,32 +101,31 @@ public class InvoiceView extends AppEventProducer{
 	}
 
 	/**
-	 * @return the nbrInvoiceId
+	 * @return the nbrExpenseRegisterId
 	 */
-	public NumberField getNbrInvoiceId() {
-		return nbrInvoiceId;
+	public NumberField getNbrExpenseRegisterId() {
+		return nbrExpenseRegisterId;
 	}
 
 	/**
-	 * @return the invoiceComposite
+	 * @return the expenseRegisterComposite
 	 */
-	public InvoiceComposite getInvoiceComposite() {
-		return invoiceComposite;
+	public ExpenseRegisterComposite getExpenseRegisterComposite() {
+		return expenseRegisterComposite;
 	}
 
 
-class InvoiceComposite extends Composite{
-	public InvoiceComposite(){
+class ExpenseRegisterComposite extends Composite{
+	public ExpenseRegisterComposite(){
 		
 		
-		invoiceFormPanel.setFrame(true);
-		invoiceFormPanel.setHeading("invoice Information");
-		invoiceFormPanel.setWidth(600);
-		//createControls();
-		invoiceFormPanel.add(invoiceTable);
+		expenseRegisterFormPanel.setFrame(true);
+		expenseRegisterFormPanel.setHeading("expense_register Information");
+		expenseRegisterFormPanel.setWidth(600);
+		createControls();
 		
 		VerticalPanel vp = new VerticalPanel();
-		  vp.add(invoiceFormPanel);
+		  vp.add(expenseRegisterFormPanel);
 	      	initWidget(vp);
 		
 
@@ -137,96 +133,14 @@ class InvoiceComposite extends Composite{
 	public void createControls(){
 
 //---------------------------------------------------------------
-		nbrPrevBalanceDue.setFieldLabel("PrevBalanceDue");
-		nbrPrevBalanceDue.setName("prevBalanceDue");
-		nbrPrevBalanceDue.setRegex(GXTValidator.DOUBLE);
-		//nbrPrevBalanceDue.setPropertyEditorType(Integer.class);
-		nbrPrevBalanceDue.setFireChangeEventOnSetValue(true);
-		//nbrPrevBalanceDue.setAllowBlank(false);
-		nbrPrevBalanceDue.setAutoValidate(true);
-		//nbrPrevBalanceDue.setVisible(false);
-		invoiceFormPanel.add(nbrPrevBalanceDue);
-//---------------------------------------------------------------
-
-
-
-//---------------------------------------------------------------
-		nbrInvoiceTotalAmt.setFieldLabel("InvoiceTotalAmt");
-		nbrInvoiceTotalAmt.setName("invoiceTotalAmt");
-		nbrInvoiceTotalAmt.setRegex(GXTValidator.DOUBLE);
-		//nbrInvoiceTotalAmt.setPropertyEditorType(Integer.class);
-		nbrInvoiceTotalAmt.setFireChangeEventOnSetValue(true);
-		//nbrInvoiceTotalAmt.setAllowBlank(false);
-		nbrInvoiceTotalAmt.setAutoValidate(true);
-		//nbrInvoiceTotalAmt.setVisible(false);
-		invoiceFormPanel.add(nbrInvoiceTotalAmt);
-//---------------------------------------------------------------
-
-
-
-//---------------------------------------------------------------
-		dtfGeneratedDt.setFieldLabel("GeneratedDt");
-		dtfGeneratedDt.setName("generatedDt");
-		//dtfGeneratedDt.setAllowBlank(false);
-		dtfGeneratedDt.setFireChangeEventOnSetValue(true);
-		//dtfGeneratedDt.setRegex("");	
-		//dtfGeneratedDt.setAutoValidate(true);
-		//dtfGeneratedDt.setVisible(false);
-		invoiceFormPanel.add(dtfGeneratedDt);
-//---------------------------------------------------------------
-
-
-
-//---------------------------------------------------------------
-		dtfInvoiceDt.setFieldLabel("InvoiceDt");
-		dtfInvoiceDt.setName("invoiceDt");
-		//dtfInvoiceDt.setAllowBlank(false);
-		dtfInvoiceDt.setFireChangeEventOnSetValue(true);
-		//dtfInvoiceDt.setRegex("");	
-		//dtfInvoiceDt.setAutoValidate(true);
-		//dtfInvoiceDt.setVisible(false);
-		invoiceFormPanel.add(dtfInvoiceDt);
-//---------------------------------------------------------------
-
-
-
-//---------------------------------------------------------------
-		dtfLastUpdate.setFieldLabel("LastUpdate");
-		dtfLastUpdate.setName("lastUpdate");
-		//dtfLastUpdate.setAllowBlank(false);
-		dtfLastUpdate.setFireChangeEventOnSetValue(true);
-		//dtfLastUpdate.setRegex("");	
-		//dtfLastUpdate.setAutoValidate(true);
-		//dtfLastUpdate.setVisible(false);
-		invoiceFormPanel.add(dtfLastUpdate);
-//---------------------------------------------------------------
-
-
-
-//---------------------------------------------------------------
-		nbrCustomerId.setFieldLabel("CustomerId");
-		nbrCustomerId.setName("customerId");
-		nbrCustomerId.setRegex(GXTValidator.DOUBLE);
-		//nbrCustomerId.setPropertyEditorType(Integer.class);
-		nbrCustomerId.setFireChangeEventOnSetValue(true);
-		//nbrCustomerId.setAllowBlank(false);
-		nbrCustomerId.setAutoValidate(true);
-		//nbrCustomerId.setVisible(false);
-		invoiceFormPanel.add(nbrCustomerId);
-//---------------------------------------------------------------
-
-
-
-//---------------------------------------------------------------
-		nbrClientId.setFieldLabel("ClientId");
-		nbrClientId.setName("clientId");
-		nbrClientId.setRegex(GXTValidator.DOUBLE);
-		//nbrClientId.setPropertyEditorType(Integer.class);
-		nbrClientId.setFireChangeEventOnSetValue(true);
-		//nbrClientId.setAllowBlank(false);
-		nbrClientId.setAutoValidate(true);
-		//nbrClientId.setVisible(false);
-		invoiceFormPanel.add(nbrClientId);
+		txtInvoiceable.setFieldLabel("Invoiceable");
+		txtInvoiceable.setName("invoiceable");
+		txtInvoiceable.setFireChangeEventOnSetValue(true);
+		//txtInvoiceable.setRegex("");
+		//txtInvoiceable.setAutoValidate(true);
+		//txtInvoiceable.setAllowBlank(false);
+		//txtInvoiceable.setVisible(false);
+		expenseRegisterFormPanel.add(txtInvoiceable);
 //---------------------------------------------------------------
 
 
@@ -240,42 +154,124 @@ class InvoiceComposite extends Composite{
 		//nbrInvoiceId.setAllowBlank(false);
 		nbrInvoiceId.setAutoValidate(true);
 		//nbrInvoiceId.setVisible(false);
-		invoiceFormPanel.add(nbrInvoiceId);
+		expenseRegisterFormPanel.add(nbrInvoiceId);
+//---------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------
+		nbrAmount.setFieldLabel("Amount");
+		nbrAmount.setName("amount");
+		nbrAmount.setRegex(GXTValidator.DOUBLE);
+		//nbrAmount.setPropertyEditorType(Integer.class);
+		nbrAmount.setFireChangeEventOnSetValue(true);
+		//nbrAmount.setAllowBlank(false);
+		nbrAmount.setAutoValidate(true);
+		//nbrAmount.setVisible(false);
+		expenseRegisterFormPanel.add(nbrAmount);
+//---------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------
+		txtDescription.setFieldLabel("Description");
+		txtDescription.setName("description");
+		txtDescription.setFireChangeEventOnSetValue(true);
+		//txtDescription.setRegex("");
+		//txtDescription.setAutoValidate(true);
+		//txtDescription.setAllowBlank(false);
+		//txtDescription.setVisible(false);
+		expenseRegisterFormPanel.add(txtDescription);
+//---------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------
+		dtfLastUpdate.setFieldLabel("LastUpdate");
+		dtfLastUpdate.setName("lastUpdate");
+		//dtfLastUpdate.setAllowBlank(false);
+		dtfLastUpdate.setFireChangeEventOnSetValue(true);
+		//dtfLastUpdate.setRegex("");	
+		//dtfLastUpdate.setAutoValidate(true);
+		//dtfLastUpdate.setVisible(false);
+		expenseRegisterFormPanel.add(dtfLastUpdate);
+//---------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------
+		nbrCustomerId.setFieldLabel("CustomerId");
+		nbrCustomerId.setName("customerId");
+		nbrCustomerId.setRegex(GXTValidator.DOUBLE);
+		//nbrCustomerId.setPropertyEditorType(Integer.class);
+		nbrCustomerId.setFireChangeEventOnSetValue(true);
+		//nbrCustomerId.setAllowBlank(false);
+		nbrCustomerId.setAutoValidate(true);
+		//nbrCustomerId.setVisible(false);
+		expenseRegisterFormPanel.add(nbrCustomerId);
+//---------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------
+		nbrClientId.setFieldLabel("ClientId");
+		nbrClientId.setName("clientId");
+		nbrClientId.setRegex(GXTValidator.DOUBLE);
+		//nbrClientId.setPropertyEditorType(Integer.class);
+		nbrClientId.setFireChangeEventOnSetValue(true);
+		//nbrClientId.setAllowBlank(false);
+		nbrClientId.setAutoValidate(true);
+		//nbrClientId.setVisible(false);
+		expenseRegisterFormPanel.add(nbrClientId);
+//---------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------
+		nbrExpenseRegisterId.setFieldLabel("ExpenseRegisterId");
+		nbrExpenseRegisterId.setName("expenseRegisterId");
+		nbrExpenseRegisterId.setRegex(GXTValidator.DOUBLE);
+		//nbrExpenseRegisterId.setPropertyEditorType(Integer.class);
+		nbrExpenseRegisterId.setFireChangeEventOnSetValue(true);
+		//nbrExpenseRegisterId.setAllowBlank(false);
+		nbrExpenseRegisterId.setAutoValidate(true);
+		//nbrExpenseRegisterId.setVisible(false);
+		expenseRegisterFormPanel.add(nbrExpenseRegisterId);
 //---------------------------------------------------------------
 
 
 	}
 	public void onAttach(){
 		super.onAttach();
-		notifyAppEvent(this, "InvoiceViewOnAttach");
+		notifyAppEvent(this, "ExpenseRegisterViewOnAttach");
 	}
 
 	public void onDetach(){
 		super.onDetach();
-		notifyAppEvent(this, "InvoiceViewOnDetach");
+		notifyAppEvent(this, "ExpenseRegisterViewOnDetach");
 	}
 
 }
 
 /**
- * @return the invoiceFormPanel
+ * @return the expenseRegisterFormPanel
  */
-public FormPanel getInvoiceFormPanel() {
-	return invoiceFormPanel;
+public FormPanel getExpenseRegisterFormPanel() {
+	return expenseRegisterFormPanel;
 }
 
 
 //	/**
-//	 * @param invoiceTable the invoiceTable to set
+//	 * @param expenseRegisterTable the expenseRegisterTable to set
 //	 */
-//	public void setInvoiceTable(InvoiceTable invoiceTable_) {
-//		this.invoiceTable = invoiceTable_;
+//	public void setExpenseRegisterTable(ExpenseRegisterTable expenseRegisterTable_) {
+//		this.expenseRegisterTable = expenseRegisterTable_;
 //	}
 //	/**
-//	 * @return the invoiceTable
+//	 * @return the expenseRegisterTable
 //	 */
-//	public InvoiceTable getInvoiceTable() {
-//		return invoiceTable;
+//	public ExpenseRegisterTable getExpenseRegisterTable() {
+//		return expenseRegisterTable;
 //	}
 
 
@@ -283,7 +279,7 @@ public FormPanel getInvoiceFormPanel() {
 /**
  * @return the store
  */
-public ListStore<InvoiceBean> getStore() {
+public ListStore<ExpenseRegisterBean> getStore() {
 	return store;
 }
 /**

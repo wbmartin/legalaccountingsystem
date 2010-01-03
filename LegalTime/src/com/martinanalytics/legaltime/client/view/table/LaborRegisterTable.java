@@ -132,14 +132,19 @@ public class LaborRegisterTable extends LayoutContainer {
 		    column.setId("minuteCount");  
 		    column.setHeader("Hours");  
 		    column.setWidth(50); 
+		    column.setAlignment(HorizontalAlignment.RIGHT);
 		    column.setRenderer(new GridCellRenderer() {
 
 				@Override
 				public Object render(ModelData model_, String property_,
 						ColumnData config_, int rowIndex_, int colIndex_,
 						ListStore store_, Grid grid_) {
-					
-					return ((Integer)model_.get("minuteCount"))/60D;
+					try{
+						return ((Integer)model_.get("minuteCount"))/60D;
+					}catch(NullPointerException nex){
+						return 0D;
+						
+					}
 				}
 		    	
 			});
@@ -240,6 +245,7 @@ public class LaborRegisterTable extends LayoutContainer {
 	    column.setHeader("Rate");  
 	    column.setWidth(65);
 	    column.setNumberFormat(NumberFormat.getFormat("$0.00"));
+	    column.setAlignment(HorizontalAlignment.RIGHT);
 	    final NumberField ttxtBillRate = new NumberField();  
 	    ttxtBillRate.setAllowBlank(false);  
 	    ttxtBillRate.addListener(Events.OnFocus,new Listener<ComponentEvent>() {
@@ -258,6 +264,7 @@ public class LaborRegisterTable extends LayoutContainer {
 		    column = new ColumnConfig(); 
 		    column.setId("Total");  
 		    column.setHeader("Total");
+		    column.setAlignment(HorizontalAlignment.RIGHT);
 		    //column.setNumberFormat(NumberFormat.getFormat("$0.00"));
 		    column.setRenderer(new GridCellRenderer(){
 
@@ -388,10 +395,11 @@ public class LaborRegisterTable extends LayoutContainer {
 	    cp.setHeading("Billable Hours");  
 	    cp.setFrame(true);  
 	    //cp.setIcon(Examples.ICONS.table());  
-	    cp.setSize(600, 300);  
+	    cp.setSize(775, 200);  
 	    cp.setLayout(new FitLayout());  
 	  
-	    //grid.setAutoExpandColumn("");  
+	    //grid.setAutoExpandColumn(""); 
+
 	    grid.setBorders(true);  
 	    grid.setAutoExpandColumn("description");
 	    //grid.addPlugin(checkColumn);  
@@ -429,20 +437,8 @@ public class LaborRegisterTable extends LayoutContainer {
 //	    toolBar.add(add);  
 //	    cp.setTopComponent(toolBar);  
 //	    cp.setButtonAlign(HorizontalAlignment.CENTER);  
-	    cp.addButton(new Button("Reset", new SelectionListener<ButtonEvent>() {  
-	  
-	      @Override  
-	      public void componentSelected(ButtonEvent ce) {  
-	        store.rejectChanges();  
-	      }  
-	    }));
-	    cp.addButton(new Button("Generate Invoice", new SelectionListener<ButtonEvent>() {  
-	  	  
-		      @Override  
-		      public void componentSelected(ButtonEvent ce) {  
-		        notifier.notifyAppEvent(this, "GenerateInvoice") ;
-		      }  
-		    })); 
+	    
+	    
 	  
 //	    cp.addButton(new Button("Save", new SelectionListener<ButtonEvent>() {  
 //	  
@@ -461,7 +457,7 @@ public class LaborRegisterTable extends LayoutContainer {
 //		  for(int ndx = 0; ndx<laborRegisterBeans_.size(); ndx++){
 //			  laborRegisterTableModelDataList.add(laborRegisterBeans_.get(ndx));
 //		  }
-		  Log.debug("setlist laborregistertable: " + laborRegisterBeans_.get(0).getInvoiceId());
+		  //Log.debug("setlist laborregistertable: " + laborRegisterBeans_.get(0).getInvoiceId());
 		  store.setFiresEvents(false);
 		  store.removeAll();
 		  //store.add(laborRegisterTableModelDataList); 

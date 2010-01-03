@@ -1,4 +1,4 @@
-package com.martinanalytics.legaltime.server.rpt;
+package com.martinanalytics.legaltime.server.rpt.addresslabels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
 import com.martinanalytics.legaltime.server.model.VwCustomerFollowupServiceImpl;
 
-public class BasicServlet extends HttpServlet {
+public class ClientAddressLabelServlet extends HttpServlet {
 	  /**
 	 * 
 	 */
