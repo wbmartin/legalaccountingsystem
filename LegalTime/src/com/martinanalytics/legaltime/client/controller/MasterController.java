@@ -34,6 +34,7 @@ public class MasterController implements AppEventListener{
 	 private LaborRegisterController laborRegisterController;
 	 private InvoiceManagerController invoiceManagerController;
 	 private InvoiceController invoiceController;
+
 	
 	 
 	 public MasterController(){

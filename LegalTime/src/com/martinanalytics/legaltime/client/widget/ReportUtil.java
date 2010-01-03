@@ -1,6 +1,8 @@
 package com.martinanalytics.legaltime.client.widget;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import com.extjs.gxt.ui.client.js.JsArray;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -11,7 +13,7 @@ public class ReportUtil {
     private ReportUtil() {
     }
     
-    public static void showReport(String action,UserProfile userProfile_) {
+    public static void showReport(String action,UserProfile userProfile_, HashMap parameters) {
 
     	JsArray names = new JsArray();
     	JsArray values = new JsArray();
@@ -21,6 +23,14 @@ public class ReportUtil {
     	values.add(userProfile_.getSessionId());
     	names.add("clientId");
     	values.add(userProfile_.getClientId());
+    	if (parameters != null){
+    	    for (Object key: parameters.keySet()) {
+	    		names.add(key.toString());
+	        	values.add(parameters.get(key));
+    		 
+    		}
+    	}
+    	
     	try{
         openReportWindow(action, names.getJsObject(), values.getJsObject() );//JavaScriptObjectHelper.convertToJavaScriptArray(values)
     	}catch(Exception e){
