@@ -1,6 +1,7 @@
 package com.martinanalytics.legaltime.client.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
@@ -31,6 +32,7 @@ import com.martinanalytics.legaltime.client.view.InvoiceSelectionView;
 import com.martinanalytics.legaltime.client.view.InvoiceView;
 import com.martinanalytics.legaltime.client.view.LaborRegisterView;
 import com.martinanalytics.legaltime.client.view.table.LaborRegisterTable;
+import com.martinanalytics.legaltime.client.widget.ReportUtil;
 
 public class InvoiceManagerController implements AppEventListener {
 	private static InvoiceManagerController instance=null;
@@ -232,6 +234,7 @@ public class InvoiceManagerController implements AppEventListener {
 		 					masterController.getAppContainer().setTransactionResults(
 		 						"Saving LaborRegister Batch Failed"
 		 						, (new java.util.Date().getTime() -startTime.getTime()));
+		 					invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
 		 				}
 		 		
 		 				public void onSuccess(Integer newInvoiceId_) {
@@ -241,6 +244,10 @@ public class InvoiceManagerController implements AppEventListener {
 		 							, (new java.util.Date().getTime() - startTime.getTime()));
 		 					
 		 					removedInvoicedLaborAndExpenses();
+		 					 HashMap params = new HashMap();
+								params.put("invoiceId", newInvoiceId_);
+								ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
+							   invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
 		 				}
 		 		});
 		   }
@@ -280,7 +287,7 @@ public class InvoiceManagerController implements AppEventListener {
 			   private void generateInvoiceAfterSaves(){
 				   if (expensesSaved && laborSaved){
 					   createInvoiceFromEligibleTrans(invoiceManagerView.getSelectedCustomerId(), new java.util.Date());
-					   invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
+					  
 				   }
 			   }
 			   private void removedInvoicedLaborAndExpenses(){

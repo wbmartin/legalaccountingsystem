@@ -17,6 +17,7 @@ import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.store.Record;
 import com.extjs.gxt.ui.client.store.Store;
+import com.extjs.gxt.ui.client.store.StoreFilter;
 import com.extjs.gxt.ui.client.util.DateWrapper;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Dialog;
@@ -82,33 +83,35 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	
 	public FollowupTableCustomerPerspective(){
 		notifier = new AppNotifyObject();
-		//followupView = new FollowupView();
+		StoreFilter<FollowupBean> storeFilter = new StoreFilter<FollowupBean>(){
+			@Override
+			public boolean select(Store<FollowupBean> store_,
+					FollowupBean parent_, FollowupBean item_, String property_) {
+				
+				return item_.getCloseDt() == null?true:false;
+			}
+			
+		};
+		store.addFilter(storeFilter);
 		
-		
-	
-		
-		
-		
-		
-		
-		//formBindings.
-	     grid.getView().setEmptyText("No Open Tasks");
-		    grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
-		    
-			grid.getSelectionModel().addListener(Events.SelectionChange,  
-					new Listener<SelectionChangedEvent<FollowupBean>>() {  
-						public void handleEvent(SelectionChangedEvent<FollowupBean> be) { 
-							Log.debug("Followupcostomertable selection detected");
-							if (be.getSelection().size() > 0) {  
-								formBindings.bind((ModelData) be.getSelection().get(0));
-								
-								
-								notifier.notifyAppEvent(this, AppMsg.SHOW_FOLLOWUP_EDITOR,"CUSTOMER");
-							} else {  
-								formBindings.unbind();  
-							}  
-						}  
-			});  
+
+		grid.getView().setEmptyText("No Open Tasks");
+		grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
+
+		grid.getSelectionModel().addListener(Events.SelectionChange,  
+				new Listener<SelectionChangedEvent<FollowupBean>>() {  
+			public void handleEvent(SelectionChangedEvent<FollowupBean> be) { 
+				Log.debug("Followupcostomertable selection detected");
+				if (be.getSelection().size() > 0) {  
+					formBindings.bind((ModelData) be.getSelection().get(0));
+
+
+					notifier.notifyAppEvent(this, AppMsg.SHOW_FOLLOWUP_EDITOR,"CUSTOMER");
+				} else {  
+					formBindings.unbind();  
+				}  
+			}  
+		});  
 //		    grid.getSelectionModel().addListener(Events.SelectionChange,  
 //					new Listener<SelectionEvent<FollowupBean>>() {  
 //						public void handleEvent(SelectionEvent<FollowupBean> be) { 
@@ -349,12 +352,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	    	store.sort("followupDescription", SortDir.ASC);
 	  	    store.insert(followupBean, 0);
 	  	    //grid.startEditing(0, 0); 
-	  	    
-	  	  
-	  	    
-	  	   
-			
-			formBindings.bind(followupBean  );
+	  	    formBindings.bind(followupBean  );
 	    	  
 	    	notifier.notifyAppEvent(this, AppMsg.SHOW_FOLLOWUP_EDITOR,"CUSTOMER");
 	    	  
@@ -362,7 +360,18 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	      }  
 	  
 	    });  
-	    toolBar.add(add);  
+	    toolBar.add(add); 
+	    Button cmdShowAllFollowups = new Button("Show Closed Followups");
+	    toolBar.add(cmdShowAllFollowups);
+	    cmdShowAllFollowups.addSelectionListener(new SelectionListener<ButtonEvent>() {  
+	  	  
+		      @Override  
+		      public void componentSelected(ButtonEvent ce) {
+		    	  
+		    	  store.clearFilters();
+		    	  
+		      }
+	    });
 	   cp.setTopComponent(toolBar);  
 	    cp.setButtonAlign(HorizontalAlignment.CENTER);  
 //	    cp.addButton(new Button("Reset", new SelectionListener<ButtonEvent>() {  
@@ -395,6 +404,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 		  store.add(followupTableModelDataList); 
 		  store.setFiresEvents(true);
 		  grid.getView().refresh(false);
+		  store.applyFilters("");
 //		  if (followupBeans_.size()>0){
 //			  grid.getSelectionModel().select(0,false);
 //		  }
