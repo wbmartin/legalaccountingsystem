@@ -841,6 +841,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     							, (new java.util.Date().getTime() - startTime.getTime()));
     						followupController.getFollowupTableCustomerPerspective().setList(followupResult);
     						
+    						
     					}
     		});
     	  }

@@ -186,6 +186,17 @@
         <url-pattern>/legaltime/InvoiceReportServlet</url-pattern> 
     </servlet-mapping> 
 <!-- ============================= -->
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>vwLaborInvoiceItemDisplayServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.VwLaborInvoiceItemDisplayServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>vwLaborInvoiceItemDisplayServlet</servlet-name> 
+        <url-pattern>/legaltime/vwLaborInvoiceItemDisplay</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
 
 
 </web-app>

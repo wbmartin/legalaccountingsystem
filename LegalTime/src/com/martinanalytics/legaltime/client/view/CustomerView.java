@@ -307,16 +307,16 @@ class CustomerComposite extends Composite{
 		//------------------
 	      
 		ToolBar toolBar = new ToolBar();  
-		Button test = new Button("test");
-		test.addListener(Events.Select, new Listener<ComponentEvent>() {
-			public void handleEvent(ComponentEvent be) {
-				HashMap params = new HashMap();
-				params.put("invoiceId", 17);
-				ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
-			}  
-		    });
-		
-		toolBar.add(test); 
+//		Button test = new Button("test");
+//		test.addListener(Events.Select, new Listener<ComponentEvent>() {
+//			public void handleEvent(ComponentEvent be) {
+//				HashMap params = new HashMap();
+//				params.put("invoiceId", 17);
+//				ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
+//			}  
+//		    });
+//		
+//		toolBar.add(test); 
 		Button addCustomer = new Button("Add Customer");  
 		addCustomer.setBorders(true);
 		addCustomer.addListener(Events.Select, new Listener<ComponentEvent>() {
@@ -352,6 +352,7 @@ class CustomerComposite extends Composite{
 			      public void handleEvent(ComponentEvent be) {
 		    	  store.rejectChanges();
 		    	  store.filter("activeYn","Y");
+		    	  grid.getSelectionModel().deselectAll();
 		      }
 		    });
 		    toolBar.add(cancelChanges);

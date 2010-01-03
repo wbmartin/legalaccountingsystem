@@ -105,7 +105,8 @@ public class ExpenseRegisterTable extends LayoutContainer {
 	    column.setHeader("ExpenseDt");  
 	    column.setWidth(100);  
 	    final DateField ttxtExpenseDt = new DateField();  
-	    ttxtExpenseDt.setAllowBlank(false);  
+	    ttxtExpenseDt.setAllowBlank(false); 
+	    ttxtExpenseDt.getPropertyEditor().setFormat(DateTimeFormat.getFormat("MM/dd/yy")); 
 	    ttxtExpenseDt.addListener(Events.OnFocus,new Listener<ComponentEvent>() {
 	        public void handleEvent(ComponentEvent be) {
 	        	ttxtExpenseDt.selectAll();
@@ -140,7 +141,8 @@ public class ExpenseRegisterTable extends LayoutContainer {
 	  	    column.setId("amount");  
 	  	    column.setHeader("Amount");  
 	  	    column.setWidth(100);  
-	  	    final TextField<String> ttxtAmount = new TextField<String>();  
+	  	  column.setNumberFormat(NumberFormat.getFormat("$0.00"));
+	  	    final NumberField ttxtAmount = new NumberField();  
 	  	    ttxtAmount.setAllowBlank(false);  
 	  	    ttxtAmount.addListener(Events.OnFocus,new Listener<ComponentEvent>() {
 	  	        public void handleEvent(ComponentEvent be) {

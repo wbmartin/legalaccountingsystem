@@ -34,6 +34,7 @@ import com.martinanalytics.legaltime.client.model.bean.LaborRegisterBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
 import com.martinanalytics.legaltime.client.model.bean.VwInvoiceDisplayBean;
+import com.martinanalytics.legaltime.client.model.bean.VwLaborInvoiceItemDisplayBean;
 import com.martinanalytics.legaltime.server.model.CustomerServiceImpl;
 import com.martinanalytics.legaltime.server.model.ExpenseInvoiceItemServiceImpl;
 import com.martinanalytics.legaltime.server.model.ExpenseRegisterServiceImpl;
@@ -41,10 +42,11 @@ import com.martinanalytics.legaltime.server.model.InvoiceServiceImpl;
 import com.martinanalytics.legaltime.server.model.LaborInvoiceItemServiceImpl;
 import com.martinanalytics.legaltime.server.model.LaborRegisterServiceImpl;
 import com.martinanalytics.legaltime.server.model.VwInvoiceDisplayServiceImpl;
+import com.martinanalytics.legaltime.server.model.VwLaborInvoiceItemDisplayServiceImpl;
 
 public class InvoiceReportServlet extends HttpServlet{
 	// static LaborRegisterServiceImpl laborRegisterService = new LaborRegisterServiceImpl();
-	static LaborInvoiceItemServiceImpl laborInvoiceItemService = new LaborInvoiceItemServiceImpl();
+	static VwLaborInvoiceItemDisplayServiceImpl laborInvoiceItemService = new VwLaborInvoiceItemDisplayServiceImpl();
 	static ExpenseInvoiceItemServiceImpl expenseInvoiceItemService = new ExpenseInvoiceItemServiceImpl();
 	 static ExpenseRegisterServiceImpl expenseRegisterService = new ExpenseRegisterServiceImpl();
 	// static InvoiceServiceImpl invoiceService = new InvoiceServiceImpl();
@@ -122,7 +124,7 @@ public class InvoiceReportServlet extends HttpServlet{
 
 	 }
 	 public static JRDataSource  getLaborBeans(UserProfile userProfile_, int invoiceId_){
-	       ArrayList<LaborInvoiceItemBean> laborLines = laborInvoiceItemService.selectLaborInvoiceItem(userProfile_, "where invoice_id = " + invoiceId_, "order by activity_dt");
+	       ArrayList<VwLaborInvoiceItemDisplayBean> laborLines = laborInvoiceItemService.selectVwLaborInvoiceItemDisplay(userProfile_, "where invoice_id = " + invoiceId_, "order by activity_dt");
 	       
 	       return new JRBeanCollectionDataSource(laborLines);
 
@@ -138,32 +140,12 @@ public class InvoiceReportServlet extends HttpServlet{
 	       java.util.HashMap params = new java.util.HashMap();
 	       double pleaseRemit =0;
 	       try{
-	        //params.put("SUBREPORT_DIR","");
-	        //params.put("SUBREPORT_DIR","./");
-	    	//   params.put("SUBREPORT_DIR",REPORT_PATH);
 	    	   String reportsDirPath = this.getServletContext().getRealPath(REPORT_PATH+"invoice/");
-	    	   File reportsDir = new File(reportsDirPath);
-	    	   if (!reportsDir.exists()) {
-	    		   System.err.println(String.valueOf(reportsDir));
-	    	       //throw new FileNotFoundException(String.valueOf(reportsDir));
-	    	   }
-	    	params.put("SUBREPORT_DIR", reportsDirPath );  
-	        //params.put("CurrentServicesRenderedAmount",currentServicesRendered);
-	        params.put("CurrentServicesRenderedAmount",0D);
-	        params.put("LaborRecords", getLaborBeans(userProfile_, invoiceId_));
-	        params.put("Expenses", getExpenseBeans(userProfile_, invoiceId_));
-	        //params.put("CurrentExpenseAmount",currentExpenses);
-	        params.put("CurrentExpenseAmount",0D);
-	        //pleaseRemit = currentServicesRendered + currentExpenses + invoiceBean.getPrevBalanceDue();
-	        pleaseRemit =0;
-	        if(pleaseRemit <0){pleaseRemit = 0;}
-	        //params.put("TotalToRemit",pleaseRemit);
-	        params.put("TotalToRemit",0D);
-	        //params.put("UserInfoCache",UserInfoCache.getInstance());
-	        params.put("UserInfoCache", null);
-	        params.put("Payments",getPaymentBeans(userProfile_, invoiceId_));
-	        //params.put("PreviousBalance",invoiceBean.getPrevBalanceDue()+ totalPaymentsReceived);
-	        params.put("PreviousBalance",0D);
+	    	   params.put("SUBREPORT_DIR", reportsDirPath );  
+	    	   params.put("LaborRecords", getLaborBeans(userProfile_, invoiceId_));
+	    	   params.put("Expenses", getExpenseBeans(userProfile_, invoiceId_));
+	    	   params.put("Payments",getPaymentBeans(userProfile_, invoiceId_));
+	    	   params.put("PreviousBalance",0D);
 	       }catch(Exception e){
 	           Log.debug( "Error General Exception getParams"+ e.getMessage());
 	       }
