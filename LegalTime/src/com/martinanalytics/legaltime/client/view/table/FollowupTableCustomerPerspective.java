@@ -23,6 +23,7 @@ import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.button.ToggleButton;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.NumberField;
@@ -93,6 +94,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 			
 		};
 		store.addFilter(storeFilter);
+		store.applyFilters("");
 		
 
 		grid.getView().setEmptyText("No Open Tasks");
@@ -333,6 +335,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 
 	    
 	    Button add = new Button("Add Followup");  
+	    add.setBorders(true);
 	    add.addSelectionListener(new SelectionListener<ButtonEvent>() {  
 	  
 	      @Override  
@@ -361,14 +364,20 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	  
 	    });  
 	    toolBar.add(add); 
-	    Button cmdShowAllFollowups = new Button("Show Closed Followups");
+	    final ToggleButton cmdShowAllFollowups = new ToggleButton("Show Closed Followups");
+	    cmdShowAllFollowups.setBorders(true);
 	    toolBar.add(cmdShowAllFollowups);
 	    cmdShowAllFollowups.addSelectionListener(new SelectionListener<ButtonEvent>() {  
 	  	  
 		      @Override  
 		      public void componentSelected(ButtonEvent ce) {
-		    	  
-		    	  store.clearFilters();
+		    	  if(cmdShowAllFollowups.isPressed()){
+		    		  store.clearFilters();
+		    		  cmdShowAllFollowups.setText("Hide Closed Followups");
+		    	  }else{
+		    		  store.applyFilters("");
+		    		  cmdShowAllFollowups.setText("Show Closed Followups");
+		    	  }
 		    	  
 		      }
 	    });
@@ -404,7 +413,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 		  store.add(followupTableModelDataList); 
 		  store.setFiresEvents(true);
 		  grid.getView().refresh(false);
-		  store.applyFilters("");
+		  
 //		  if (followupBeans_.size()>0){
 //			  grid.getSelectionModel().select(0,false);
 //		  }

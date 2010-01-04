@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventProducer;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
+import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
 
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.view.table.CustomerTable;
@@ -41,6 +42,7 @@ import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.button.ToggleButton;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.extjs.gxt.ui.client.widget.form.DateField;
 import com.extjs.gxt.ui.client.widget.form.Field;
@@ -49,7 +51,6 @@ import com.extjs.gxt.ui.client.widget.form.ListField;
 import com.extjs.gxt.ui.client.widget.form.NumberField;
 import com.extjs.gxt.ui.client.widget.form.SimpleComboBox;
 import com.extjs.gxt.ui.client.widget.form.SimpleComboValue;
-import com.extjs.gxt.ui.client.widget.form.StoreFilterField;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.form.Validator;
 import com.extjs.gxt.ui.client.widget.form.ComboBox.TriggerAction;
@@ -116,13 +117,25 @@ public class CustomerView extends AppEventProducer{
 	private ColumnModel cm;
 	private VwCustomerHourlyBillRateTable vwCustomerHourlyBillRateTable = new VwCustomerHourlyBillRateTable();
 	private FollowupTableCustomerPerspective  followupTableCustomerPerspective;// = new FollowupTableCustomerPerspective(); 
-
+	private Button cmdUnDelete = new Button("Undelete");
 	private final int LABEL_WIDTH =75;
 
 	private CustomerComposite customerComposite;
 	public CustomerView(){
 		userProfile = UserProfile.getInstance();
 		customerComposite =new CustomerComposite();
+		
+		StoreFilter<CustomerBean> storeFilter = new StoreFilter<CustomerBean>(){
+			@Override
+			public boolean select(Store<CustomerBean> store_,
+					CustomerBean parent_, CustomerBean item_, String property_) {
+				
+				return item_.getActiveYn().equals("Y") ?true:false;
+			}
+			
+		};
+		store.addFilter(storeFilter);
+		store.applyFilters("");
 	}
 	/**
 	 * @return the nbrContingencyRate
@@ -295,6 +308,11 @@ class CustomerComposite extends Composite{
 						if (be.getSelection().size() > 0) {  
 							if(txtLastName.getValue()==null || customerFormPanel.isValid()){
 								formBindings.bind((ModelData) be.getSelection().get(0)); 
+								if(be.getSelection().get(0).getActiveYn().equals("N")){
+									cmdUnDelete.setVisible(true);
+								}else{
+									cmdUnDelete.setVisible(false);
+								}
 								notifyAppEvent(this,"CustomerChange", be.getSelection().get(0).getCustomerId());
 							}else{
 								notifyAppEvent(this, "UserMessage", "Please Correct Validation Errors");
@@ -351,7 +369,7 @@ class CustomerComposite extends Composite{
 		    cancelChanges.addListener(Events.Select, new Listener<ComponentEvent>() {
 			      public void handleEvent(ComponentEvent be) {
 		    	  store.rejectChanges();
-		    	  store.filter("activeYn","Y");
+		    	 // store.filter("activeYn","Y");
 		    	  grid.getSelectionModel().deselectAll();
 		      }
 		    });
@@ -363,12 +381,31 @@ class CustomerComposite extends Composite{
 			      public void handleEvent(ComponentEvent be) {
   
 			    	  txtActiveYn.setValue("N");
-			    	  store.filter("activeYn","Y");
+			    	 store.filter("");
 			    	  grid.getSelectionModel().select(0, false);
 			    	  
 			      }
 			    });
 		    toolBar.add(deleteCustomer);
+		    
+		    
+		    final ToggleButton cmdShowAllCustomers = new ToggleButton("Show Deleted Customers");
+		    cmdShowAllCustomers.setBorders(true);
+		    toolBar.add(cmdShowAllCustomers);
+		    cmdShowAllCustomers.addSelectionListener(new SelectionListener<ButtonEvent>() {  
+		  	  
+			      @Override  
+			      public void componentSelected(ButtonEvent ce) {
+			    	  if(cmdShowAllCustomers.isPressed()){
+			    		  store.clearFilters();
+			    		  cmdShowAllCustomers.setText("Hide Deleted Customers");
+			    	  }else{
+			    		  store.applyFilters("");
+			    		  cmdShowAllCustomers.setText("Show Deleted Customers");
+			    	  }
+			    	  
+			      }
+		    });
 		    //-----------------------
 		    
 		    //-----------------
@@ -396,8 +433,16 @@ class CustomerComposite extends Composite{
 	}
 	
 	public void createFields(){
-
-
+		cmdUnDelete.addSelectionListener(new SelectionListener<ButtonEvent>() {  
+		  	  
+		      @Override  
+		      public void componentSelected(ButtonEvent ce) {
+		      txtActiveYn.setValue("Y");
+		      }});
+		cmdUnDelete.setVisible(false);
+		customerFormPanel.add(cmdUnDelete);
+		
+		
 		txtFirstName.setFieldLabel("First Name");
 		txtFirstName.setName("firstName");
 		txtFirstName.setFireChangeEventOnSetValue(true);
