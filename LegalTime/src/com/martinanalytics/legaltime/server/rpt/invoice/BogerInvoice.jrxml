@@ -27,75 +27,51 @@
 	<field name="zip" class="java.lang.String"/>
 	<field name="invoiceDt" class="java.util.Date"/>
 	<field name="mortgageAmount" class="java.lang.Double"/>
+	<field name="prevBalanceDue" class="java.lang.Double"/>
+	<field name="invoiceTotalAmt" class="java.lang.Double"/>
+	<variable name="PleaseRemit" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($F{prevBalanceDue}.doubleValue() + $F{invoiceTotalAmt}.doubleValue())
+
+]]></variableExpression>
+	</variable>
+	<variable name="PleaseRemitNonNeg" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($V{PleaseRemit}.doubleValue() <0D ? 0 : $V{PleaseRemit}.doubleValue())]]></variableExpression>
+	</variable>
 	<group name="LayoutHelp">
 		<groupExpression><![CDATA[$F{invoiceId}]]></groupExpression>
 		<groupFooter>
-			<band height="35">
+			<band height="24">
 				<subreport>
-					<reportElement x="1" y="3" width="554" height="22"/>
+					<reportElement x="1" y="3" width="554" height="17"/>
 					<dataSourceExpression><![CDATA[$P{LaborRecords}]]></dataSourceExpression>
 					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "BogerInvoice_LaborSubReport.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
-			<band height="65">
-				<staticText>
-					<reportElement x="151" y="5" width="167" height="20"/>
-					<textElement/>
-					<text><![CDATA[Total For Current Services Rendered]]></text>
-				</staticText>
-				<textField pattern="$ #,##0.00">
-					<reportElement x="489" y="4" width="67" height="20"/>
-					<textElement textAlignment="Right" markup="none"/>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$P{CurrentServicesRenderedAmount}]]></textFieldExpression>
-				</textField>
+			<band height="26">
 				<subreport>
-					<reportElement x="0" y="39" width="555" height="16" isPrintWhenDetailOverflows="true"/>
+					<reportElement x="1" y="3" width="555" height="16" isPrintWhenDetailOverflows="true"/>
 					<dataSourceExpression><![CDATA[$P{Expenses}]]></dataSourceExpression>
 					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "BogerInvoice_ExpenseSubReport.jasper"]]></subreportExpression>
 				</subreport>
-				<line>
-					<reportElement x="0" y="4" width="555" height="1"/>
-				</line>
 			</band>
-			<band height="112">
-				<line>
-					<reportElement x="0" y="9" width="555" height="1">
-						<printWhenExpression><![CDATA[Boolean.valueOf(!($P{CurrentExpenseAmount}).equals("0"))]]></printWhenExpression>
-					</reportElement>
-				</line>
+			<band height="70">
 				<staticText>
-					<reportElement x="151" y="11" width="167" height="20">
-						<printWhenExpression><![CDATA[Boolean.valueOf(!($P{CurrentExpenseAmount}).equals("0"))]]></printWhenExpression>
-					</reportElement>
-					<textElement/>
-					<text><![CDATA[Total For Other Charges]]></text>
-				</staticText>
-				<textField pattern="$#,##0.00">
-					<reportElement x="489" y="11" width="67" height="20">
-						<printWhenExpression><![CDATA[Boolean.valueOf(!($P{CurrentExpenseAmount}).equals("1"))]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Right"/>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$P{CurrentExpenseAmount}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="151" y="41" width="167" height="20"/>
+					<reportElement x="151" y="5" width="167" height="20"/>
 					<textElement>
 						<font size="12" isBold="true" isUnderline="false"/>
 					</textElement>
 					<text><![CDATA[Previous Balance]]></text>
 				</staticText>
-				<textField pattern="$ #,##0.00">
-					<reportElement x="489" y="41" width="67" height="20"/>
-					<textElement textAlignment="Right">
-						<font isBold="true"/>
-					</textElement>
-					<textFieldExpression class="java.lang.Double"><![CDATA[$P{PreviousBalance}]]></textFieldExpression>
-				</textField>
 				<subreport>
-					<reportElement x="1" y="75" width="555" height="23"/>
+					<reportElement x="1" y="39" width="555" height="23"/>
 					<dataSourceExpression><![CDATA[$P{Payments}]]></dataSourceExpression>
 					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "BogerInvoice_PaymentsSubReport.jasper"]]></subreportExpression>
 				</subreport>
+				<textField pattern="$ #,##0.00">
+					<reportElement x="456" y="5" width="100" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{prevBalanceDue}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -168,7 +144,7 @@
 				<textElement/>
 				<text><![CDATA[Date:]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="MM/dd/yy">
 				<reportElement x="510" y="0" width="45" height="20"/>
 				<textElement textAlignment="Right" markup="none"/>
 				<textFieldExpression class="java.util.Date"><![CDATA[$F{invoiceDt}]]></textFieldExpression>
@@ -240,13 +216,6 @@
 				</textElement>
 				<text><![CDATA[Please Remit]]></text>
 			</staticText>
-			<textField pattern="$ #,##0.00">
-				<reportElement x="489" y="12" width="66" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$P{TotalToRemit}]]></textFieldExpression>
-			</textField>
 			<line>
 				<reportElement x="489" y="32" width="66" height="1"/>
 			</line>
@@ -268,6 +237,13 @@
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression class="java.lang.Double"><![CDATA[$F{mortgageAmount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00">
+				<reportElement x="455" y="12" width="100" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{PleaseRemitNonNeg}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

@@ -387,9 +387,24 @@ public class VwCustomerFollowupTable extends LayoutContainer implements AppEvent
 		  
 	  }
 	  
-	  public void saveChanges(){
-		  List<Record> modified = store.getModifiedRecords();
+//	  public void saveChanges(){
+//		  List<Record> modified = store.getModifiedRecords();
+//		  VwCustomerFollowupBean vwCustomerFollowupBean = new VwCustomerFollowupBean();
+//		  ArrayList<VwCustomerFollowupBean> batchSave = new ArrayList<VwCustomerFollowupBean>();
+//		  for (Record r : modified) {
+//			  vwCustomerFollowupBean.setProperties(r.getModel().getProperties());
+//			  batchSave.add(vwCustomerFollowupBean);
+//			  
+//			  
+//		  }
+// 		store.commitChanges();
+//		notifier.notifyAppEvent(this, "SaveVwCustomerFollowupBatch", batchSave );
+//		  
+//	  }
+	  
+	  public ArrayList<VwCustomerFollowupBean> getModifiedList(){
 		  VwCustomerFollowupBean vwCustomerFollowupBean = new VwCustomerFollowupBean();
+		  List<Record> modified = store.getModifiedRecords();
 		  ArrayList<VwCustomerFollowupBean> batchSave = new ArrayList<VwCustomerFollowupBean>();
 		  for (Record r : modified) {
 			  vwCustomerFollowupBean.setProperties(r.getModel().getProperties());
@@ -397,15 +412,13 @@ public class VwCustomerFollowupTable extends LayoutContainer implements AppEvent
 			  
 			  
 		  }
- 		store.commitChanges();
-		notifier.notifyAppEvent(this, "SaveVwCustomerFollowupBatch", batchSave );
-		  
+		  return batchSave;
 	  }
 	
 	public void onDetach(){
 		super.onDetach();
-		saveChanges();
-			notifier.notifyAppEvent(this, "VwCustomerFollowupTableOnAttach");
+		//saveChanges();
+			notifier.notifyAppEvent(this, "VwCustomerFollowupTableOnDetach");
 	}
 	public void onAttach(){
 		super.onAttach();

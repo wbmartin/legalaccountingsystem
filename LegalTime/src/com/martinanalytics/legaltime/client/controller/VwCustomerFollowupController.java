@@ -98,8 +98,10 @@ public class VwCustomerFollowupController implements AppEventListener, ClickHand
     }else if(e_.getName().equals("SaveChangesToVWCustomerFollowupTable")){
     	
 	}else if(e_.getName().equals("VwCustomerFollowupViewOnDetach")){
+								 
 	}else if(e_.getName().equals("VwCustomerFollowupTableOnAttach")){		
-	}else if(e_.getName().equals("VwCustomerFollowupTableOnDetach")){		
+	}else if(e_.getName().equals("VwCustomerFollowupTableOnDetach")){	
+		saveVwCustomerFollowupBeanBatch(vwCustomerFollowupTable.getModifiedList());
 	
 	}else{
 		Log.debug("Unexpected AppEvent named" +e_.getName() );

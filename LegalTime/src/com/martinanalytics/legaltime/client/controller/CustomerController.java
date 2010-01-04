@@ -125,9 +125,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   public void onAppEventNotify(AppEvent e_) {
 	Log.debug("Customer Controller received: " +e_.getName() + " "+ e_.getSource().toString());
     if (e_.getName().equals("CustomerViewOnAttach")){
-    	selectCustomerBeans("where active_yn='Y'", "order by last_name");	
+    	selectCustomerBeans("", "order by active_yn desc, last_name");	//where active_yn ='Y'
     }else if (e_.getName().equals("RefreshCustomers")){
-    	selectCustomerBeans("where active_yn='Y'", "order by last_name");
+    	selectCustomerBeans("", "active_yn desc, order by last_name ");
 	}else if(e_.getName().equals("CustomerViewOnDetach")){
 		saveAllChanges();
 	}else if(e_.getName().equals("SaveCustomerBatch")){
@@ -208,7 +208,11 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 						masterController.getAppContainer().setTransactionResults(
 							"Successfully Retrieved Customer listing"
 							, (new java.util.Date().getTime() - startTime.getTime()));
+						    //
+						    
 							setCustomerList(customerResult);
+							customerView.getStore().setFiresEvents(true);
+							
 							notifier.notifyAppEvent(this, AppMsg.CUSTOMER_CACHE_REFRESHED);
 					}
 		});
@@ -766,7 +770,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 //    		  customerTableModelDataList.add(new CustomerBean(customerBeans_.get(ndx)));
 //    	  }
     	  customerView.getStore().removeAll();
+    	  customerView.getStore().clearFilters();
     	  customerView.getStore().add(customerBeans_);
+    	  customerView.getStore().applyFilters("");
 
     }
     
