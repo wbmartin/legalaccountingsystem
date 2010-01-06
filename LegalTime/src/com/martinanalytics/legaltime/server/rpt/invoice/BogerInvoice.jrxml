@@ -44,14 +44,14 @@
 				<subreport>
 					<reportElement x="1" y="3" width="554" height="17"/>
 					<dataSourceExpression><![CDATA[$P{LaborRecords}]]></dataSourceExpression>
-					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "BogerInvoice_LaborSubReport.jasper"]]></subreportExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "/BogerInvoice_LaborSubReport.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 			<band height="26">
 				<subreport>
 					<reportElement x="1" y="3" width="555" height="16" isPrintWhenDetailOverflows="true"/>
 					<dataSourceExpression><![CDATA[$P{Expenses}]]></dataSourceExpression>
-					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "BogerInvoice_ExpenseSubReport.jasper"]]></subreportExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "/BogerInvoice_ExpenseSubReport.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 			<band height="70">
@@ -65,7 +65,7 @@
 				<subreport>
 					<reportElement x="1" y="39" width="555" height="23"/>
 					<dataSourceExpression><![CDATA[$P{Payments}]]></dataSourceExpression>
-					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "BogerInvoice_PaymentsSubReport.jasper"]]></subreportExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "/BogerInvoice_PaymentsSubReport.jasper"]]></subreportExpression>
 				</subreport>
 				<textField pattern="$ #,##0.00">
 					<reportElement x="456" y="5" width="100" height="20"/>

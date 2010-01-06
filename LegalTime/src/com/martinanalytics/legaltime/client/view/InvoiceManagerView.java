@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.ExpenseRegisterBean;
+import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.view.table.ExpenseRegisterTable;
 import com.martinanalytics.legaltime.client.view.table.LaborRegisterTable;
 import com.martinanalytics.legaltime.client.widget.AlternateComboBox;
@@ -137,12 +138,12 @@ public class InvoiceManagerView {
 		        
 		        ExpenseRegisterBean expenseRegisterBean  = new ExpenseRegisterBean();
 				expenseRegisterBean.setInvoiceable(true);
-		 		expenseRegisterBean.setInvoiceId(0);
+		 		expenseRegisterBean.setInvoiceId(null);
 		 		expenseRegisterBean.setAmount(0D);
 		 		expenseRegisterBean.setDescription("!Enter Description Here");
 		 		expenseRegisterBean.setLastUpdate(new java.util.Date());
-		 		expenseRegisterBean.setCustomerId(0);
-		 		expenseRegisterBean.setClientId(0);
+		 		expenseRegisterBean.setCustomerId(((CustomerBean)cboCustomerId.getSelection().get(0)).getCustomerId());
+		 		expenseRegisterBean.setClientId(UserProfile.getInstance().getClientId());
 		 		expenseRegisterBean.setExpenseRegisterId(0);
 		 		expenseRegisterBean.setExpenseDt(new java.util.Date());
 		  	        expenseRegisterTable.getGrid().stopEditing();  
