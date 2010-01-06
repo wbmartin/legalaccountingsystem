@@ -272,9 +272,13 @@ public class LaborRegisterTable extends LayoutContainer {
 				public Object render(ModelData model_, String property_,
 						ColumnData config_, int rowIndex_, int colIndex_,
 						ListStore store_, Grid grid_) {
+					if (model_.get("minuteCount") == null){
+						return null;
+					}else{
 					Double total = ((Integer)model_.get("minuteCount"))* ((Double)model_.get("billRate"))/60;
 					
 					return NumberFormat.getFormat("$0.00").format(total);
+					}
 				}
 		    	
 		    });

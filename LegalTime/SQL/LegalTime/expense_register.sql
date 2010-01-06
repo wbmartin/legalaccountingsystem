@@ -71,12 +71,9 @@ GRANT EXECUTE ON FUNCTION expense_register_bypk(text, integer, text, text,    in
 
 
 
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  expense_register_iq(text, integer, text , bool, int4, float8, text, int4)
-
--- DROP FUNCTION expense_register_iq( text, integer, text , bool, int4, float8, text, int4));
-
-create or replace function expense_register_iq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text , invoiceable_ bool, invoiceId_ int4, amount_ float8, description_ text, customerId_ int4)
+ DROP FUNCTION expense_register_iq(text, integer, text, text, boolean, integer, double precision, text, integer);
+ 
+create or replace function expense_register_iq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text , expenseDt_ date, invoiceable_ bool, invoiceId_ int4, amount_ float8, description_ text, customerId_ int4)
   returns expense_register as
 $body$
   declare
@@ -86,31 +83,22 @@ $body$
     	perform issessionvalid(clientid_, securityuserid_,sessionid_) ;
     	perform isuserauthorized(clientid_, securityuserid_,'INSERT_EXPENSEREGISTER' );
     end if;
-    insert into expense_register(client_id , invoiceable , invoice_id , amount , description , last_update , customer_id ) 
-	values (clientid_ , invoiceable_, invoiceId_, amount_, description_, now(), customerId_) 
+    insert into expense_register(client_id , expense_dt , invoiceable , invoice_id , amount , description , last_update , customer_id ) 
+	values (clientid_ , expenseDt_, invoiceable_, invoiceId_, amount_, description_, now(), customerId_) 
 	returning * into newrow;
       return newrow;
   end;
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function expense_register_iq(text, integer, text, text , bool, int4, float8, text, int4) owner to postgres;
-GRANT EXECUTE ON FUNCTION expense_register_iq(text, integer, text, text , bool, int4, float8, text, int4) TO GROUP legaltime_full;
-
-select * from expense_register_iq('ALREADY_AUTH', 1, 'test', 'test'  ,true
- , 1
- , 1
- , 'text' 
- , 1
- );
-
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  expense_register_uq(text, integer, text , bool, int4, float8, text, timestamp, int4,  integer)
-
--- DROP FUNCTION expense_register_uq( text, integer, text , bool, int4, float8, text, timestamp, int4,  integer);
+alter function expense_register_iq(text, integer, text, text , date, bool, int4, float8, text, int4) owner to postgres;
+GRANT EXECUTE ON FUNCTION expense_register_iq(text, integer, text, text , date, bool, int4, float8, text, int4) TO GROUP legaltime_full;
 
 
-create or replace function expense_register_uq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text , invoiceable_ bool, invoiceId_ int4, amount_ float8, description_ text, lastUpdate_ timestamp, customerId_ int4, expenseRegisterId_ integer)
+
+DROP FUNCTION expense_register_uq(text, integer, text, text, boolean, integer, double precision, text, timestamp without time zone, integer, integer);
+
+create or replace function expense_register_uq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text , expenseDt_ date, invoiceable_ bool, invoiceId_ int4, amount_ float8, description_ text, lastUpdate_ timestamp, customerId_ int4, expenseRegisterId_ integer)
   returns expense_register as
 $body$
   declare
@@ -121,7 +109,8 @@ $body$
     	perform isuserauthorized(clientid_, securityuserid_, 'UPDATE_EXPENSEREGISTER' );
     end if;
 	update expense_register set
-          invoiceable = invoiceable_ 
+          expense_dt = expenseDt_ 
+         , invoiceable = invoiceable_ 
          , invoice_id = invoiceId_ 
          , amount = amount_ 
          , description = description_ 
@@ -145,18 +134,8 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function expense_register_uq(text, integer, text, text , bool, int4, float8, text, timestamp, int4,  integer) owner to postgres;
-GRANT EXECUTE ON FUNCTION expense_register_uq(text, integer, text, text , bool, int4, float8, text, timestamp, int4,  integer) TO GROUP legaltime_full;
-
-
-select * from expense_register_uq('ALREADY_AUTH', 1, 'test', 'test' , true
-, 1
- , 'text' 
- , 'text' 
-, <last_update>
-, 1
-, 1
- );
+alter function expense_register_uq(text, integer, text, text , date, bool, int4, float8, text, timestamp, int4,  integer) owner to postgres;
+GRANT EXECUTE ON FUNCTION expense_register_uq(text, integer, text, text , date, bool, int4, float8, text, timestamp, int4,  integer) TO GROUP legaltime_full;
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+

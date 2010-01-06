@@ -50,6 +50,7 @@ public class InvoiceManagerController implements AppEventListener {
 	  private boolean laborSaved = false;
 	  private InvoiceSelectionView invoiceSelectionView;
 	  private Dialog invoiceSelectionDialog;
+	  private boolean generateInvoiceRequested;
 	  
 	protected InvoiceManagerController (MasterController masterController_){
 		masterController = masterController_;
@@ -57,7 +58,7 @@ public class InvoiceManagerController implements AppEventListener {
 		invoiceManagerView.getNotifier().addAppEventListener(this);
 		invoiceManagerView.getLaborRegisterTable().getNotifier().addAppEventListener(this);
 		invoiceSelectionView = new InvoiceSelectionView();
-		
+		generateInvoiceRequested = false;
 		invoiceSelectionDialog = new Dialog();
 		createInvoiceSelectionDialog();
 	}
@@ -94,12 +95,14 @@ public class InvoiceManagerController implements AppEventListener {
 	public void onAppEventNotify(AppEvent e_) {
 		if(e_.getName().equals("InvoiceManagerCustomerChanged")){
 			saveLaborRegisterBeanBatch(invoiceManagerView.getLaborRegisterTable().getList());
+			saveExpenseRegisterBeanBatch(invoiceManagerView.getExpenseRegisterTable().getList());
 			selectLaborRegisterBeans("where customer_id = "+ e_.getPayLoad() + " and invoice_id is null", "order by activity_date");
 			selectExpenseRegisterBeans("where customer_id = "+ e_.getPayLoad()+ " and invoice_id is null","order by expense_dt");
 		}else if(e_.getName().equals("GenerateInvoice")){
 			invoiceManagerView.getCmdGenerateInvoice().setEnabled(false);
 			expensesSaved = false;
 			laborSaved = false;
+			generateInvoiceRequested = true;
 			saveLaborRegisterBeanBatch(invoiceManagerView.getLaborRegisterTable().getList());
 			saveExpenseRegisterBeanBatch(invoiceManagerView.getExpenseRegisterTable().getList());
 			
@@ -174,7 +177,7 @@ public class InvoiceManagerController implements AppEventListener {
 	 							, (new java.util.Date().getTime() - startTime.getTime()));
 	 					
 	 					laborSaved = true;
-	 					generateInvoiceAfterSaves();
+	 					generateInvoiceAfterSavesIfRequested();
 	 					
 	 			
 	 				}
@@ -279,15 +282,15 @@ public class InvoiceManagerController implements AppEventListener {
 			 							, (new java.util.Date().getTime() - startTime.getTime()));
 			 					
 			 					expensesSaved = true;
-			 					generateInvoiceAfterSaves();
+			 					generateInvoiceAfterSavesIfRequested();
 			 				}
 			 		});
 			   }
 			   
-			   private void generateInvoiceAfterSaves(){
-				   if (expensesSaved && laborSaved){
+			   private void generateInvoiceAfterSavesIfRequested(){
+				   if (expensesSaved && laborSaved && generateInvoiceRequested){
 					   createInvoiceFromEligibleTrans(invoiceManagerView.getSelectedCustomerId(), new java.util.Date());
-					  
+					   generateInvoiceRequested = false;
 				   }
 			   }
 			   private void removedInvoicedLaborAndExpenses(){

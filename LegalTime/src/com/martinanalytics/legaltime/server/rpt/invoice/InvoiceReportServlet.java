@@ -68,6 +68,7 @@ public class InvoiceReportServlet extends HttpServlet{
         
         ArrayList<JasperPrint> jasperPrintList = buildInvoices(userProfile, beans);
         try {
+        	
 			ServletOutputStream outputStream = response.getOutputStream();
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        JRPdfExporter exporter = new JRPdfExporter();
@@ -105,6 +106,8 @@ public class InvoiceReportServlet extends HttpServlet{
 					    jasperFile, getParams(userProfile_, bean.getInvoiceId()),new JRBeanCollectionDataSource(single,false)));
 //				result.add(JasperFillManager.fillReport(
 //					    jasperFile, null,getExpenseBeans(userProfile_, bean.getInvoiceId())));
+				
+				
 			} catch (JRException e) {
 				
 				e.printStackTrace();
@@ -141,7 +144,8 @@ public class InvoiceReportServlet extends HttpServlet{
 	       double pleaseRemit =0;
 	       try{
 	    	   String reportsDirPath = this.getServletContext().getRealPath(REPORT_PATH+"invoice/");
-	    	   params.put("SUBREPORT_DIR", reportsDirPath );  
+	    	   
+	    	   params.put("SUBREPORT_DIR",reportsDirPath);  
 	    	   params.put("LaborRecords", getLaborBeans(userProfile_, invoiceId_));
 	    	   params.put("Expenses", getExpenseBeans(userProfile_, invoiceId_));
 	    	   params.put("Payments",getPaymentBeans(userProfile_, invoiceId_));
