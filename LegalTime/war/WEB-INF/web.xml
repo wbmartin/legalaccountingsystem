@@ -103,13 +103,13 @@
 
 <!-- ============================= -->
     <servlet> 
-        <servlet-name>ClientAddressLabelServlet</servlet-name> 
-        <servlet-class>com.martinanalytics.legaltime.server.rpt.addresslabels.ClientAddressLabelServlet</servlet-class> 
+        <servlet-name>CustomerAddressLabelServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.rpt.addresslabels.CustomerAddressLabelServlet</servlet-class> 
     </servlet> 
  
     <servlet-mapping> 
-        <servlet-name>ClientAddressLabelServlet</servlet-name> 
-        <url-pattern>/legaltime/ClientAddressLabelServlet</url-pattern> 
+        <servlet-name>CustomerAddressLabelServlet</servlet-name> 
+        <url-pattern>/legaltime/CustomerAddressLabelServlet</url-pattern> 
     </servlet-mapping> 
 <!-- ============================= -->
 
@@ -198,5 +198,18 @@
     </servlet-mapping> 
 <!-- ============================= -->
 
+
+
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>FollowupReportServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.rpt.followup.FollowupReportServlet</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>FollowupReportServlet</servlet-name> 
+        <url-pattern>/legaltime/FollowupReportServlet</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
 
 </web-app>

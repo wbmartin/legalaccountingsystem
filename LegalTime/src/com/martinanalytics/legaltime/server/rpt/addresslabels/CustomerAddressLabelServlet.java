@@ -19,34 +19,36 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
+import com.martinanalytics.legaltime.server.model.CustomerServiceImpl;
 import com.martinanalytics.legaltime.server.model.VwCustomerFollowupServiceImpl;
 
-public class ClientAddressLabelServlet extends HttpServlet {
+public class CustomerAddressLabelServlet extends HttpServlet {
 	  /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	VwCustomerFollowupServiceImpl vwCustomerFollowupServiceImpl = new VwCustomerFollowupServiceImpl();
+	CustomerServiceImpl customerServiceImpl = new CustomerServiceImpl();
 
 	public void doPost(HttpServletRequest request,
               HttpServletResponse response) throws ServletException, IOException {
 		//PrintWriter out = response.getWriter();
-		ArrayList<VwCustomerFollowupBean> beans = new  ArrayList<VwCustomerFollowupBean>();
+		ArrayList<CustomerBean> beans = new  ArrayList<CustomerBean>();
 		UserProfile userProfile = new UserProfile();
 		userProfile.setUserId(request.getParameter("userId"));
 		userProfile.setSessionId(request.getParameter("sessionId"));
 		userProfile.setClientId(Integer.parseInt(request.getParameter("clientId")));
-		String whereClause ="where customer_id =6";
-		String orderByClause ="order by due_dt desc";
+		String whereClause ="";
+		String orderByClause ="order by last_name desc";
 	    
-		beans = vwCustomerFollowupServiceImpl.selectVwCustomerFollowup(userProfile, whereClause, orderByClause);
+		beans = customerServiceImpl.selectCustomer(userProfile, whereClause, orderByClause);
         boolean success = false;
-        JasperPrint jasperPrint;
+        JasperPrint jasperPrint;	
         java.util.HashMap params = new java.util.HashMap();
         InputStream jasperFile = this.getServletContext().getResourceAsStream(
-        		"/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/Followup.jasper");
+        		"/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/addresslabels/ClientAddressLabels.jasper");
         try {
 			jasperPrint = JasperFillManager.fillReport(
 			    jasperFile, params,new JRBeanCollectionDataSource(beans,false));

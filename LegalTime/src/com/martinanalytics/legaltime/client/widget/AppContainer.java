@@ -200,16 +200,29 @@ public class AppContainer extends LayoutContainer {
 //    miEmailManager.addStyleName("LEFT");
 //    mnuBilling.add(miEmailManager);
     
-    Menu mnuReport = new Menu();
-    bar.add(new MenuBarItem("Reports", mnuReport));
+    Menu mnuReports = new Menu();
+    bar.add(new MenuBarItem("Reports", mnuReports));
+    
     MenuItem miClientAddressLabels = new MenuItem("Client Address Labels");
-    mnuReport.add(miClientAddressLabels);
+    mnuReports.add(miClientAddressLabels);
     miClientAddressLabels.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
-        	ReportUtil.showReport("./ClientAddressLabelServlet",UserProfile.getInstance(), null);
+        	ReportUtil.showReport("./CustomerAddressLabelServlet",UserProfile.getInstance(), null);
         	
           }}
     );
+    
+    
+    MenuItem miFollowupReport = new MenuItem("Followups");
+    mnuReports.add(miFollowupReport);
+    miFollowupReport.addStyleName("LEFT");
+    miFollowupReport.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+        	ReportUtil.showReport("./FollowupReportServlet",UserProfile.getInstance(), null);
+        	
+          }}
+    );
+    
     
     
     
