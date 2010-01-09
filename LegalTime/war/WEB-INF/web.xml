@@ -212,4 +212,30 @@
     </servlet-mapping> 
 <!-- ============================= -->
 
+
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>customerAccountRegisterServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.CustomerAccountRegisterServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>customerAccountRegisterServlet</servlet-name> 
+        <url-pattern>/legaltime/customerAccountRegister</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>paymentLogServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.model.PaymentLogServiceImpl</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>paymentLogServlet</servlet-name> 
+        <url-pattern>/legaltime/paymentLog</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+
 </web-app>

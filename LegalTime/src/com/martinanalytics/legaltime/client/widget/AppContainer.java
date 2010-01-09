@@ -149,6 +149,15 @@ public class AppContainer extends LayoutContainer {
           }}
     );
     
+    MenuItem miCustomerAccounting= new MenuItem("Customer Accounting");
+    miCustomerAccounting.addStyleName("LEFT");
+    mnuCustomer.add(miCustomerAccounting);
+    miCustomerAccounting.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+        	History.newItem(AppPages.CUSTOMER_ACCOUNT_REGISTER_PAGE);
+          }}
+    );
+    
     MenuItem miBillHours= new MenuItem("Bill Hours");
     miBillHours.addStyleName("LEFT");
     mnuCustomer.add(miBillHours);

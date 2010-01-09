@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.InvoiceBean;
 import com.martinanalytics.legaltime.client.model.InvoiceService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -311,12 +312,12 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	
 
 	/**
-	 * delete a record from the database
+	 * create an invoice from the database
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param invoiceBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
 	 */
-	public Integer createInvoiceFromEligibleTrans(UserProfile userProfile_, Integer customerId_, java.util.Date invoiceDt_){
+	public Integer createInvoiceFromEligibleTrans(UserProfile userProfile_, Integer customerId_, java.util.Date invoiceDt_)throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -339,12 +340,63 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {	
 		e.printStackTrace();
-		newInvoiceId = -1;
-		throw new GWTServerException("Deleting Invoice Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			System.err.println("FiredCustomExceptions");
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving LaborRegister Records Failed", e);
+		}
 	  }
 
 
 	  return newInvoiceId;
+
+	
+	}
+
+	
+	
+	
+	/**
+	 * create an invoice from the database
+	 * @param userProfile_ the credentials to use for authentication and authorization
+	 * @param invoiceBean_ the bean to delete, only primary keys value
+         * @return true if the delete was successful
+	 */
+public Boolean unwindInvoice(UserProfile userProfile_, Integer invoiceId_)throws GWTCustomException{
+	  int ndx =1;
+	  PreparedStatement ps;
+	  ResultSet rs;
+	  
+	  boolean result=false;
+	  //ArrayList<InvoiceBean> resultList  = new ArrayList<InvoiceBean>();
+	  try {
+		
+		ps = databaseManager.getConnection().prepareStatement("select * from unwind_invoice('CHECK_AUTH',?,?,?, ?);");
+		ps.setInt(ndx++,  userProfile_.getClientId());
+		ps.setString(ndx++,  userProfile_.getUserId());
+		ps.setString(ndx++, userProfile_.getSessionId());
+		ps.setInt(ndx++, invoiceId_ );
+    	
+   		
+		rs =  ps.executeQuery();
+		
+		while(rs.next()){
+			result = rs.getBoolean(1);
+		}
+	  }catch (Exception e) {	
+		e.printStackTrace();
+		result = false;
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			System.err.println("FiredCustomExceptions");
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving LaborRegister Records Failed", e);
+		}
+	  }
+
+
+	  return result;
 
 	
 	}

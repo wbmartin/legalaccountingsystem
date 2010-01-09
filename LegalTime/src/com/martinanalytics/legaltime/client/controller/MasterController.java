@@ -34,8 +34,9 @@ public class MasterController implements AppEventListener{
 	 private LaborRegisterController laborRegisterController;
 	 private InvoiceManagerController invoiceManagerController;
 	 private InvoiceController invoiceController;
+	 private CustomerAccountRegisterController customerAccountRegisterController;
+	 private PaymentLogController paymentLogController;
 
-	
 	 
 	 public MasterController(){
 		 userProfile = UserProfile.getInstance();
@@ -44,40 +45,48 @@ public class MasterController implements AppEventListener{
 		 itemWidgets.put(AppPages.LOGIN_PAGE, loginController.getLoginView().getLoginViewComposite());
 		 loginController.getNotifier().addAppEventListener(this);
 
-		 
+
 		 appContainer = AppContainer.getInstance();
 		 appContainer.getNotifier().addAppEventListener(this);
-		 
+
 		 customerController =  CustomerController.getInstance(this);
 		 itemWidgets.put(AppPages.CUSTOMER_PAGE, customerController.getCustomerView().getCustomerComposite());
 		 customerController.getNotifier().addAppEventListener(this);
-		 
+
 		 vwCustomerHourlyBillRateController =  VwCustomerHourlyBillRateController.getInstance(this);
 		 itemWidgets.put(AppPages.VW_USER_GRANT_PAGE, vwCustomerHourlyBillRateController.getVwCustomerHourlyBillRateView().getVwCustomerHourlyBillRateComposite());
-		 
-		 
+
+
 		 customerBillRateController =  CustomerBillRateController.getInstance(this);
 		 itemWidgets.put(AppPages.CUSTOMER_BILL_RATE_PAGE, customerBillRateController.getCustomerBillRateView().getCustomerBillRateComposite());
 
 		 followupController =  FollowupController.getInstance(this);
 		 itemWidgets.put(AppPages.FOLLOWUP_PAGE, followupController.getFollowupView().getFollowupComposite());
-		
+
 		 vwCustomerFollowupController =  VwCustomerFollowupController.getInstance(this);
 		 itemWidgets.put(AppPages.VW_CUSTOMER_FOLLOWUP_PAGE, vwCustomerFollowupController.getVwCustomerFollowupView().getVwCustomerFollowupComposite());
 
 		 userInfoController =  UserInfoController.getInstance(this);
 		 itemWidgets.put(AppPages.USER_INFO_PAGE, userInfoController.getUserInfoView().getUserInfoComposite());
-		 
+
 		 laborRegisterController =  LaborRegisterController.getInstance(this);
 		 itemWidgets.put(AppPages.LABOR_REGISTER_PAGE, laborRegisterController.getLaborRegisterView().getLaborRegisterComposite());
 
 		 invoiceManagerController =  InvoiceManagerController.getInstance(this);
 		 itemWidgets.put(AppPages.INVOICE_MANAGER_PAGE,  invoiceManagerController.getInvoiceManagerView().getInvoiceManagerViewComposite());
-		 
-		 
+
 		 invoiceController =  InvoiceController.getInstance(this);
-			itemWidgets.put(AppPages.INVOICE_PAGE, invoiceController.getInvoiceView().getInvoiceComposite());
+		 itemWidgets.put(AppPages.INVOICE_PAGE, invoiceController.getInvoiceView().getInvoiceComposite());
+
+		 customerAccountRegisterController =  CustomerAccountRegisterController.getInstance(this);
+		 itemWidgets.put(AppPages.CUSTOMER_ACCOUNT_REGISTER_PAGE, customerAccountRegisterController.getCustomerAccountRegisterView().getCustomerAccountRegisterComposite());
+		 customerAccountRegisterController.getNotifier().addAppEventListener(this);
+		
+		 
 			
+			paymentLogController =  PaymentLogController.getInstance(this);
+			itemWidgets.put(AppPages.PAYMENT_LOG_PAGE, paymentLogController.getPaymentLogView().getPaymentLogComposite());
+
 	 }
 	 
 	 public Composite getPage(String page_){
@@ -129,8 +138,13 @@ public class MasterController implements AppEventListener{
 			laborRegisterController.getLaborRegisterView().getCboCustomerId().setList(customerController.getCache());
 			followupController.getFollowupView().getCboCustomerId().setList(customerController.getCache());
 			invoiceManagerController.getInvoiceManagerView().getCboCustomerId().setList(customerController.getCache());
+			customerAccountRegisterController.getCustomerAccountRegisterView().getCboCustomerId().setList(customerController.getCache());
+			paymentLogController.getPaymentLogView().getCboCustomerId().setList(customerController.getCache());
 		}else if(e_.getName().equals(AppMsg.SHOW_LABOR_REGISTER_DIALOG)){
 			laborRegisterController.showBillableHoursDialog();
+		}else if(e_.getName().equals("PostPaymentRequest")){
+			paymentLogController.getPaymentLogView().getCboCustomerId().setKeyValue(e_.getPayLoad());
+			paymentLogController.getPaymentLogView().getPostPaymentDialog().show();
 		}else{
 			Log.debug("Unexpected App Message" + e_.getName());
 		}

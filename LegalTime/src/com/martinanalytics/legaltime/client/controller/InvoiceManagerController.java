@@ -60,6 +60,7 @@ public class InvoiceManagerController implements AppEventListener {
 		invoiceManagerView.getNotifier().addAppEventListener(this);
 		invoiceManagerView.getLaborRegisterTable().getNotifier().addAppEventListener(this);
 		invoiceSelectionView = new InvoiceSelectionView();
+		invoiceSelectionView.getNotifier().addAppEventListener(this);
 		generateInvoiceRequested = false;
 		invoiceSelectionDialog = new Dialog();
 		createInvoiceSelectionDialog();
@@ -113,6 +114,18 @@ public class InvoiceManagerController implements AppEventListener {
 		}else if(e_.getName().equals("ShowInvoiceList")){
 			selectVwInvoiceDisplayBeans("","");
 			invoiceSelectionDialog.show();
+		}else if(e_.getName().equals("ReprintInvoice")){
+			ArrayList<VwInvoiceDisplayBean> items = invoiceSelectionView.getInvoiceTable().getSelectedList();
+			
+			for(int ndx =0; ndx< items.size(); ndx++){
+				printInvoiceToUser(items.get(ndx).getInvoiceId());
+			}
+		}else if(e_.getName().equals("UnwindInvoice")){
+			ArrayList<VwInvoiceDisplayBean> items = invoiceSelectionView.getInvoiceTable().getSelectedList();
+			
+			for(int ndx =0; ndx< items.size(); ndx++){
+				unwindInvoice(items.get(ndx).getInvoiceId());
+			}
 		}
 		
 	}
@@ -272,12 +285,57 @@ public class InvoiceManagerController implements AppEventListener {
 		 							, (new java.util.Date().getTime() - startTime.getTime()));
 		 					
 		 					removedInvoicedLaborAndExpenses();
-		 					 HashMap params = new HashMap();
-								params.put("invoiceId", newInvoiceId_);
-								ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
-							   invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
+		 					printInvoiceToUser(newInvoiceId_);
 		 				}
 		 		});
+		   }
+		   
+		   /**
+			  * Sends a batch of beans to the Server to be saved.  If the primary keys are null or empty, an insert will be processed.
+			  * The results are handled through the onSuccess method in the AsynchCallback.
+			  * @param laborRegisterBean_ the bean to save to the database
+			  */
+			   public void unwindInvoice(Integer invoiceId_){
+			 	final java.util.Date startTime = new java.util.Date();
+			 	invoiceService.unwindInvoice(UserProfile.getInstance(), invoiceId_, 
+			 			new AsyncCallback<Boolean>(){
+			 				public void onFailure(Throwable caught) {
+			 					Log.debug("InvoiceManagerController.unwindInvoice Failed: " + caught.getMessage() +"|"+ caught.toString());
+
+			 					masterController.getAppContainer().setTransactionResults(
+			 						"Saving LaborRegister Batch Failed"
+			 						, (new java.util.Date().getTime() -startTime.getTime()));
+			 					invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
+			 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
+									masterController.promptUserForLogin();
+								}else{
+									masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+											AppPref.SERVER_ERROR + caught.getMessage());
+								}
+			 				}
+			 		
+			 				public void onSuccess(Boolean newInvoiceId_) {
+			 					Log.debug("InvoiceManagerController.createInvoiceFromEligibleTrans onSuccess: " + newInvoiceId_);
+			 					masterController.getAppContainer().setTransactionResults(
+			 							"Successfully saved LaborRegister Batch"
+			 							, (new java.util.Date().getTime() - startTime.getTime()));
+			 					
+			 					selectVwInvoiceDisplayBeans("","");
+			 				}
+			 		});
+			   }		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   private void printInvoiceToUser(Integer invoiceId_){
+			   HashMap params = new HashMap();
+				params.put("invoiceId", invoiceId_);
+				ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
+			   invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
 		   }
 
 		   

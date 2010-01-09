@@ -4,6 +4,7 @@ package com.martinanalytics.legaltime.client.view.table;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.store.ListStore;
@@ -33,9 +34,11 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Element;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.VwInvoiceDisplayBean;
 //import com.martinanalytics.legaltime.client.model.bean.InvoiceBean;
 import com.extjs.gxt.ui.client.event.ButtonEvent; 
+import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
@@ -50,7 +53,7 @@ public class InvoiceTable extends LayoutContainer {
 	List<ColumnConfig> configs= new ArrayList<ColumnConfig>();
 	ColumnModel cm =new ColumnModel(configs);
 	//Be sure to distinguish Grid from Editor Grid
-	EditorGrid<VwInvoiceDisplayBean> grid= new EditorGrid<VwInvoiceDisplayBean>(store, cm);
+	Grid<VwInvoiceDisplayBean> grid= new Grid<VwInvoiceDisplayBean>(store, cm);
 
 
 	public InvoiceTable(){
@@ -227,6 +230,21 @@ public class InvoiceTable extends LayoutContainer {
 	    grid.setBorders(true);  
 	    grid.setAutoExpandColumn("displayName");
 	    grid.setWidth(600);
+	    grid.getSelectionModel().addListener(Events.SelectionChange,  
+				new Listener<SelectionChangedEvent<VwInvoiceDisplayBean>>() {  
+					public void handleEvent(SelectionChangedEvent<VwInvoiceDisplayBean> be) {
+						if (be.getSelection().size()>0){
+						Record selected = grid.getStore().getRecord(be.getSelection().get(0));
+						if( selected.get("selected")==null ||selected.get("selected").equals("false")){
+							selected.set("selected",true);	
+						}else{
+							selected.set("selected",false);
+						}
+						grid.getSelectionModel().deselectAll();
+						}
+					}
+	    });
+	    
 	    //grid.addPlugin(checkColumn);  
 	    cp.add(grid);  
 	  
@@ -323,6 +341,20 @@ public class InvoiceTable extends LayoutContainer {
 		  }
 		  return arrayList;
 	  }
+	  
+	  public ArrayList<VwInvoiceDisplayBean> getSelectedList(){		  
+		  List<Record> modified = store.getModifiedRecords();
+		  VwInvoiceDisplayBean invoiceBean;
+		  ArrayList<VwInvoiceDisplayBean> arrayList = new ArrayList<VwInvoiceDisplayBean>();
+		  for (Record r : modified) {
+			  if(r.get("selected").equals(true)){
+				  invoiceBean = new VwInvoiceDisplayBean();
+				  invoiceBean.setProperties(r.getModel().getProperties());
+				  arrayList.add(invoiceBean);
+			  }
+		  }
+		  return arrayList;
+	  }
 
 	
 	public void onDetach(){
@@ -401,6 +433,7 @@ public class InvoiceTable extends LayoutContainer {
 	public Grid<VwInvoiceDisplayBean> getGrid() {
 		return grid;
 	}
+	
 
 
 }

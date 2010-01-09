@@ -6,11 +6,14 @@ INSERT INTO security_privilege(client_id,  priv_name, last_update, description) 
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'INSERT_INVOICE', now(), 'Allows users to add records to invoice');
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'UPDATE_INVOICE', now(), 'Allows users to update records in invoice');
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'DELETE_INVOICE', now(), 'Allows users to delete records from invoice');
-select * from security_privilege where priv_name in ('SELECT_INVOICE','INSERT_INVOICE','UPDATE_INVOICE','DELETE_INVOICE');
+INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'UNWIND_INVOICE', now(), 'Allows users to unwind created invoices');
+
+select * from security_privilege where priv_name in ('SELECT_INVOICE','INSERT_INVOICE','UPDATE_INVOICE','DELETE_INVOICE','UNWIND_INVOICE');
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 37);
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 38);
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 39);
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 40);
+INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 57);
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function: invoice_sq(text, integer, text, text)
@@ -276,4 +279,58 @@ INSERT INTO expense_register( client_id, customer_id, last_update, description,
             amount, invoice_id, invoiceable, expense_dt)
     VALUES (1, 26, now(), 'test expense',     100, null, true, now());
 
+
+    
+    
+    
+    
+    
+    -- Function: create_customer_invoice_all_eligible(text, integer, text, text, integer, date)
+
+-- DROP FUNCTION unwind_invoice(text, integer, text, text, integer);
+
+CREATE OR REPLACE FUNCTION unwind_invoice(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, invoiceid_ integer)
+  RETURNS boolean AS
+$BODY$
+  declare
+   originalInvoice invoice;
+   
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid(clientid_, securityuserid_,sessionid_) ;
+    	perform isuserauthorized(clientid_, securityuserid_,'UNWIND_INVOICE' );
+    end if;
+    --
+    select  * into originalInvoice from invoice where invoice_id = invoiceid_;
+    update invoice set invoice_total_amt = 0, last_update = now() where invoice_id = invoiceid_;
+
+
+    update labor_register set invoice_id = null where invoice_id = invoiceid_;
+    update expense_register set invoice_id = null where invoice_id = invoiceid_;
+--Labor
+    update labor_invoice_item set activity_description = 'REVERSED ' || activity_description || ' ORIGINAL HOURS: ' || hours_billed, hours_billed = 0 where  invoice_id = invoiceid_;
+   
+--Admin Expenses
+    update expense_invoice_item set expense_description = 'REVERSED ' ||expense_description || ' ORIGINAL EXPENSE' || amount, amount =0 where  invoice_id = invoiceid_;
+ INSERT INTO customer_account_register( client_id, customer_id, last_update,  effective_dt, description, 				tran_amt, tran_type)
+				 VALUES (clientid_,    originalInvoice.customer_id, now(),        now(), 	'Invoice REVERSAL #' || invoiceid_, originalInvoice.invoice_total_amt * -1 ,'INVCE');
+
+      return true;
+  end;
+$BODY$
+  LANGUAGE 'plpgsql' VOLATILE
+  COST 100;
+ALTER FUNCTION unwind_invoice(text, integer, text, text, integer) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO public;
+GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO postgres;
+GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO legaltime_full;
+
+select * from unwind_invoice('ALREADY_AUTH', 1,'','',36)
+
+select * from invoice where invoice_id =36
+select * from labor_register where invoice_id =36
+select * from expense_register where invoice_id =36
+select * from labor_invoice_item where invoice_id =36
+select * from expense_invoice_item where invoice_id =36
+select * from customer_account_register where description like '%36%'
 
