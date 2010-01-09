@@ -59,11 +59,11 @@ CREATE TABLE public.customer (
 );
 
 CREATE TABLE public.customer_account_register (
-       client_account_register_id SERIAL NOT NULL
+       customer_account_register_id SERIAL NOT NULL
      , client_id INTEGER NOT NULL
      , customer_id INTEGER NOT NULL
      , last_update TIMESTAMP(3) WITHOUT TIME ZONE DEFAULT now()
-     , effective_dt CHAR(10)
+     , effective_dt DATE
      , description TEXT
      , tran_amt DOUBLE PRECISION
      , tran_type VARCHAR(5)
@@ -89,6 +89,7 @@ CREATE TABLE public.expense_register (
      , amount DOUBLE PRECISION
      , invoice_id INTEGER
      , invoiceable BOOL
+     , expense_dt DATE
 );
 
 CREATE TABLE public.labor_register (
@@ -127,7 +128,7 @@ CREATE TABLE public.payment_log (
      , description TEXT
      , amount DOUBLE PRECISION
      , invoice_id INTEGER
-     , client_account_register_id INTEGER
+     , customer_account_register_id INTEGER
 );
 
 CREATE TABLE public.labor_invoice_item (
@@ -192,7 +193,7 @@ ALTER TABLE public.customer
 
 ALTER TABLE public.customer_account_register
   ADD CONSTRAINT PK_CUSTOMER_ACCOUNT_REGISTER
-      PRIMARY KEY (client_account_register_id, client_id, customer_id);
+      PRIMARY KEY (customer_account_register_id, client_id, customer_id);
 
 ALTER TABLE public.invoice
   ADD CONSTRAINT PK_INVOICE
@@ -286,14 +287,14 @@ ALTER TABLE public.payment_log
       REFERENCES public.customer (customer_id, client_id);
 
 ALTER TABLE public.payment_log
-  ADD CONSTRAINT FK_payment_log_2
-      FOREIGN KEY (client_account_register_id, client_id, customer_id)
-      REFERENCES public.customer_account_register (client_account_register_id, client_id, customer_id);
-
-ALTER TABLE public.payment_log
   ADD CONSTRAINT FK_payment_log_3
       FOREIGN KEY (invoice_id, client_id, customer_id)
       REFERENCES public.invoice (invoice_id, client_id, customer_id);
+
+ALTER TABLE public.payment_log
+  ADD CONSTRAINT FK_paymentlog_customeraccountregister
+      FOREIGN KEY (customer_account_register_id, client_id, customer_id)
+      REFERENCES public.customer_account_register (customer_account_register_id, client_id, customer_id);
 
 ALTER TABLE public.labor_invoice_item
   ADD CONSTRAINT FK_laborinvoiceitem_customer

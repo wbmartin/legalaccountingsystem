@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 
 
 
@@ -126,8 +127,9 @@ private class LoginViewComposite extends Composite{
 		cp.setBorders(false);
 		cp.setBodyBorder(false);
 		cp.setHeaderVisible(false);
-		
-		cp.add(getInitialLoginFormPanel());
+		vpPrimary.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		vpPrimary.setWidth("100%");
+		cp.add(initialLoginFormPanel);
 		vpPrimary.add(cp);
 		initWidget(vpPrimary);
 		//loginDialog.show();

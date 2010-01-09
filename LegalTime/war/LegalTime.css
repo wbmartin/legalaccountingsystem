@@ -51,6 +51,9 @@ display: inline;
 .LEFT{
 text-align: left;
 }
+.RIGHT{
+text-align: right;
+}
 
 
 #ApplicationTitle{
