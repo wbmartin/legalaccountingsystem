@@ -11,4 +11,5 @@ public class AppMsg {
 	public static final String SHOW_FOLLOWUP_EDITOR = "ShowFollowupEditor";
 	public static final String FOLLOWUP_EDITOR_CLOSING = "FolllowupEditorClosing";
 	public static final String FOLLOWUP_EDITOR_CANCELED = "FolllowupEditorCanceled";
+	public static final String SERVER_TIMEOUT_ERROR ="ERROR: Invalid Session -- Access Denied";
 }

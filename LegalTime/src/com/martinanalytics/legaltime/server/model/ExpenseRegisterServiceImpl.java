@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.ExpenseRegisterBean;
 import com.martinanalytics.legaltime.client.model.ExpenseRegisterService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -190,7 +191,7 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
 	 */
-	public ArrayList< ExpenseRegisterBean> selectExpenseRegister(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< ExpenseRegisterBean> selectExpenseRegister(UserProfile userProfile_, String whereClause_, String orderByClause_)throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -207,7 +208,13 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving ExpenseRegister Records Failed", e);
+		System.err.println("**************"+e.getMessage());
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			System.err.println("FiredCustomExceptions");
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving ExpenseRegister Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}

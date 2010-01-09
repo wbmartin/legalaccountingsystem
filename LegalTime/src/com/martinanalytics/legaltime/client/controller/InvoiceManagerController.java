@@ -14,6 +14,7 @@ import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
+import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.model.ExpenseRegisterService;
 import com.martinanalytics.legaltime.client.model.ExpenseRegisterServiceAsync;
 import com.martinanalytics.legaltime.client.model.InvoiceService;
@@ -51,6 +52,7 @@ public class InvoiceManagerController implements AppEventListener {
 	  private InvoiceSelectionView invoiceSelectionView;
 	  private Dialog invoiceSelectionDialog;
 	  private boolean generateInvoiceRequested;
+	  private AppNotifyObject notifier  = new AppNotifyObject();
 	  
 	protected InvoiceManagerController (MasterController masterController_){
 		masterController = masterController_;
@@ -130,13 +132,20 @@ public class InvoiceManagerController implements AppEventListener {
 			laborRegisterService.selectLaborRegister(UserProfile.getInstance(), whereClause_, orderByClause_, 
 					new AsyncCallback<ArrayList<LaborRegisterBean>>(){
 						public void onFailure(Throwable caught) {
-							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-									AppPref.SERVER_ERROR + caught.getMessage());
+							
 							masterController.getAppContainer().setTransactionResults(
 								"Retrieving LaborRegister Failed"
 								, (new java.util.Date().getTime() -startTime.getTime()));
 							masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
-
+							
+							if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
+								masterController.promptUserForLogin();
+							}else{
+								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+										AppPref.SERVER_ERROR + caught.getMessage());
+							}
+							
+							
 						}
 			
 						public void onSuccess(ArrayList<LaborRegisterBean> laborRegisterResult) {
@@ -163,11 +172,18 @@ public class InvoiceManagerController implements AppEventListener {
 	 			new AsyncCallback<ArrayList<LaborRegisterBean>>(){
 	 				public void onFailure(Throwable caught) {
 	 					Log.debug("laborRegisterService.saveLaborRegisterBeanBatch Failed: " + caught);
+	 					
 	 					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
 	 							AppPref.SERVER_ERROR + caught.getMessage());
 	 					masterController.getAppContainer().setTransactionResults(
 	 						"Saving LaborRegister Batch Failed"
 	 						, (new java.util.Date().getTime() -startTime.getTime()));
+	 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
+							masterController.promptUserForLogin();
+						}else{
+							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+									AppPref.SERVER_ERROR + caught.getMessage());
+						}
 	 				}
 	 		
 	 				public void onSuccess(ArrayList<LaborRegisterBean> laborRegisterResult) {
@@ -198,13 +214,17 @@ public class InvoiceManagerController implements AppEventListener {
 	   		expenseRegisterService.selectExpenseRegister(UserProfile.getInstance(), whereClause_, orderByClause_, 
 	   				new AsyncCallback<ArrayList<ExpenseRegisterBean>>(){
 	   					public void onFailure(Throwable caught) {
-	   						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-	   								AppPref.SERVER_ERROR + caught.getMessage());
+	   						
 	   						masterController.getAppContainer().setTransactionResults(
 	   							"Retrieving ExpenseRegister Failed"
 	   							, (new java.util.Date().getTime() -startTime.getTime()));
 	   						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
-
+	   						if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
+								masterController.promptUserForLogin();
+							}else{
+								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+										AppPref.SERVER_ERROR + caught.getMessage());
+							}
 	   					}
 	   		
 	   					public void onSuccess(ArrayList<ExpenseRegisterBean> expenseRegisterResult) {
@@ -231,13 +251,18 @@ public class InvoiceManagerController implements AppEventListener {
 		 	invoiceService.createInvoiceFromEligibleTrans(UserProfile.getInstance(), customerId_, invoiceDt_,
 		 			new AsyncCallback<Integer>(){
 		 				public void onFailure(Throwable caught) {
-		 					Log.debug("InvoiceManagerController.createInvoiceFromEligibleTrans Failed: " + caught);
-		 					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-		 							AppPref.SERVER_ERROR + caught.getMessage());
+		 					Log.debug("InvoiceManagerController.createInvoiceFromEligibleTrans Failed: " + caught.getMessage() +"|"+ caught.toString());
+
 		 					masterController.getAppContainer().setTransactionResults(
 		 						"Saving LaborRegister Batch Failed"
 		 						, (new java.util.Date().getTime() -startTime.getTime()));
 		 					invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
+		 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
+								masterController.promptUserForLogin();
+							}else{
+								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+										AppPref.SERVER_ERROR + caught.getMessage());
+							}
 		 				}
 		 		
 		 				public void onSuccess(Integer newInvoiceId_) {
@@ -268,11 +293,15 @@ public class InvoiceManagerController implements AppEventListener {
 			 			new AsyncCallback<ArrayList<ExpenseRegisterBean>>(){
 			 				public void onFailure(Throwable caught) {
 			 					Log.debug("laborRegisterService.saveLaborRegisterBeanBatch Failed: " + caught);
-			 					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-			 							AppPref.SERVER_ERROR + caught.getMessage());
 			 					masterController.getAppContainer().setTransactionResults(
 			 						"Saving LaborRegister Batch Failed"
 			 						, (new java.util.Date().getTime() -startTime.getTime()));
+			 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
+									masterController.promptUserForLogin();
+								}else{
+									masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+											AppPref.SERVER_ERROR + caught.getMessage());
+								}
 			 				}
 			 		
 			 				public void onSuccess(ArrayList<ExpenseRegisterBean> expenseRegisterResult) {
@@ -342,13 +371,17 @@ public class InvoiceManagerController implements AppEventListener {
 	   		vwInvoiceDisplayService.selectVwInvoiceDisplay(UserProfile.getInstance(), whereClause_, orderByClause_, 
 	   				new AsyncCallback<ArrayList<VwInvoiceDisplayBean>>(){
 	   					public void onFailure(Throwable caught) {
-	   						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-	   								AppPref.SERVER_ERROR + caught.getMessage());
+	   						
 	   						masterController.getAppContainer().setTransactionResults(
 	   							"Retrieving VwInvoiceDisplay Failed"
 	   							, (new java.util.Date().getTime() -startTime.getTime()));
 	   						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
-
+	   						if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
+								masterController.promptUserForLogin();
+							}else{
+								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+										AppPref.SERVER_ERROR + caught.getMessage());
+							}
 	   					}
 	   		
 	   					public void onSuccess(ArrayList<VwInvoiceDisplayBean> vwInvoiceDisplayResult) {
@@ -362,5 +395,13 @@ public class InvoiceManagerController implements AppEventListener {
 	   					}
 	   		});
 	   	  }
+
+	
+	/**
+	 * @return the notifier
+	 */
+	public AppNotifyObject getNotifier() {
+		return notifier;
+	}
 
 }
