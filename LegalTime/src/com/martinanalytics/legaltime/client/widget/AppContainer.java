@@ -70,6 +70,8 @@ public class AppContainer extends LayoutContainer {
 		super();
 		setStyleName("AppContainer");
 		mainPanel = new ScrollPanel();
+		vp.setWidth("100%");
+		mainPanel.setWidth("100%");
 		mainPanel.setWidget(vp);
 		//cp.setHeaderVisible(false);
 		//cp.setBodyBorder(false);

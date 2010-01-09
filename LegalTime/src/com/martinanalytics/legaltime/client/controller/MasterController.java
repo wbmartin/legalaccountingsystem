@@ -73,15 +73,25 @@ public class MasterController implements AppEventListener{
 
 		 invoiceManagerController =  InvoiceManagerController.getInstance(this);
 		 itemWidgets.put(AppPages.INVOICE_MANAGER_PAGE,  invoiceManagerController.getInvoiceManagerView().getInvoiceManagerViewComposite());
-
+		 
+		 
 		 invoiceController =  InvoiceController.getInstance(this);
 			itemWidgets.put(AppPages.INVOICE_PAGE, invoiceController.getInvoiceView().getInvoiceComposite());
+			
 	 }
 	 
 	 public Composite getPage(String page_){
 		 String finalPage =page_;
 		 return itemWidgets.get(finalPage);
 		 
+	 }
+	 public void promptUserForLogin(){
+		if(!loginController.getLoginView().getLoginDialog().isVisible()){
+		 loginController.getLoginView().getLoginDialog().show();
+		}
+	 }
+	 public void secondaryLoginAccepted(){
+		 loginController.getLoginView().getLoginDialog().hide();
 	 }
 	
 	 public void notifyUserOfSystemError(String title_, String msg_){
@@ -102,7 +112,7 @@ public class MasterController implements AppEventListener{
 			userProfile.setSessionId("");
 			userProfile.setClientId(0);
 			userProfile.expireSession();
-			loginController.getLoginView().getSendButton().setEnabled(true);
+			
 			History.newItem(AppPages.LOGIN_PAGE);
 			
 		}else if(e_.getName().equals("REQUEST_SCROLL_TO_TOP")){

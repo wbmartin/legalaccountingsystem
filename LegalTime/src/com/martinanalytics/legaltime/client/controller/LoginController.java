@@ -28,7 +28,7 @@ import com.martinanalytics.legaltime.client.view.LoginView;
  * @author bmartin
  *
  */
-public class LoginController implements ClickHandler, KeyUpHandler, AppEventListener{
+public class LoginController implements   AppEventListener{
 	private LoginView loginView; //contains the View for entering login credentials
 	private static LoginController instance = null; // Singleton instance
 	private final ApplicationSecurityServiceAsync applicationSecurityService = 
@@ -69,24 +69,8 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 	public  LoginView getLoginView(){
 		return loginView;
 	}
-	/**
-	 * Handles onClick actions from LoginView
-	 */
-	public void onClick(ClickEvent event) {
-		//sendNameToServer();
-		if (event.getSource() == loginView.getSendButton() ){
-			attemptAuthorization();
-		}
-	}
+
 	
-	/**
-	 * Handles keyboard actions from LoginView
-	 */
-	public void onKeyUp(KeyUpEvent event) {
-		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			//sendNameToServer();
-		}
-	}
 
 	/**
 	 * Retrieves login credentials from LoginView and verifies access to the system
@@ -94,14 +78,22 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 	 * valid username for each database call.  The web browser security exposes to many
 	 * gaps to completely rely on this setting.
 	 */
-	private void attemptAuthorization(){
+	private void attemptAuthorization(final String type){
+		//TODO handle different subsequent Logins
 		final java.util.Date startTime = new java.util.Date();
-		loginView.getSendButton().setEnabled(false);
 		String userId;
 		String passwd;
+		if(type.equals("INITIAL")){
+			loginView.getInitialLoginFormPanel().getSendButton().setEnabled(false);
+			userId = loginView.getInitialLoginFormPanel().getTxtUserId().getValue();
+			passwd = loginView.getInitialLoginFormPanel().getTxtPassword().getValue();
+		}else{
+			userId = loginView.getSubLoginFormPanel().getTxtUserId().getValue();
+			passwd = loginView.getSubLoginFormPanel().getTxtPassword().getValue();
+		}
+
 		
-		userId = loginView.getTxtUserId().getValue();
-		passwd = loginView.getTxtPassword().getValue();
+		
 		if(AppPref.TEST_MODE ){
 			userId ="bmartin";
 			passwd ="test";
@@ -114,30 +106,41 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 						
 						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
 								AppPref.SERVER_ERROR + caught.getMessage());
-						loginView.getSendButton().setEnabled(true);
+						if(type.equals("INITIAL")){
+							loginView.getInitialLoginFormPanel().getSendButton().setEnabled(true);
+						}
+						
 						masterController.getAppContainer().setTransactionResults("Login Request Failed", (new java.util.Date().getTime() -startTime.getTime()));
 						
 					}
 		
 					public void onSuccess(SecurityUserBean result) {
 						Log.debug("AttemptAuthorization.onSuccess received: " + result);
-						loginView.getSendButton().setEnabled(true);
+						if(type.equals("INITIAL")){
+							loginView.getInitialLoginFormPanel().getSendButton().setEnabled(true);
+						}
 						if (result.getClientId() !=0 && result.getSessionId() !=null){
 							userProfile.setUserId(result.getUserId());
 							userProfile.incrementSessionTimeOut();
 							userProfile.setSessionId(result.getSessionId());
 							userProfile.setClientId(result.getClientId());
-							Log.debug("Requesting First Page History Change");
-							History.newItem(AppPages.FIRST_PAGE);
+							
 							masterController.getAppContainer().setTransactionResults(
 									"Successful Login"
 									, (new java.util.Date().getTime() -startTime.getTime()));
 							notifier.notifyAppEvent(this, "SuccessfulLogin");
-							
+						if(type.equals("INITIAL"))	{
+							Log.debug("Requesting First Page History Change");
+							History.newItem(AppPages.FIRST_PAGE);
+						}else{
+							masterController.secondaryLoginAccepted();
+						}
 								
 						}else{
 							masterController.notifyUserOfSystemError("Sorry...","I couldn't validate your credentials.  Please try again.");
-							loginView.getSendButton().setEnabled(true);
+							if(type.equals("INITIAL")){
+								loginView.getInitialLoginFormPanel().getSendButton().setEnabled(true);
+							}
 							masterController.getAppContainer().setTransactionResults(
 									"Login Denied"
 									, (new java.util.Date().getTime() - startTime.getTime()));
@@ -152,7 +155,9 @@ public class LoginController implements ClickHandler, KeyUpHandler, AppEventList
 	public void onAppEventNotify(AppEvent e_) {
 		Log.debug("LoginController Recieved " + e_.getName());
 		if(e_.getName().equals("AttemptLogin")){
-			attemptAuthorization();
+			attemptAuthorization("INITIAL");
+		}if(e_.getName().equals("AttemptSubsequentLogin")){
+			attemptAuthorization("SUBSEQUENT");
 		}
 	
 	}

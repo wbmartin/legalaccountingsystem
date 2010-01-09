@@ -12,6 +12,7 @@ import com.extjs.gxt.ui.client.event.KeyListener;
 import com.extjs.gxt.ui.client.event.Listener;
 
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 //import com.extjs.gxt.ui.client.widget.Window;
 
@@ -40,43 +41,62 @@ import com.extjs.gxt.ui.client.event.ComponentEvent;
 
 public class LoginView extends AppEventProducer{
 
-	private final Button sendButton = new Button("Login");
-	private final TextField<String> txtUserId = new TextField<String>();
-	private final TextField<String> txtPassword = new TextField<String>();
+	
 	private final Label textToServerLabel = new Label();
 	private final HTML serverResponseLabel = new HTML();
 	private AppNotifyObject notifier;
 	//private MasterFileBar masterFileBar = MasterFileBar.getInstance();
 	
 	private LoginViewComposite loginViewComposite;
+	private final Dialog loginDialog = new Dialog();
+	private final LoginFormPanel initialLoginFormPanel;
+	private final LoginFormPanel subLoginFormPanel;
+
 	
 	public LoginView(){
+		initialLoginFormPanel = new LoginFormPanel("INITIAL");
+		subLoginFormPanel = new LoginFormPanel("SUB"); 
 		
+		establishInitialListeners();
+		//subLoginFormPanel.getSendButton().setVisible(false);
 		notifier = new AppNotifyObject();
 		loginViewComposite = new LoginViewComposite();
 		loginViewComposite.createView();
+		loginDialog.setWidth(405);
+		loginDialog.setButtons(Dialog.OK);
+		loginDialog.add(subLoginFormPanel );
+		//loginDialog.add(loginFormPanel);
+		loginDialog.getButtonById(Dialog.OK).addListener(Events.Select, new Listener<ComponentEvent>() {
+		      public void handleEvent(ComponentEvent be) {
+		          notifier.notifyAppEvent(this, "AttemptSubsequentLogin");
+		        }
+		      });
+		loginDialog.setClosable(false);
+		loginDialog.setHideOnButtonClick(false);
+		loginDialog.setModal(true);
 		
 		
 		
-		establishListeners();
+		
+		
 		
 	}
-	private void establishListeners(){
-		sendButton.addListener(Events.Select, new Listener<ComponentEvent>() {
+	private void establishInitialListeners(){
+		initialLoginFormPanel.getSendButton().addListener(Events.Select, new Listener<ComponentEvent>() {
 		      public void handleEvent(ComponentEvent be) {
 		          notifier.notifyAppEvent(this, "AttemptLogin");
 		        }
 		      });
-		txtUserId.addKeyListener(new KeyListener(){		
+		initialLoginFormPanel.getTxtUserId().addKeyListener(new KeyListener(){		
 			 public void componentKeyUp(ComponentEvent event) {
 				 Log.debug("keyCode: " + event.getKeyCode());
 			        if(event.getKeyCode() == 13){
-			        	txtPassword.setCursorPos(0);	        	
+			        	initialLoginFormPanel.getTxtPassword().setCursorPos(0);	        	
 			        }
 			      }
 		});
 		
-		txtPassword.addKeyListener(new KeyListener(){		
+		initialLoginFormPanel.getTxtPassword().addKeyListener(new KeyListener(){		
 			 public void componentKeyUp(ComponentEvent event) {
 				 Log.debug("keyCode: " + event.getKeyCode());
 			        if(event.getKeyCode() == 13){
@@ -86,6 +106,8 @@ public class LoginView extends AppEventProducer{
 		});
 	}
 	
+	
+	
 	public LoginViewComposite getLoginViewComposite(){
 		return  loginViewComposite;
 	}
@@ -94,35 +116,21 @@ public class LoginView extends AppEventProducer{
 
 private class LoginViewComposite extends Composite{
 	public void createView(){
-		txtPassword.setPassword(true);
+		
 		VerticalPanel vpPrimary = new VerticalPanel();
 		vpPrimary.setStyleName("LoginPanel");
-		sendButton.setStyleName("sendButton");
-		FormPanel loginFormPanel = new FormPanel();
-		loginFormPanel.setWidth(400);
-		loginFormPanel.setHeading("Login...");
-		
 		vpPrimary.setStyleName("CENTER");
-		
 		vpPrimary.add(new HTML("<h1 id ='ApplicationTitle'>" + AppPref.APPLICATION_NAME +" </h1>"));
 
-		txtUserId.setFieldLabel("User Name");
-		loginFormPanel.add(txtUserId);
-
-		txtPassword.setFieldLabel("Password");
-		loginFormPanel.add(txtPassword);
-
-		loginFormPanel.addButton(sendButton);
-		loginFormPanel.setBorders(false);
-		
-		loginFormPanel.setButtonAlign(Style.HorizontalAlignment.CENTER);
 		ContentPanel cp = new ContentPanel(new CenterLayout());
 		cp.setBorders(false);
 		cp.setBodyBorder(false);
 		cp.setHeaderVisible(false);
-		cp.add(loginFormPanel);
+		
+		cp.add(getInitialLoginFormPanel());
 		vpPrimary.add(cp);
 		initWidget(vpPrimary);
+		//loginDialog.show();
 	}
 	public void onAttach(){
 		Log.debug(AppPages.LOGIN_PAGE +"OnAttach");
@@ -132,26 +140,7 @@ private class LoginViewComposite extends Composite{
 }
 
 
-/**
- * @return the sendButton
- */
-public Button getSendButton() {
-	return sendButton;
-}
 
-/**
- * @return the txtUserId
- */
-public TextField<String> getTxtUserId() {
-	return txtUserId;
-}
-
-/**
- * @return the txtPassword
- */
-public TextField<String> getTxtPassword() {
-	return txtPassword;
-}
 
 /**
  * @return the textToServerLabel
@@ -179,6 +168,33 @@ public void setNotifier(AppNotifyObject notifier) {
  */
 public AppNotifyObject getNotifier() {
 	return notifier;
+}
+/**
+ * @return the loginDialog
+ */
+public Dialog getLoginDialog() {
+	
+	return loginDialog;
+}
+
+
+
+
+/**
+ * @return the initialLoginFormPanel
+ */
+public LoginFormPanel getInitialLoginFormPanel() {
+	return initialLoginFormPanel;
+}
+
+
+
+
+/**
+ * @return the subLoginFormPanel
+ */
+public LoginFormPanel getSubLoginFormPanel() {
+	return subLoginFormPanel;
 }
 
 }
