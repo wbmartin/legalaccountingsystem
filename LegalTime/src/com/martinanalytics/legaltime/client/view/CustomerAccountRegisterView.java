@@ -159,16 +159,31 @@ class CustomerAccountRegisterComposite extends Composite{
 		cboCustomerId.setFieldLabel("Customer");
 		customerAccountRegisterFormPanel.add(getCustomerAccountRegisterTable());
 		ToolBar toolbar = new ToolBar();
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=	
 		Button cmdPostPayment = new Button("Post Payment", new SelectionListener<ButtonEvent>() {  
 		  	  
 		      @Override  
 		      public void componentSelected(ButtonEvent ce) {  
+
 		        notifier.notifyAppEvent(this, "PostPaymentRequest", cboCustomerId.getKeyValue()) ;
 		      }  
 		    });
 		cmdPostPayment.setBorders(true);
 		toolbar.add(cmdPostPayment);
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=		
+		Button cmdReverse = new Button("Reverse", new SelectionListener<ButtonEvent>() {  
+		  	  
+		      @Override  
+		      public void componentSelected(ButtonEvent ce) {  
+
+		        notifier.notifyAppEvent(this, "ReverseRequest") ;
+		      }  
+		    });
+		cmdReverse.setBorders(true);
+		toolbar.add(cmdReverse);
 		
+		
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=			
 		customerAccountRegisterFormPanel.setBottomComponent(toolbar);
 		vp.add(customerAccountRegisterFormPanel);
 		

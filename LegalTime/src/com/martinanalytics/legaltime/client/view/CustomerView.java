@@ -344,14 +344,14 @@ class CustomerComposite extends Composite{
 		    }); 
 		    
 		    toolBar.add(addCustomer); 
-		    Button saveCustomers = new Button("Save"); 
-		    saveCustomers.setBorders(true);
-		    saveCustomers.addListener(Events.Select, new Listener<ComponentEvent>() {
-			      public void handleEvent(ComponentEvent be) {
-		    	  notifyAppEvent(this, "UserRequestedSave");
-		      }
-		    });
-		    toolBar.add(saveCustomers);
+//		    Button saveCustomers = new Button("Save"); 
+//		    saveCustomers.setBorders(true);
+//		    saveCustomers.addListener(Events.Select, new Listener<ComponentEvent>() {
+//			      public void handleEvent(ComponentEvent be) {
+//		    	  notifyAppEvent(this, "UserRequestedSave");
+//		      }
+//		    });
+//		    toolBar.add(saveCustomers);
 		    //---------------------
 //			Button test = new Button("Test");
 //			toolBar.add(test);

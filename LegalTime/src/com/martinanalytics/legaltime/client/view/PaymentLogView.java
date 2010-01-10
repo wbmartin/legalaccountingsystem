@@ -27,12 +27,15 @@ import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.martinanalytics.legaltime.client.widget.AlternateComboBox;
+import com.martinanalytics.legaltime.client.widget.AlternateComboBoxBinding;
 import com.martinanalytics.legaltime.client.widget.GXTValidator;
 import com.martinanalytics.legaltime.client.model.bean.PaymentLogBean;
 import com.martinanalytics.legaltime.client.view.table.CustomerAccountRegisterTable;
 import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.store.Store;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.binding.FormBinding;
+import com.extjs.gxt.ui.client.binding.SimpleComboBoxFieldBinding;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 
@@ -71,8 +74,20 @@ public class PaymentLogView extends AppEventProducer{
 		postPaymentDialog.getButtonById(Dialog.NO).setText("Post and Another");
 		establishListeners();
 		postPaymentDialog.setClosable(false);
-		postPaymentDialog.setHideOnButtonClick(true);
+		postPaymentDialog.setHideOnButtonClick(false);
 		postPaymentDialog.add(paymentLogComposite);
+		
+		formBindings = new FormBinding(paymentLogFormPanel, true);
+		//formBindings.removeFieldBinding((formBindings.getBinding(cboCustomerId)));
+		AlternateComboBoxBinding customerBinding = new AlternateComboBoxBinding (formBindings, cboCustomerId);
+		//formBindings.setStore((Store<PaymentLogBean>) store); 
+		//store.add( new PaymentLogBean());
+		PaymentLogBean paymentLogBean = new PaymentLogBean();
+		paymentLogBean.setDescription("Payment Received");
+		paymentLogBean.setEffectiveDt(new java.util.Date());
+		formBindings.bind(paymentLogBean);
+		
+		
 	}
 	
 	public void establishListeners(){
@@ -81,10 +96,45 @@ public class PaymentLogView extends AppEventProducer{
 		      @Override  
 		      public void componentSelected(ButtonEvent ce) {  
 		    	  postPaymentDialog.hide();
+		    	  notifyAppEvent(this, "PostPaymentDialogClosing");
 		      }
 		      });
-//		postPaymentDialog.getButtonById(Dialog.YES).
-//		postPaymentDialog.getButtonById(Dialog.NO).
+		postPaymentDialog.getButtonById(Dialog.YES).addSelectionListener(new SelectionListener<ButtonEvent>() {  
+			  
+		      @Override  
+		      public void componentSelected(ButtonEvent ce) {  
+		    	  if (paymentLogFormPanel.isValid()){
+		    		  notifyAppEvent(this, "AddPayment");
+		    		  postPaymentDialog.hide();
+		    		  notifyAppEvent(this, "PostPaymentDialogClosing");
+		    	  }
+		      }
+		      });
+		postPaymentDialog.getButtonById(Dialog.NO).addSelectionListener(new SelectionListener<ButtonEvent>() {  
+			  
+		      @Override  
+		      public void componentSelected(ButtonEvent ce) { 
+		    	  if (paymentLogFormPanel.isValid()){
+		    	    notifyAppEvent(this, "AddPayment");
+		    		postPaymentDialog.getButtonById(Dialog.YES).setEnabled(false);
+		    		postPaymentDialog.getButtonById(Dialog.NO).setEnabled(false);
+		    	  }
+		    	  
+		      }
+		      });
+		
+		
+		
+		
+		
+		
+	
+
+	}
+	
+	public void clearForm(){
+		nbrAmount.setValue(0);
+		txtDescription.setValue("Payment Received");
 	}
 	/**
 	 * @return the nbrCustomerAccountRegisterId
@@ -194,7 +244,7 @@ class PaymentLogComposite extends Composite{
 ////---------------------------------------------------------------
 		cboCustomerId.setFieldLabel("Customer");
 		paymentLogFormPanel.add(cboCustomerId);
-
+		cboCustomerId.setAllowBlank(false);
 
 //---------------------------------------------------------------
 		nbrAmount.setFieldLabel("Amount");
