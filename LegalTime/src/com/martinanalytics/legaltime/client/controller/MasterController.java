@@ -86,7 +86,7 @@ public class MasterController implements AppEventListener{
 			
 			paymentLogController =  PaymentLogController.getInstance(this);
 			itemWidgets.put(AppPages.PAYMENT_LOG_PAGE, paymentLogController.getPaymentLogView().getPaymentLogComposite());
-
+			paymentLogController.getNotifier().addAppEventListener(this);
 	 }
 	 
 	 public Composite getPage(String page_){
@@ -143,8 +143,13 @@ public class MasterController implements AppEventListener{
 		}else if(e_.getName().equals(AppMsg.SHOW_LABOR_REGISTER_DIALOG)){
 			laborRegisterController.showBillableHoursDialog();
 		}else if(e_.getName().equals("PostPaymentRequest")){
-			paymentLogController.getPaymentLogView().getCboCustomerId().setKeyValue(e_.getPayLoad());
+			if(e_.getPayLoad() !=null){
+				paymentLogController.getPaymentLogView().getCboCustomerId().setKeyValue(e_.getPayLoad());
+			}
 			paymentLogController.getPaymentLogView().getPostPaymentDialog().show();
+			
+		}else if(e_.getName().equals(	"PostPaymentDialogClosing")){
+			customerAccountRegisterController.refreshList();
 		}else{
 			Log.debug("Unexpected App Message" + e_.getName());
 		}

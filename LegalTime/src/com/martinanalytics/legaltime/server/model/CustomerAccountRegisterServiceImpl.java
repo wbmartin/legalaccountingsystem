@@ -39,11 +39,16 @@ public class CustomerAccountRegisterServiceImpl extends RemoteServiceServlet
 	  String result;
 	  ArrayList<CustomerAccountRegisterBean> resultList  = new ArrayList<CustomerAccountRegisterBean>();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  tran_type , tran_amt , description , effective_dt , last_update , customer_id , client_id , customer_account_register_id  from customer_account_register_iq('CHECK_AUTH',?,?,?,?,?,?,?,?);");
+		ps = databaseManager.getConnection().prepareStatement("select  ref_id , tran_type , tran_amt , description , effective_dt , last_update , customer_id , client_id , customer_account_register_id  from customer_account_register_iq('CHECK_AUTH',?,?,?,?,?,?,?,?,?);");
 		ps.setInt(++ndx, userProfile_.getClientId());
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
-		ps.setString(++ndx,customerAccountRegisterBean_.getTranType() );
+		try{
+  			ps.setInt(++ndx,customerAccountRegisterBean_.getRefId());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
+  		ps.setString(++ndx,customerAccountRegisterBean_.getTranType() );
   		try{
   			ps.setDouble(++ndx, customerAccountRegisterBean_.getTranAmt());
   		}catch(NullPointerException nex){
@@ -93,11 +98,16 @@ public class CustomerAccountRegisterServiceImpl extends RemoteServiceServlet
 	  String result;
 	  ArrayList<CustomerAccountRegisterBean> resultList  = new ArrayList<CustomerAccountRegisterBean>();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  tran_type , tran_amt , description , effective_dt , last_update , customer_id , client_id , customer_account_register_id  from customer_account_register_uq('CHECK_AUTH',?,?,?,?,?,?,?,?,?,?);");
+		ps = databaseManager.getConnection().prepareStatement("select  ref_id , tran_type , tran_amt , description , effective_dt , last_update , customer_id , client_id , customer_account_register_id  from customer_account_register_uq('CHECK_AUTH',?,?,?,?,?,?,?,?,?,?,?);");
 		ps.setInt(++ndx,  userProfile_.getClientId());
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
-		ps.setString(++ndx,customerAccountRegisterBean_.getTranType() );
+		try{
+  			ps.setInt(++ndx,customerAccountRegisterBean_.getRefId());
+  		}catch(NullPointerException nex){
+  			ps.setNull(ndx, java.sql.Types.INTEGER);
+  		}
+  		ps.setString(++ndx,customerAccountRegisterBean_.getTranType() );
   		try{
   			ps.setDouble(++ndx, customerAccountRegisterBean_.getTranAmt());
   		}catch(NullPointerException nex){
@@ -202,7 +212,7 @@ public class CustomerAccountRegisterServiceImpl extends RemoteServiceServlet
 	  String result;
 	  ArrayList<CustomerAccountRegisterBean> resultList  = new ArrayList<CustomerAccountRegisterBean>();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  tran_type , tran_amt , description , effective_dt , last_update , customer_id , client_id , customer_account_register_id  from customer_account_register_sq('CHECK_AUTH',?,?,?) " + whereClause_ + " " + orderByClause_+ ";");
+		ps = databaseManager.getConnection().prepareStatement("select  ref_id , tran_type , tran_amt , description , effective_dt , last_update , customer_id , client_id , customer_account_register_id  from customer_account_register_sq('CHECK_AUTH',?,?,?) " + whereClause_ + " " + orderByClause_+ ";");
 		ps.setInt(ndx++, userProfile_.getClientId());
 		ps.setString(ndx++,  userProfile_.getUserId());
 		ps.setString(ndx++, userProfile_.getSessionId());
@@ -242,7 +252,7 @@ public class CustomerAccountRegisterServiceImpl extends RemoteServiceServlet
 	  ResultSet rs;
 	  CustomerAccountRegisterBean result  = new CustomerAccountRegisterBean();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  tran_type , tran_amt , description , effective_dt , last_update , customer_id , client_id , customer_account_register_id  from customer_account_register_bypk('CHECK_AUTH',?,?,?, ?, ? );");
+		ps = databaseManager.getConnection().prepareStatement("select  ref_id , tran_type , tran_amt , description , effective_dt , last_update , customer_id , client_id , customer_account_register_id  from customer_account_register_bypk('CHECK_AUTH',?,?,?, ?, ? );");
 		ps.setInt(++ndx, userProfile_.getClientId());
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
@@ -274,21 +284,23 @@ public class CustomerAccountRegisterServiceImpl extends RemoteServiceServlet
  	public CustomerAccountRegisterBean decodeRow(ResultSet rs) throws SQLException{
 	  java.util.Date nullDate = new java.util.Date(0);
           CustomerAccountRegisterBean bean = new CustomerAccountRegisterBean();
-          bean.setTranType(rs.getString(1));
+          bean.setRefId(rs.getInt(1));
+            if(rs.wasNull()){bean.setRefId(null);}
+          bean.setTranType(rs.getString(2));
             if(rs.wasNull()){bean.setTranType(null);}
-          bean.setTranAmt(rs.getDouble(2));
+          bean.setTranAmt(rs.getDouble(3));
             if(rs.wasNull()){bean.setTranAmt(null);}
-          bean.setDescription(rs.getString(3));
+          bean.setDescription(rs.getString(4));
             if(rs.wasNull()){bean.setDescription(null);}
-          bean.setEffectiveDt(rs.getDate(4));
+          bean.setEffectiveDt(rs.getDate(5));
             if(rs.wasNull()){bean.setEffectiveDt(null);}
-          bean.setLastUpdate(rs.getTimestamp(5));
+          bean.setLastUpdate(rs.getTimestamp(6));
             if(bean.getLastUpdate().equals(nullDate)){bean.setLastUpdate(null);} 
-          bean.setCustomerId(rs.getInt(6));
+          bean.setCustomerId(rs.getInt(7));
             if(rs.wasNull()){bean.setCustomerId(null);}
-          bean.setClientId(rs.getInt(7));
+          bean.setClientId(rs.getInt(8));
             if(rs.wasNull()){bean.setClientId(null);}
-          bean.setCustomerAccountRegisterId(rs.getInt(8));
+          bean.setCustomerAccountRegisterId(rs.getInt(9));
             if(rs.wasNull()){bean.setCustomerAccountRegisterId(null);}
           return bean;
         }

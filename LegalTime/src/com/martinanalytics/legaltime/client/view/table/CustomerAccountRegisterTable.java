@@ -4,6 +4,9 @@ package com.martinanalytics.legaltime.client.view.table;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+import com.allen_sauer.gwt.log.client.Log;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.store.ListStore;
@@ -48,6 +51,7 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 	FormBinding formBindings;
 	List<ColumnConfig> configs= new ArrayList<ColumnConfig>();
 	ColumnModel cm =new ColumnModel(configs);
+	ArrayList<Double> runningTotal = new ArrayList<Double>();
 	//Be sure to distinguish Grid from Editor Grid
 	Grid<CustomerAccountRegisterBean> grid= new Grid<CustomerAccountRegisterBean>(store, cm);
 	
@@ -129,11 +133,17 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 			public Object render(ModelData model_, String property_,
 					ColumnData config_, int rowIndex_, int colIndex_,
 					ListStore store_, Grid grid_) {
-				Double result;
-				if(model_.get("tranAmt")!= null && ((Double)model_.get("tranAmt"))>0){
-					result = (Double)model_.get("tranAmt");
-					return NumberFormat.getFormat("$#,##0.00").format(result);
-				}else{
+//				Double result;
+//				if(model_.get("tranAmt")!= null && ((Double)model_.get("tranAmt"))>0){
+//					result = (Double)model_.get("tranAmt");
+//					return NumberFormat.getFormat("$#,##0.00").format(result);
+//				}else{
+//					return null;
+//				}
+				try{
+					return runningTotal.get(rowIndex_);
+				}catch(Exception ex){
+					//Log.debug("runningTotal" + runningTotal.toString());
 					return null;
 				}
 				
@@ -144,7 +154,7 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 
 	    column = new ColumnConfig();
 	    column.setId("decrease");
-	    column.setHeader("decrease");
+	    column.setHeader("Decrease");
 	    column.setWidth(100);
 	    column.setSortable(false);
 	    column.setAlignment(HorizontalAlignment.RIGHT);
@@ -183,7 +193,9 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 					ListStore store_, Grid grid_) {
 				Double result = 0D;
 				for(int ndx =0; ndx<=rowIndex_;ndx++){
-					result += store.getAt(ndx).getTranAmt();
+					if(store.getAt(ndx).getTranAmt() != null){
+						result += store.getAt(ndx).getTranAmt();
+					}
 				}
 				return NumberFormat.getFormat("$#,##0.00").format(result);
 			}
@@ -339,6 +351,16 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 		  store.add((List <CustomerAccountRegisterBean>)customerAccountRegisterBeans_); 
 		  store.setFiresEvents(true);
 		  grid.getView().refresh(false);
+		  
+		  Double previousValue =0D;
+		  runningTotal.clear();
+		  for(int ndx =0; ndx <customerAccountRegisterBeans_.size();ndx++ ){
+			  
+				  runningTotal.add(previousValue + customerAccountRegisterBeans_.get(ndx).getTranAmt());  
+				  previousValue = previousValue + customerAccountRegisterBeans_.get(ndx).getTranAmt();
+			  
+		  }
+		  
 
 		  
 	  }

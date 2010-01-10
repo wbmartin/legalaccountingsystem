@@ -202,9 +202,96 @@ GRANT EXECUTE ON FUNCTION invoice_dq(text, integer, text, text , invoiceId_ int4
 
  
 
-create or replace function create_customer_invoice_all_eligible(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, customerid_ integer, invoiceDt_ date )
-  returns integer as
-$body$
+select * from create_customer_invoice_all_eligible('ALREADY_AUTH', 1, 'userid', 'session' , 26, '2009-10-10');
+
+
+
+--clear tables for testing
+update labor_register set invoice_id = null;
+delete  from labor_invoice_item;
+update expense_register set invoice_id = null;
+delete  from expense_invoice_item;
+delete  from invoice;
+
+--test points
+select * from invoice
+select * from labor_invoice_item;
+select * from labor_register
+select * from expense_invoice_item;
+select * from expense_register
+select * from customer_account_register
+
+
+
+
+INSERT INTO expense_register( client_id, customer_id, last_update, description, 
+            amount, invoice_id, invoiceable, expense_dt)
+    VALUES (1, 26, now(), 'test expense',     100, null, true, now());
+
+
+    
+    
+    
+    
+  select * from unwind_invoice('ALREADY_AUTH', 1,'','',36)
+
+select * from invoice where invoice_id =36
+select * from labor_register where invoice_id =36
+select * from expense_register where invoice_id =36
+select * from labor_invoice_item where invoice_id =36
+select * from expense_invoice_item where invoice_id =36
+select * from customer_account_register where description like '%36%'
+
+
+
+
+
+CREATE OR REPLACE FUNCTION unwind_invoice(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, invoiceid_ integer)
+  RETURNS boolean AS
+$BODY$
+  declare
+   originalInvoice invoice;
+   
+  begin
+    if alreadyauth_ <>'ALREADY_AUTH' then	
+    	perform issessionvalid(clientid_, securityuserid_,sessionid_) ;
+    	perform isuserauthorized(clientid_, securityuserid_,'UNWIND_INVOICE' );
+    end if;
+    --
+    select  * into originalInvoice from invoice where invoice_id = invoiceid_;
+    update invoice set invoice_total_amt = 0, last_update = now() where invoice_id = invoiceid_;
+
+
+    update labor_register set invoice_id = null where invoice_id = invoiceid_;
+    update expense_register set invoice_id = null where invoice_id = invoiceid_;
+--Labor
+    update labor_invoice_item set activity_description = 'REVERSED ' || activity_description || ' ORIGINAL HOURS: ' || hours_billed, hours_billed = 0 where  invoice_id = invoiceid_;
+   
+--Admin Expenses
+    update expense_invoice_item set expense_description = 'REVERSED ' ||expense_description || ' ORIGINAL EXPENSE' || amount, amount =0 where  invoice_id = invoiceid_;
+ INSERT INTO customer_account_register( client_id, customer_id, last_update,  effective_dt, description, 				tran_amt, tran_type, ref_id)
+				 VALUES (clientid_,    originalInvoice.customer_id, now(),        now(), 	'Invoice REVERSAL #' || invoiceid_, originalInvoice.invoice_total_amt * -1 ,'INVR', originalInvoice.invoice_id);
+
+      return true;
+  end;
+$BODY$
+  LANGUAGE 'plpgsql' VOLATILE
+  COST 100;
+ALTER FUNCTION unwind_invoice(text, integer, text, text, integer) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO public;
+GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO postgres;
+GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO legaltime_full;
+
+
+
+
+-- Function: create_customer_invoice_all_eligible(text, integer, text, text, integer, date)
+
+-- DROP FUNCTION create_customer_invoice_all_eligible(text, integer, text, text, integer, date);
+
+CREATE OR REPLACE FUNCTION create_customer_invoice_all_eligible(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, customerid_ integer, invoicedt_ date)
+  RETURNS integer AS
+$BODY$
   declare
     newInvoice invoice;
     eligibleLaborRegisterItem labor_register;
@@ -241,96 +328,22 @@ $body$
  
      update invoice set invoice_total_amt  = invoiceAmt where invoice_id = newInvoice.invoice_id;
 
-     INSERT INTO customer_account_register( client_id, customer_id, last_update,  effective_dt, description, 				tran_amt, tran_type)
-				 VALUES (clientid_,    customerid_, now(),        now(), 	'Invoice #' || newInvoice.invoice_id, invoiceAmt,'INVCE');
+     INSERT INTO customer_account_register( client_id, customer_id, last_update,  effective_dt, description, 				tran_amt, tran_type, ref_id)
+				 VALUES (clientid_,    customerid_, now(),        now(), 	'Invoice #' || newInvoice.invoice_id, invoiceAmt,'INVCE', newInvoice.invoice_id);
 
       return newInvoice.invoice_id;
-  end;
-$body$
-  language 'plpgsql' volatile
-  cost 100;
-alter function create_customer_invoice_all_eligible(text,  integer, text,text, integer,date ) owner to postgres;
---GRANT EXECUTE ON FUNCTION invoice_iq(text, integer, text, text , float8, float8, date, date, int4, int4) TO GROUP legaltime_full;
-
-
-select * from create_customer_invoice_all_eligible('ALREADY_AUTH', 1, 'userid', 'session' , 26, '2009-10-10');
-
-
-
---clear tables for testing
-update labor_register set invoice_id = null;
-delete  from labor_invoice_item;
-update expense_register set invoice_id = null;
-delete  from expense_invoice_item;
-delete  from invoice;
-
---test points
-select * from invoice
-select * from labor_invoice_item;
-select * from labor_register
-select * from expense_invoice_item;
-select * from expense_register
-select * from customer_account_register
-
-
-
-
-INSERT INTO expense_register( client_id, customer_id, last_update, description, 
-            amount, invoice_id, invoiceable, expense_dt)
-    VALUES (1, 26, now(), 'test expense',     100, null, true, now());
-
-
-    
-    
-    
-    
-    
-    -- Function: create_customer_invoice_all_eligible(text, integer, text, text, integer, date)
-
--- DROP FUNCTION unwind_invoice(text, integer, text, text, integer);
-
-CREATE OR REPLACE FUNCTION unwind_invoice(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, invoiceid_ integer)
-  RETURNS boolean AS
-$BODY$
-  declare
-   originalInvoice invoice;
-   
-  begin
-    if alreadyauth_ <>'ALREADY_AUTH' then	
-    	perform issessionvalid(clientid_, securityuserid_,sessionid_) ;
-    	perform isuserauthorized(clientid_, securityuserid_,'UNWIND_INVOICE' );
-    end if;
-    --
-    select  * into originalInvoice from invoice where invoice_id = invoiceid_;
-    update invoice set invoice_total_amt = 0, last_update = now() where invoice_id = invoiceid_;
-
-
-    update labor_register set invoice_id = null where invoice_id = invoiceid_;
-    update expense_register set invoice_id = null where invoice_id = invoiceid_;
---Labor
-    update labor_invoice_item set activity_description = 'REVERSED ' || activity_description || ' ORIGINAL HOURS: ' || hours_billed, hours_billed = 0 where  invoice_id = invoiceid_;
-   
---Admin Expenses
-    update expense_invoice_item set expense_description = 'REVERSED ' ||expense_description || ' ORIGINAL EXPENSE' || amount, amount =0 where  invoice_id = invoiceid_;
- INSERT INTO customer_account_register( client_id, customer_id, last_update,  effective_dt, description, 				tran_amt, tran_type)
-				 VALUES (clientid_,    originalInvoice.customer_id, now(),        now(), 	'Invoice REVERSAL #' || invoiceid_, originalInvoice.invoice_total_amt * -1 ,'INVCE');
-
-      return true;
   end;
 $BODY$
   LANGUAGE 'plpgsql' VOLATILE
   COST 100;
-ALTER FUNCTION unwind_invoice(text, integer, text, text, integer) OWNER TO postgres;
-GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO public;
-GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO postgres;
-GRANT EXECUTE ON FUNCTION unwind_invoice(text, integer, text, text, integer) TO legaltime_full;
+ALTER FUNCTION create_customer_invoice_all_eligible(text, integer, text, text, integer, date) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION create_customer_invoice_all_eligible(text, integer, text, text, integer, date) TO public;
+GRANT EXECUTE ON FUNCTION create_customer_invoice_all_eligible(text, integer, text, text, integer, date) TO postgres;
+GRANT EXECUTE ON FUNCTION create_customer_invoice_all_eligible(text, integer, text, text, integer, date) TO legaltime_full;
 
-select * from unwind_invoice('ALREADY_AUTH', 1,'','',36)
 
-select * from invoice where invoice_id =36
-select * from labor_register where invoice_id =36
-select * from expense_register where invoice_id =36
-select * from labor_invoice_item where invoice_id =36
-select * from expense_invoice_item where invoice_id =36
-select * from customer_account_register where description like '%36%'
+
+
+
+
 

@@ -20,6 +20,7 @@ public class CustomerAccountRegisterBean extends BaseModelData{
 		setBean(customerAccountRegisterBean_);
 	}
 	public void setBean(CustomerAccountRegisterBean customerAccountRegisterBean_){
+		setRefId(customerAccountRegisterBean_.getRefId());
 		setTranType(customerAccountRegisterBean_.getTranType());
 		setTranAmt(customerAccountRegisterBean_.getTranAmt());
 		setDescription(customerAccountRegisterBean_.getDescription());
@@ -33,6 +34,7 @@ public class CustomerAccountRegisterBean extends BaseModelData{
 	
 	public CustomerAccountRegisterBean getStandardCustomerAccountRegisterBean(){
 		CustomerAccountRegisterBean customerAccountRegisterBean = new CustomerAccountRegisterBean();
+		customerAccountRegisterBean.setRefId(getRefId());
 		customerAccountRegisterBean.setTranType(getTranType());
 		customerAccountRegisterBean.setTranAmt(getTranAmt());
 		customerAccountRegisterBean.setDescription(getDescription());
@@ -43,6 +45,13 @@ public class CustomerAccountRegisterBean extends BaseModelData{
 		customerAccountRegisterBean.setCustomerAccountRegisterId(getCustomerAccountRegisterId());
 		return customerAccountRegisterBean;
 	}
+	public Integer getRefId(){
+		return get("refId");
+	}
+	public void setRefId( Integer new_){
+		set("refId", new_);
+	}
+
 	public String getTranType(){
 		return get("tranType");
 	}

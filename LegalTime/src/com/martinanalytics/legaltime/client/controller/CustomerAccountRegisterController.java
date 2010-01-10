@@ -90,13 +90,28 @@ public class CustomerAccountRegisterController implements AppEventListener, Clic
 		Integer custid = (Integer)e_.getPayLoad();
 		selectCustomerAccountRegisterBeans("where customer_id=" + custid, "order by effective_dt");
 	}else if(e_.getName().equals("PostPaymentRequest")){	
-		notifier.notifyAppEvent(this, "PostPaymentRequest");
+		notifier.notifyAppEvent(this, "PostPaymentRequest", e_.getPayLoad());
+	}else if(e_.getName().equals(	"ReverseRequest")){
+		reverseTransaction();
 	}else{
 		Log.debug("Unexpected AppEvent named" +e_.getName() );
 	}
 	
 	
   }
+
+private void reverseTransaction() {
+	Integer selectedId =0;
+	String tranType ="";
+	try{
+	CustomerAccountRegisterBean customerAccountRegisterBean = customerAccountRegisterView.getCustomerAccountRegisterTable().getGrid().getSelectionModel().getSelection().get(0);
+	Log.debug("selected ref" + customerAccountRegisterBean.getRefId() );
+	Log.debug("selected type" + customerAccountRegisterBean.getTranType() );
+	}catch(Exception e){
+		Log.debug("Exception Caught in CustomerAcount Register");
+	}
+	
+}
 
 /**
  * Handles onClick actions from LoginView
@@ -423,6 +438,12 @@ public void saveAllChanges(){
  */
 public AppNotifyObject getNotifier() {
 	return notifier;
+}
+
+public void refreshList() {
+	Integer custid = (Integer)customerAccountRegisterView.getCboCustomerId().getKeyValue();
+	selectCustomerAccountRegisterBeans("where customer_id=" + custid, "order by effective_dt");
+	
 }
 
 

@@ -12,13 +12,6 @@ INSERT INTO security_profile_grant(client_id, security_profile_id, security_priv
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 59);
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 60);
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 61);
-
-
---=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function: customer_account_register_sq(text, integer, text, text)
-
--- DROP FUNCTION customer_account_register_sq(text, integer, text, text);
-
 CREATE OR REPLACE FUNCTION customer_account_register_sq(alreadyAuth_ text, clientid_ integer, securityuserid_ text, sessionid_ text)
   RETURNS SETOF customer_account_register AS
 $BODY$
@@ -29,7 +22,7 @@ $BODY$
     	perform isSessionValid(clientId_, securityuserId_,sessionId_) ;
     	perform isUserAuthorized(clientId_, securityuserId_, 'SELECT_CUSTOMERACCOUNTREGISTER' );
     end if;
--- tran_type, tran_amt, description, effective_dt, last_update, customer_id, client_id, customer_account_register_id    
+-- ref_id, tran_type, tran_amt, description, effective_dt, last_update, customer_id, client_id, customer_account_register_id    
     return query select * from customer_account_register where client_id = clientId_;
   End;
 $BODY$
@@ -61,7 +54,7 @@ $BODY$
     	perform isSessionValid(clientId_, securityuserId_,sessionId_) ;
     	perform isUserAuthorized(clientId_, securityuserId_, 'SELECT_CUSTOMERACCOUNTREGISTER' );
     end if;
--- tran_type, tran_amt, description, effective_dt, last_update, customer_id, client_id, customer_account_register_id    
+-- ref_id, tran_type, tran_amt, description, effective_dt, last_update, customer_id, client_id, customer_account_register_id    
      select * into result from customer_account_register where   customer_account_register_id = customerAccountRegisterId_  and client_id = clientId_  and customer_id = customerId_ ;
      return result;
   End;
@@ -74,11 +67,11 @@ GRANT EXECUTE ON FUNCTION customer_account_register_bypk(text, integer, text, te
 
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  customer_account_register_iq(text, integer, text , varchar, float8, text, date, int4)
+-- Function:  customer_account_register_iq(text, integer, text , int4, varchar, float8, text, date, int4)
 
--- DROP FUNCTION customer_account_register_iq( text, integer, text , varchar, float8, text, date, int4));
+-- DROP FUNCTION customer_account_register_iq( text, integer, text , int4, varchar, float8, text, date, int4));
 
-create or replace function customer_account_register_iq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text , tranType_ varchar, tranAmt_ float8, description_ text, effectiveDt_ date, customerId_ int4)
+create or replace function customer_account_register_iq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text , refId_ int4, tranType_ varchar, tranAmt_ float8, description_ text, effectiveDt_ date, customerId_ int4)
   returns customer_account_register as
 $body$
   declare
@@ -88,18 +81,19 @@ $body$
     	perform issessionvalid(clientid_, securityuserid_,sessionid_) ;
     	perform isuserauthorized(clientid_, securityuserid_,'INSERT_CUSTOMERACCOUNTREGISTER' );
     end if;
-    insert into customer_account_register(client_id , tran_type , tran_amt , description , effective_dt , last_update , customer_id ) 
-	values (clientid_ , tranType_, tranAmt_, description_, effectiveDt_, now(), customerId_) 
+    insert into customer_account_register(client_id , ref_id , tran_type , tran_amt , description , effective_dt , last_update , customer_id ) 
+	values (clientid_ , refId_, tranType_, tranAmt_, description_, effectiveDt_, now(), customerId_) 
 	returning * into newrow;
       return newrow;
   end;
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function customer_account_register_iq(text, integer, text, text , varchar, float8, text, date, int4) owner to postgres;
-GRANT EXECUTE ON FUNCTION customer_account_register_iq(text, integer, text, text , varchar, float8, text, date, int4) TO GROUP legaltime_full;
+alter function customer_account_register_iq(text, integer, text, text , int4, varchar, float8, text, date, int4) owner to postgres;
+GRANT EXECUTE ON FUNCTION customer_account_register_iq(text, integer, text, text , int4, varchar, float8, text, date, int4) TO GROUP legaltime_full;
 
-select * from customer_account_register_iq('ALREADY_AUTH', 1, 'test', 'test'  , 'text' 
+select * from customer_account_register_iq('ALREADY_AUTH', 1, 'test', 'test'  , 1
+ , 'text' 
  , 1
  , 'text' 
  , now()
@@ -107,12 +101,12 @@ select * from customer_account_register_iq('ALREADY_AUTH', 1, 'test', 'test'  , 
  );
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
--- Function:  customer_account_register_uq(text, integer, text , varchar, float8, text, date, timestamp, int4,  integer)
+-- Function:  customer_account_register_uq(text, integer, text , int4, varchar, float8, text, date, timestamp, int4,  integer)
 
--- DROP FUNCTION customer_account_register_uq( text, integer, text , varchar, float8, text, date, timestamp, int4,  integer);
+-- DROP FUNCTION customer_account_register_uq( text, integer, text , int4, varchar, float8, text, date, timestamp, int4,  integer);
 
 
-create or replace function customer_account_register_uq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text , tranType_ varchar, tranAmt_ float8, description_ text, effectiveDt_ date, lastUpdate_ timestamp, customerId_ int4, customerAccountRegisterId_ integer)
+create or replace function customer_account_register_uq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text , refId_ int4, tranType_ varchar, tranAmt_ float8, description_ text, effectiveDt_ date, lastUpdate_ timestamp, customerId_ int4, customerAccountRegisterId_ integer)
   returns customer_account_register as
 $body$
   declare
@@ -123,7 +117,8 @@ $body$
     	perform isuserauthorized(clientid_, securityuserid_, 'UPDATE_CUSTOMERACCOUNTREGISTER' );
     end if;
 	update customer_account_register set
-          tran_type = tranType_ 
+          ref_id = refId_ 
+         , tran_type = tranType_ 
          , tran_amt = tranAmt_ 
          , description = description_ 
          , effective_dt = effectiveDt_ 
@@ -147,11 +142,12 @@ $body$
 $body$
   language 'plpgsql' volatile
   cost 100;
-alter function customer_account_register_uq(text, integer, text, text , varchar, float8, text, date, timestamp, int4,  integer) owner to postgres;
-GRANT EXECUTE ON FUNCTION customer_account_register_uq(text, integer, text, text , varchar, float8, text, date, timestamp, int4,  integer) TO GROUP legaltime_full;
+alter function customer_account_register_uq(text, integer, text, text , int4, varchar, float8, text, date, timestamp, int4,  integer) owner to postgres;
+GRANT EXECUTE ON FUNCTION customer_account_register_uq(text, integer, text, text , int4, varchar, float8, text, date, timestamp, int4,  integer) TO GROUP legaltime_full;
 
 
-select * from customer_account_register_uq('ALREADY_AUTH', 1, 'test', 'test'  , 'text' 
+select * from customer_account_register_uq('ALREADY_AUTH', 1, 'test', 'test' , 1
+ , 'text' 
  , 'text' 
  , 'text' 
  , 'text' 
@@ -197,9 +193,4 @@ GRANT EXECUTE ON FUNCTION customer_account_register_dq(text, integer, text, text
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
-
-
-
-
-
-
+ 

@@ -25,7 +25,7 @@
 		<set-property name="log_FirebugLogger" value="ENABLED" />
 		<set-property name="log_GWTLogger" value="ENABLED" />
 		<set-property name="log_SystemLogger" value="ENABLED" />
-		<set-property name="log_RemoteLogger" value="ENABLED" />
+		<!--  --><set-property name="log_RemoteLogger" value="ENABLED" /> -->
 		<set-property name="log_WindowLogger" value="DISABLED" />
 		<set-configuration-property name="log_pattern" value="%d [%-5p] %m%n" />
 </module>

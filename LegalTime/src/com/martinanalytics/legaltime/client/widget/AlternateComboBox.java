@@ -51,7 +51,11 @@ public class AlternateComboBox<D extends ModelData> extends ComboBox{
 	
 	
 	public Object getKeyValue(){
+		try{
 		return getValue().get(getValueField());
+		}catch(Exception e){
+			return null;
+		}
 		
 	}
 	public int getSelectedIndex(){

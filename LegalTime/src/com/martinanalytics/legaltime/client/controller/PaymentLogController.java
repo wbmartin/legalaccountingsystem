@@ -22,6 +22,8 @@ import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import java.util.ArrayList;
 import com.martinanalytics.legaltime.client.widget.SimpleDateFormat;
 import com.extjs.gxt.ui.client.store.Record;
+import com.extjs.gxt.ui.client.widget.Dialog;
+
 import java.util.List;
 
 
@@ -84,7 +86,10 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 	}else if(e_.getName().equals("PaymentLogViewOnDetach")){
 	}else if(e_.getName().equals("PaymentLogTableOnAttach")){		
 	}else if(e_.getName().equals("PaymentLogTableOnDetach")){		
-	
+	}else if(e_.getName().equals("AddPayment")){
+		savePaymentLogBean((PaymentLogBean)paymentLogView.getFormBindings().getModel());
+	}else if(e_.getName().equals("PostPaymentDialogClosing")){
+		notifier.notifyAppEvent(this, "PostPaymentDialogClosing");
 	}else{
 		Log.debug("Unexpected AppEvent named" +e_.getName() );
 	}
@@ -345,6 +350,10 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 							"Successfully saved PaymentLog record"
 							, (new java.util.Date().getTime() - startTime.getTime()));
 						masterController.getAppContainer().addSysLogMessage("Bean Saved" +  paymentLogBean_.toString());
+						paymentLogView.getNbrAmount().setValue(null);
+						paymentLogView.getPostPaymentDialog().getButtonById(Dialog.YES).setEnabled(true);
+						paymentLogView.getPostPaymentDialog().getButtonById(Dialog.NO).setEnabled(true);
+						paymentLogView.getPostPaymentDialog().getButtonById(Dialog.CANCEL).setEnabled(true);
 					}else{
 						
 						masterController.notifyUserOfSystemError("Server Error","There was an error while saving a "
