@@ -4,6 +4,7 @@ package com.martinanalytics.legaltime.client.model;
 import com.martinanalytics.legaltime.client.model.bean.InvoiceBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import java.util.ArrayList;
+import java.util.Date;
 //private final InvoiceServiceAsync invoiceService = 
 //	GWT.create(InvoiceService.class);
 //
@@ -20,5 +21,7 @@ public interface InvoiceServiceAsync{
 	void  getInvoiceByPrKey(UserProfile userProfile_ , Integer invoiceId_ , Integer customerId_ , AsyncCallback<InvoiceBean> callback);
 	void createInvoiceFromEligibleTrans(UserProfile userProfile_, Integer customerId_, java.util.Date invoiceDt_,AsyncCallback<Integer> callback);
 	void unwindInvoice(UserProfile userProfile_, Integer invoiceId_,AsyncCallback<Boolean> callback);
+	void invoiceAllHourlyClients(UserProfile userProfile_, Date invoiceDt_,
+			AsyncCallback<ArrayList<Integer>> callback);
 
 }

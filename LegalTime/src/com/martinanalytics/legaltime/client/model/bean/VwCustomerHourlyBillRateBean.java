@@ -20,6 +20,9 @@ public class VwCustomerHourlyBillRateBean extends BaseModelData{
 		setBean(vwCustomerHourlyBillRateBean_);
 	}
 	public void setBean(VwCustomerHourlyBillRateBean vwCustomerHourlyBillRateBean_){
+		setBillType(vwCustomerHourlyBillRateBean_.getBillType());
+		setLastName(vwCustomerHourlyBillRateBean_.getLastName());
+		setFirstName(vwCustomerHourlyBillRateBean_.getFirstName());
 		setLastUpdate(vwCustomerHourlyBillRateBean_.getLastUpdate());
 		setCustomerId(vwCustomerHourlyBillRateBean_.getCustomerId());
 		setBillRate(vwCustomerHourlyBillRateBean_.getBillRate());
@@ -32,6 +35,9 @@ public class VwCustomerHourlyBillRateBean extends BaseModelData{
 	
 	public VwCustomerHourlyBillRateBean getStandardVwCustomerHourlyBillRateBean(){
 		VwCustomerHourlyBillRateBean vwCustomerHourlyBillRateBean = new VwCustomerHourlyBillRateBean();
+		vwCustomerHourlyBillRateBean.setBillType(getBillType());
+		vwCustomerHourlyBillRateBean.setLastName(getLastName());
+		vwCustomerHourlyBillRateBean.setFirstName(getFirstName());
 		vwCustomerHourlyBillRateBean.setLastUpdate(getLastUpdate());
 		vwCustomerHourlyBillRateBean.setCustomerId(getCustomerId());
 		vwCustomerHourlyBillRateBean.setBillRate(getBillRate());
@@ -41,6 +47,27 @@ public class VwCustomerHourlyBillRateBean extends BaseModelData{
 		vwCustomerHourlyBillRateBean.setClientId(getClientId());
 		return vwCustomerHourlyBillRateBean;
 	}
+	public String getBillType(){
+		return get("billType");
+	}
+	public void setBillType( String new_){
+		set("billType", new_);
+	}
+
+	public String getLastName(){
+		return get("lastName");
+	}
+	public void setLastName( String new_){
+		set("lastName", new_);
+	}
+
+	public String getFirstName(){
+		return get("firstName");
+	}
+	public void setFirstName( String new_){
+		set("firstName", new_);
+	}
+
 	public java.util.Date getLastUpdate(){
 		return get("lastUpdate");
 	}

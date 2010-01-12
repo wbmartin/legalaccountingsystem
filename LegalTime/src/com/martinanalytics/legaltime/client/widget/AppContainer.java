@@ -11,6 +11,7 @@ package com.martinanalytics.legaltime.client.widget;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
@@ -26,6 +27,9 @@ import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.Status;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 
+import com.extjs.gxt.ui.client.widget.form.DateField;
+import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.CenterLayout;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
@@ -36,6 +40,7 @@ import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
@@ -66,6 +71,11 @@ public class AppContainer extends LayoutContainer {
     ContentPanel cp = new ContentPanel(new CenterLayout());
     CenterLayout centerLayout = new CenterLayout();
     VerticalPanel vp = new VerticalPanel();
+    Dialog invoicedClientDatePromptDialog = new Dialog();
+    Dialog assessMonthlyChargesDatePromptDialog = new Dialog();
+    DateField dtfInvoiced = new DateField();
+    private DateField dtfAssessMonthlyCharges = new DateField();
+    private TextField txtLastMonthlyChargeDate = new TextField();
 	protected AppContainer(){
 		super();
 		setStyleName("AppContainer");
@@ -99,6 +109,41 @@ public class AppContainer extends LayoutContainer {
 		messageLog = new ArrayList<String>();
 		
 		createApplicationWindow();
+		createInvoicedClientDatePromptDialog();
+		createAssessMonthlyChargesDatePromptDialog();
+	}
+	private void createInvoicedClientDatePromptDialog() {
+		invoicedClientDatePromptDialog.setModal(true);
+		HTML msg = new HTML("<p>This report will display all invoices generated on the date you select Below</p></br></br>");
+		FormPanel invoicedCustomerFormPanel = new FormPanel();
+		invoicedCustomerFormPanel.add(msg);
+		dtfInvoiced.setFieldLabel("Invoice Date");
+		invoicedCustomerFormPanel.add(dtfInvoiced);
+		invoicedCustomerFormPanel.setHeaderVisible(true);
+		invoicedCustomerFormPanel.setHeading("Enter Invoice Date...");
+		invoicedCustomerFormPanel.addStyleName("LEFT");
+		invoicedCustomerFormPanel.setWidth(400);
+		invoicedCustomerFormPanel.setBorders(false);
+		invoicedCustomerFormPanel.setInsetBorder(false);
+		
+		invoicedClientDatePromptDialog.add(invoicedCustomerFormPanel);
+		invoicedClientDatePromptDialog.setButtons(Dialog.OKCANCEL);
+		invoicedClientDatePromptDialog.setButtonAlign(HorizontalAlignment.CENTER);
+		invoicedClientDatePromptDialog.setHideOnButtonClick(true);
+		invoicedClientDatePromptDialog.setWidth(400);
+		invoicedClientDatePromptDialog.getButtonById(Dialog.OK).addListener(Events.Select, new Listener<ComponentEvent>() {
+	        public void handleEvent(ComponentEvent be) {
+	        	HashMap params = new HashMap();
+	        	params.put("invoiceOnly", "YES");
+	        	params.put("invoiceDt",dtfInvoiced.getValue());
+	        	ReportUtil.showReport("./CustomerAddressLabelServlet",UserProfile.getInstance(), params);
+
+	          }}
+	    );
+		
+		
+		
+		
 	}
 	public void createApplicationWindow() {
 
@@ -200,28 +245,67 @@ public class AppContainer extends LayoutContainer {
     miInvoiceManager.addStyleName("LEFT");
     mnuBilling.add(miInvoiceManager);
     
- 
+    MenuItem miAssessMonthlyCharges = new MenuItem("Assess Monthly Charges");
+    miAssessMonthlyCharges.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+        	assessMonthlyChargesDatePromptDialog.show();
+        	notifier.notifyAppEvent(this, "AssessMonthlyChargesRequested");
+        	
+          }}
+    );
+    miAssessMonthlyCharges.addStyleName("LEFT");
+    mnuBilling.add(miAssessMonthlyCharges);
     
-//    MenuItem miEmailManager = new MenuItem("Email Addresses");
-//    miEmailManager.addListener(Events.Select, new Listener<ComponentEvent>() {
-//        public void handleEvent(ComponentEvent be) {
-//        	//History.newItem(AppPages.RECIPIENT_PAGE);
-//          }}
-//    );
-//    miEmailManager.addStyleName("LEFT");
-//    mnuBilling.add(miEmailManager);
+    MenuItem miInvoiceHourlyClients = new MenuItem("Invoice All Hourly Clients");
+    miInvoiceHourlyClients.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+        	
+        	notifier.notifyAppEvent(this, "InvoiceAllHourlyClients");
+        	
+          }}
+    );
+    miAssessMonthlyCharges.addStyleName("LEFT");
+    mnuBilling.add(miInvoiceHourlyClients);
+    
+    
+    
+    
+    
     
     Menu mnuReports = new Menu();
     bar.add(new MenuBarItem("Reports", mnuReports));
     
-    MenuItem miClientAddressLabels = new MenuItem("Client Address Labels");
+    MenuItem miClientAddressLabels = new MenuItem("All Client Address Labels");
     mnuReports.add(miClientAddressLabels);
+    miClientAddressLabels.addStyleName("LEFT");
     miClientAddressLabels.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
         	ReportUtil.showReport("./CustomerAddressLabelServlet",UserProfile.getInstance(), null);
         	
           }}
     );
+    
+    MenuItem miInvoicedClientAddressLabels = new MenuItem("Invoiced Client Address Labels");
+    mnuReports.add(miInvoicedClientAddressLabels);
+    miInvoicedClientAddressLabels.addStyleName("LEFT");
+    miInvoicedClientAddressLabels.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+
+        	invoicedClientDatePromptDialog.show();
+        	
+          }}
+    );
+    
+    MenuItem miHourlyBillReport = new MenuItem("Hourly Bill Rates");
+    mnuReports.add(miHourlyBillReport);
+    miHourlyBillReport.addStyleName("LEFT");
+    miHourlyBillReport.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+
+        	ReportUtil.showReport("./HourlyBillRateReportServlet",UserProfile.getInstance(), null);
+          }}
+    );
+    
     
     
     MenuItem miFollowupReport = new MenuItem("Followups");
@@ -366,22 +450,69 @@ public void setAppWindowDialog(Dialog newDialog_) {
 	 appWindowDialog = newDialog_;
 }
 public void setView(Composite page_) {
-//	cp.removeAll();
-//	cp.setLayout(centerLayout);
-//	cp.add(page_);
-//
-//	VerticalPanel vp = new VerticalPanel();
-//	vp.setWidth("100%");
-//	vp.setHorizontalAlign(HorizontalAlignment.CENTER);
-//	vp.add(cp);
-//	cp.setWidth("96%");
-	
 	mainPanel.setWidget(page_);
-	//vp.removeAll();
-	//vp.add(page_);
-	
-
-	
 }
 
+
+
+private void createAssessMonthlyChargesDatePromptDialog() {
+	assessMonthlyChargesDatePromptDialog.setModal(true);
+	HTML msg = new HTML("<p>Click Ok to assess monthly charges for ALL monthly billing customers.  Please note, the last" +
+			"date monthly charges were applied is displayed below.</p></br></br>");
+	FormPanel assessMonthlyChargesFormPanel = new FormPanel();
+	assessMonthlyChargesFormPanel.add(msg);
+	dtfAssessMonthlyCharges.setFieldLabel("Charge Date");
+	
+	
+     txtLastMonthlyChargeDate.setFieldLabel("Last Charge Date");
+     txtLastMonthlyChargeDate.setEnabled(false);
+     assessMonthlyChargesFormPanel.add(txtLastMonthlyChargeDate);
+	assessMonthlyChargesFormPanel.add(dtfAssessMonthlyCharges);
+	assessMonthlyChargesFormPanel.setHeaderVisible(true);
+	assessMonthlyChargesFormPanel.setHeading("Enter Monthly Charge Date...");
+	assessMonthlyChargesFormPanel.addStyleName("LEFT");
+	assessMonthlyChargesFormPanel.setWidth(400);
+	assessMonthlyChargesFormPanel.setBorders(false);
+	assessMonthlyChargesFormPanel.setInsetBorder(false);
+	
+	assessMonthlyChargesDatePromptDialog.add(assessMonthlyChargesFormPanel);
+	assessMonthlyChargesDatePromptDialog.setButtons(Dialog.OKCANCEL);
+	assessMonthlyChargesDatePromptDialog.setButtonAlign(HorizontalAlignment.CENTER);
+	assessMonthlyChargesDatePromptDialog.setHideOnButtonClick(true);
+	assessMonthlyChargesDatePromptDialog.setWidth(400);
+	assessMonthlyChargesDatePromptDialog.getButtonById(Dialog.OK).addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+//        	HashMap params = new HashMap();
+//        	params.put("invoiceOnly", "YES");
+//        	params.put("invoiceDt",dtfInvoiced.getValue());
+//        	ReportUtil.showReport("./CustomerAddressLabelServlet",UserProfile.getInstance(), params);
+        	notifier.notifyAppEvent(this, "AssessMonthlyChargeCommit");
+
+          }}
+    );
+}
+/**
+ * @param dtfAssessMonthlyCharges the dtfAssessMonthlyCharges to set
+ */
+public void setDtfAssessMonthlyCharges(DateField dtfAssessMonthlyCharges) {
+	this.dtfAssessMonthlyCharges = dtfAssessMonthlyCharges;
+}
+/**
+ * @return the dtfAssessMonthlyCharges
+ */
+public DateField getDtfAssessMonthlyCharges() {
+	return dtfAssessMonthlyCharges;
+}
+/**
+ * @param txtLastMonthlyChargeDate the txtLastMonthlyChargeDate to set
+ */
+public void setTxtLastMonthlyChargeDate(TextField txtLastMonthlyChargeDate) {
+	this.txtLastMonthlyChargeDate = txtLastMonthlyChargeDate;
+}
+/**
+ * @return the txtLastMonthlyChargeDate
+ */
+public TextField getTxtLastMonthlyChargeDate() {
+	return txtLastMonthlyChargeDate;
+}
 }

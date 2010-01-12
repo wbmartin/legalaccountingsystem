@@ -17,5 +17,6 @@ public interface LaborRegisterService extends RemoteService{
 	 ArrayList<LaborRegisterBean> selectLaborRegister(UserProfile userProfile_, String whereClause_, String OrderByClause_) throws GWTCustomException;
 	 ArrayList<LaborRegisterBean> saveLaborRegisterBeanBatch(UserProfile userProfile_, ArrayList<LaborRegisterBean> laborRegisterBeanList_);
 	 LaborRegisterBean getLaborRegisterByPrKey(UserProfile userProfile_ , Integer laborRegisterId_ , Integer customerId_ );
-
+	 Integer AssessMonthlyCharges(UserProfile userProfile_, java.util.Date assessDt_) throws GWTCustomException;
+	 java.util.Date RetrieveLastMonthlycharge(UserProfile userProfile_) throws GWTCustomException;
 }

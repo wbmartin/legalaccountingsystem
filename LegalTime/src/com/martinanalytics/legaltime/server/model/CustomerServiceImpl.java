@@ -3,6 +3,7 @@
 package com.martinanalytics.legaltime.server.model;
 
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -216,6 +217,38 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		throw new GWTServerException("Retrieving Customer Records Failed", e);
+	  }
+	  return resultList;
+	}
+	
+	
+	/**
+	 * Retrieve the entire list of beans from the with an invoice generated on a given date
+	 * @param userProfile_ the credentials to use for authentication and authorization
+	 * @param whereClause_ the filter to apply to the list, should begin with "where"
+	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
+         * @return an arraylist of the beans
+	 */
+	public ArrayList< CustomerBean> selectCustomerWithInvoice(UserProfile userProfile_,java.util.Date invoiceDt_, String whereClause_, String orderByClause_){
+	  int ndx =1;
+	  PreparedStatement ps;
+	  ResultSet rs;
+	  String result;
+	  ArrayList<CustomerBean> resultList  = new ArrayList<CustomerBean>();
+	  try {
+		ps = databaseManager.getConnection().prepareStatement("select  contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_invoiced_sq('CHECK_AUTH',?,?,?,?) " + whereClause_ + " " + orderByClause_+ ";");
+		ps.setInt(ndx++, userProfile_.getClientId());
+		ps.setString(ndx++,  userProfile_.getUserId());
+		ps.setString(ndx++, userProfile_.getSessionId());
+		ps.setDate(ndx++, new java.sql.Date( invoiceDt_.getTime()));
+		System.err.println("DateRequested" + invoiceDt_);
+		rs =  ps.executeQuery();
+		while(rs.next()){
+		  resultList.add(decodeRow(rs));
+		}
+	  }catch (Exception e) {
+		e.printStackTrace();
+		throw new GWTServerException("Retrieving Invoiced Customer Records Failed", e);
 	  }
 	  return resultList;
 	}

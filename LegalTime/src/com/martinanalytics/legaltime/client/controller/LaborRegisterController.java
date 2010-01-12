@@ -1,3 +1,7 @@
+/*This file has been modified
+ *   added retrieve last date function
+ *   added assessMonthlyCharges Functions
+ */
 
 package com.martinanalytics.legaltime.client.controller;
 
@@ -25,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.extjs.gxt.ui.client.store.Record;
+import com.martinanalytics.legaltime.client.widget.AppContainer;
 import com.martinanalytics.legaltime.client.widget.SimpleDateFormat;
 
 
@@ -691,6 +696,66 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
   		
   	  
     }
+  
+  
+  
+  
+  
+  
+  
+  public void retrieveLastMonthlyChargeDate( ){
+		final java.util.Date startTime = new java.util.Date();
+			laborRegisterService.RetrieveLastMonthlycharge(userProfile, 
+					new AsyncCallback<java.util.Date>(){
+						public void onFailure(Throwable caught) {
+							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+									AppPref.SERVER_ERROR + caught.getMessage());
+							masterController.getAppContainer().setTransactionResults(
+								"retrieveLastMonthlyChargeDate Failed"
+								, (new java.util.Date().getTime() -startTime.getTime()));
+							masterController.getAppContainer().addSysLogMessage("retrieveLastMonthlyChargeDate Attempted "  );
+
+						}
+			
+						public void onSuccess(java.util.Date lastAssessedChargeDate) {
+							masterController.getAppContainer().addSysLogMessage("retrieveLastMonthlyChargeDate ");
+							
+							masterController.getAppContainer().setTransactionResults(
+								"Successfully retrieveLastMonthlyChargeDate"
+								, (new java.util.Date().getTime() - startTime.getTime()));
+							AppContainer.getInstance().getTxtLastMonthlyChargeDate().setValue(lastAssessedChargeDate);
+							
+						}
+			});
+		  }
+  
+  
+  public void assessMontlyCharges(java.util.Date assessDt_ ){
+		final java.util.Date startTime = new java.util.Date();
+			laborRegisterService.AssessMonthlyCharges(userProfile,  assessDt_,
+					new AsyncCallback<Integer>(){
+						public void onFailure(Throwable caught) {
+							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+									AppPref.SERVER_ERROR + caught.getMessage());
+							masterController.getAppContainer().setTransactionResults(
+								"retrieveLastMonthlyChargeDate Failed"
+								, (new java.util.Date().getTime() -startTime.getTime()));
+							masterController.getAppContainer().addSysLogMessage("retrieveLastMonthlyChargeDate Attempted "  );
+
+						}
+			
+						public void onSuccess(Integer chargesAssessedCount) {
+							masterController.getAppContainer().addSysLogMessage("retrieveLastMonthlyChargeDate ");
+							
+							masterController.getAppContainer().setTransactionResults(
+								"Successfully retrieveLastMonthlyChargeDate"
+								, (new java.util.Date().getTime() - startTime.getTime()));
+							masterController.notifyUserOfSystemError("Monthly Charge Cycle Completed", chargesAssessedCount + "customer(s) were assessed their montly " +
+									"charge, but have not been invoiced.");
+							
+						}
+			});
+		  }
   
   
 

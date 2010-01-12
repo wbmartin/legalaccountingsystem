@@ -1,4 +1,7 @@
-
+/*
+ * This file has been modified
+ *  * added invoice all hourly clients
+ */
 
 package com.martinanalytics.legaltime.server.model;
 
@@ -402,4 +405,33 @@ public Boolean unwindInvoice(UserProfile userProfile_, Integer invoiceId_)throws
 	}
 
 
+
+
+
+public ArrayList<Integer> invoiceAllHourlyClients(UserProfile userProfile_, java.util.Date invoiceDt_){
+	  int ndx =1;
+	  PreparedStatement ps;
+	  ResultSet rs;
+	  String result="";
+	  ArrayList<Integer> resultList  = new ArrayList<Integer>();
+	  try {
+		ps = databaseManager.getConnection().prepareStatement("select * from invoice_all_hourly_clients('CHECK_AUTH',?,?,?,?)") ;
+		ps.setInt(ndx++, userProfile_.getClientId());
+		ps.setString(ndx++,  userProfile_.getUserId());
+		ps.setString(ndx++, userProfile_.getSessionId());
+		ps.setDate(ndx++, new java.sql.Date(invoiceDt_.getTime()));
+		rs =  ps.executeQuery();
+		while(rs.next()){
+		  result = rs.getString(1);
+		}
+		String[] resultArray = result.split(",");
+		for( ndx =0;ndx<resultArray.length;ndx++){
+			resultList.add(Integer.parseInt(resultArray[ndx]));
+		}
+	  }catch (Exception e) {
+		e.printStackTrace();
+		throw new GWTServerException("Retrieving Invoice Records Failed", e);
+	  }
+	  return resultList;
+	}
 }

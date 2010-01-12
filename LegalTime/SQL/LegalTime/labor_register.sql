@@ -1,4 +1,6 @@
-
+--this has been modified to include additional functions
+-- * assess Monthly Customer Charges
+-- * retrieve last monthly charge
 
 -- Security Grants
 GRANT ALL ON TABLE labor_register TO GROUP legaltime_full;
@@ -211,3 +213,78 @@ GRANT EXECUTE ON FUNCTION labor_register_dq(text, integer, text, text , integer,
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
  
+CREATE OR REPLACE FUNCTION assess_all_monthly_charges(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, assessDt_ date)
+  RETURNS integer AS
+$BODY$
+  Declare
+  monthlyCustomer customer;
+  customerCount integer;
+  Begin
+  customerCount:=0;
+    if alreadyAuth_ <>'ALREADY_AUTH' then
+    	perform isSessionValid(clientId_, securityuserId_,sessionId_) ;
+    	perform isUserAuthorized(clientId_, securityuserId_, 'SELECT_CUSTOMER' );
+    end if;
+	for monthlyCustomer in select * from customer where  bill_type ='MONTHLY'  and monthly_bill_rate >0 and active_yn ='Y' loop
+	   insert into labor_register(client_id , user_id , invoice_id , bill_rate , invoiceable , activity_date , end_time , start_time , minute_count , description , last_update , customer_id ) 
+	values (clientid_ , securityuserid_, null, monthlyCustomer.monthly_bill_rate, true, assessDt_, assessDt_, assessDt_, 60, 'Monthly Retainer Fee', now(), monthlyCustomer.customer_id) ;
+	customerCount:=customerCount+1;
+
+	end loop;
+
+    return customerCount;
+  End;
+$BODY$
+  LANGUAGE 'plpgsql' VOLATILE
+  COST 100
+;
+ALTER FUNCTION assess_all_monthly_charges(text, integer, text, text, date) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION assess_all_monthly_charges(text, integer, text, text, date) TO public;
+GRANT EXECUTE ON FUNCTION assess_all_monthly_charges(text, integer, text, text, date) TO postgres;
+GRANT EXECUTE ON FUNCTION assess_all_monthly_charges(text, integer, text, text, date) TO legaltime_full;
+
+select * from labor_register order by last_update desc
+
+
+
+select * from assess_all_monthly_charges('ALREADY_AUTH',1,'bmartin','','2010-1-10');
+
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION retrieve_last_monthly_charge(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text )
+  RETURNS date AS
+$BODY$
+  Declare
+  lastMonthlyCharge date;
+  Begin
+
+    if alreadyAuth_ <>'ALREADY_AUTH' then
+    	perform isSessionValid(clientId_, securityuserId_,sessionId_) ;
+    	perform isUserAuthorized(clientId_, securityuserId_, 'SELECT_LABORREGISTER' );
+    end if;
+
+    select max(activity_date) into lastMonthlyCharge from labor_register where description ='Monthly Retainer Fee';
+
+
+    return lastMonthlyCharge;
+  End;
+$BODY$
+  LANGUAGE 'plpgsql' VOLATILE
+  COST 100
+;
+ALTER FUNCTION retrieve_last_monthly_charge(text, integer, text, text) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION retrieve_last_monthly_charge(text, integer, text, text) TO public;
+GRANT EXECUTE ON FUNCTION retrieve_last_monthly_charge(text, integer, text, text) TO postgres;
+GRANT EXECUTE ON FUNCTION retrieve_last_monthly_charge(text, integer, text, text) TO legaltime_full;
+
+
+
+
+select * from retrieve_last_monthly_charge('ALREADY_AUTH',1,'bmartin','');
+
+
+

@@ -19,4 +19,5 @@ public interface InvoiceService extends RemoteService{
 	 InvoiceBean getInvoiceByPrKey(UserProfile userProfile_ , Integer invoiceId_ , Integer customerId_ );
 	  Integer createInvoiceFromEligibleTrans(UserProfile userProfile_, Integer customerId_, java.util.Date invoiceDt_) throws GWTCustomException;
 	  Boolean unwindInvoice(UserProfile userProfile_, Integer invoiceId_)throws GWTCustomException;
+	  ArrayList<Integer> invoiceAllHourlyClients(UserProfile userProfile_, java.util.Date invoiceDt_);
 }
