@@ -61,10 +61,16 @@ public class InvoiceReportServlet extends HttpServlet{
 		userProfile.setUserId(request.getParameter("userId"));
 		userProfile.setSessionId(request.getParameter("sessionId"));
 		userProfile.setClientId(Integer.parseInt(request.getParameter("clientId")));
-		Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
         boolean success = false;
         ArrayList<VwInvoiceDisplayBean> beans = new ArrayList<VwInvoiceDisplayBean>();
-        beans.add(vwInvoiceDisplayService.selectVwInvoiceDisplay(userProfile, "where invoice_id= " +invoiceId, "").get(0));
+		try{
+		  Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
+		  beans.add(vwInvoiceDisplayService.selectVwInvoiceDisplay(userProfile, "where invoice_id= " +invoiceId, "").get(0));
+		}catch(Exception e){
+			beans = vwInvoiceDisplayService.selectVwInvoiceDisplay(userProfile, "where invoice_id in (" +request.getParameter("invoiceIdList") +")", "");
+		}
+
+        
         
         ArrayList<JasperPrint> jasperPrintList = buildInvoices(userProfile, beans);
         try {
@@ -84,7 +90,7 @@ public class InvoiceReportServlet extends HttpServlet{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        System.err.println("Followup Report Created Successfully");
+        System.err.println("Invoices Report Created Successfully");
 		
         
         
@@ -92,7 +98,7 @@ public class InvoiceReportServlet extends HttpServlet{
 	
 	private ArrayList<JasperPrint> buildInvoices(UserProfile userProfile_, ArrayList<VwInvoiceDisplayBean> beans){
 		 
-		InputStream jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice.jasper");
+		InputStream jasperFile ;//= this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice.jasper");
 		//InputStream jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice_ExpenseSubReport.jasper");
 		ArrayList<VwInvoiceDisplayBean> single = new ArrayList<VwInvoiceDisplayBean>();
 		ArrayList<JasperPrint> result = new ArrayList<JasperPrint>();
@@ -101,13 +107,11 @@ public class InvoiceReportServlet extends HttpServlet{
 		for(VwInvoiceDisplayBean bean :beans){
 			single.clear();
 			single.add(bean);
+			System.err.println("Invoice ID: " +bean.getInvoiceId());
 			try {
+				jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice.jasper");
 				result.add(JasperFillManager.fillReport(
-					    jasperFile, getParams(userProfile_, bean.getInvoiceId()),new JRBeanCollectionDataSource(single,false)));
-//				result.add(JasperFillManager.fillReport(
-//					    jasperFile, null,getExpenseBeans(userProfile_, bean.getInvoiceId())));
-				
-				
+					    jasperFile, getParams(userProfile_, bean.getInvoiceId()),new JRBeanCollectionDataSource(single,false)));				
 			} catch (JRException e) {
 				
 				e.printStackTrace();

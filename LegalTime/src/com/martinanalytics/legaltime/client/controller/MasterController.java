@@ -150,6 +150,13 @@ public class MasterController implements AppEventListener{
 			
 		}else if(e_.getName().equals(	"PostPaymentDialogClosing")){
 			customerAccountRegisterController.refreshList();
+		}else if(e_.getName().equals(	"AssessMonthlyChargesRequested")){	
+			laborRegisterController.retrieveLastMonthlyChargeDate();
+		}else if(e_.getName().equals(	"AssessMonthlyChargeCommit")){		
+			laborRegisterController.assessMontlyCharges(appContainer.getDtfAssessMonthlyCharges().getValue());
+		}else if(e_.getName().equals(	"InvoiceAllHourlyClients")){
+			invoiceController.invoiceAllHourlyClients(new java.util.Date());
+			
 		}else{
 			Log.debug("Unexpected App Message" + e_.getName());
 		}

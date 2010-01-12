@@ -347,3 +347,52 @@ GRANT EXECUTE ON FUNCTION create_customer_invoice_all_eligible(text, integer, te
 
 
 
+
+CREATE OR REPLACE FUNCTION invoice_all_hourly_clients(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, invoiceDt_ date)
+  RETURNS text AS
+$BODY$
+  Declare
+  hourlyCustomer customer;
+  invoiceList text;
+  newInvoiceId integer;
+  Begin
+  invoiceList:='';
+  
+    if alreadyAuth_ <>'ALREADY_AUTH' then
+    	perform isSessionValid(clientId_, securityuserId_,sessionId_) ;
+    	perform isuserauthorized(clientid_, securityuserid_,'INSERT_INVOICE' );
+    end if;
+	for hourlyCustomer in select customer.* from customer where  bill_type ='HOURLY'  and active_yn ='Y' loop
+	   select * into newInvoiceId from create_customer_invoice_all_eligible('ALREADY_AUTH', clientid_ , securityuserid_ , sessionid_ , hourlyCustomer.customer_id, invoicedt_ ) ;
+	   	
+	   invoiceList :=invoiceList || newInvoiceId ||',';  
+	end loop;
+
+    return trim(trailing ',' from invoiceList);
+  End;
+$BODY$
+  LANGUAGE 'plpgsql' VOLATILE
+  COST 100
+;
+ALTER FUNCTION invoice_all_hourly_clients(text, integer, text, text, date) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION invoice_all_hourly_clients(text, integer, text, text, date) TO public;
+GRANT EXECUTE ON FUNCTION invoice_all_hourly_clients(text, integer, text, text, date) TO postgres;
+GRANT EXECUTE ON FUNCTION invoice_all_hourly_clients(text, integer, text, text, date) TO legaltime_full;
+
+select * from labor_register order by last_update desc
+
+
+
+select * from invoice_all_hourly_clients('ALREADY_AUTH',1,'bmartin','','2010-1-10');
+
+select * from labor_register;
+update labor_register set invoice_id = null
+
+
+
+
+
+
+
+
+

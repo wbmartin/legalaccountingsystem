@@ -1,4 +1,5 @@
-
+--This has been modified
+--  * Added customer_invoice
 
 
 -- Security Grants
@@ -247,4 +248,60 @@ GRANT EXECUTE ON FUNCTION customer_dq(text, integer, text, text , integer, times
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
  
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION customer_invoiced_sq(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text,  invoiceDt_ date)
+  RETURNS SETOF customer AS
+$BODY$
+  Declare
+  
+  Begin
+    if alreadyAuth_ <>'ALREADY_AUTH' then
+    	perform isSessionValid(clientId_, securityuserId_,sessionId_) ;
+    	perform isUserAuthorized(clientId_, securityuserId_, 'SELECT_CUSTOMER' );
+    end if;
+-- contingency_rate, mortgage_amount, active_yn, monthly_bill_rate, bill_type, note, client_since_dt, email, fax, home_phone, work_phone, zip, state, city, address, last_name, first_name, last_update, client_id, customer_id    
+    return query select distinct customer.* 
+		from  customer left join invoice  on customer.customer_id =invoice.customer_id 
+		where customer.client_id = clientId_ and invoice.invoice_dt = invoiceDt_;
+  End;
+$BODY$
+  LANGUAGE 'plpgsql' VOLATILE
+  COST 100
+  ROWS 1000;
+ALTER FUNCTION customer_invoiced_sq(text, integer, text, text, date) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION customer_invoiced_sq(text, integer, text, text, date) TO public;
+GRANT EXECUTE ON FUNCTION customer_invoiced_sq(text, integer, text, text, date) TO postgres;
+GRANT EXECUTE ON FUNCTION customer_invoiced_sq(text, integer, text, text, date) TO legaltime_full;
+
+select * from customer_invoiced_sq('ALREADY_AUTH',1,'','','2010-01-09')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

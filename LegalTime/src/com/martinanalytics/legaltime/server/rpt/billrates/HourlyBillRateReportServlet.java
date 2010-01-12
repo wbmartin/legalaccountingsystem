@@ -1,4 +1,7 @@
-package com.martinanalytics.legaltime.server.rpt.addresslabels;
+package com.martinanalytics.legaltime.server.rpt.billrates;
+
+
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,37 +26,41 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
+import com.martinanalytics.legaltime.client.model.bean.VwCustomerHourlyBillRateBean;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.CustomerServiceImpl;
 import com.martinanalytics.legaltime.server.model.VwCustomerFollowupServiceImpl;
+import com.martinanalytics.legaltime.server.model.VwCustomerHourlyBillRateServiceImpl;
 
-public class CustomerAddressLabelServlet extends HttpServlet {
+public class HourlyBillRateReportServlet  extends HttpServlet {
 	  /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	CustomerServiceImpl customerServiceImpl = new CustomerServiceImpl();
+	VwCustomerHourlyBillRateServiceImpl vwCustomerHourlyBillRateServiceImpl = new VwCustomerHourlyBillRateServiceImpl();
 
 	public void doPost(HttpServletRequest request,
               HttpServletResponse response) throws ServletException, IOException {
 		//PrintWriter out = response.getWriter();
-		ArrayList<CustomerBean> beans = new  ArrayList<CustomerBean>();
+		ArrayList<VwCustomerHourlyBillRateBean> beans = new  ArrayList<VwCustomerHourlyBillRateBean>();
 		UserProfile userProfile = new UserProfile();
 		userProfile.setUserId(request.getParameter("userId"));
 		userProfile.setSessionId(request.getParameter("sessionId"));
 		userProfile.setClientId(Integer.parseInt(request.getParameter("clientId")));
-		String whereClause ="";
-		String orderByClause ="order by last_name desc";
-	    if(request.getParameter("invoiceOnly")!=null && request.getParameter("invoiceOnly").equals("YES")){
-	    	java.util.Date dt = new java.util.Date(request.getParameter("invoiceDt"));
-	    	beans = customerServiceImpl.selectCustomerWithInvoice(userProfile, dt,whereClause, orderByClause);
-	    }else{
-	    	beans = customerServiceImpl.selectCustomer(userProfile, whereClause, orderByClause);
-	    }
+		String whereClause="where bill_type='HOURLY'";
+		String orderByClause ="order by last_name, first_name";
+	    	try {
+				beans = vwCustomerHourlyBillRateServiceImpl.selectVwCustomerHourlyBillRate(userProfile,whereClause  , orderByClause);
+			} catch (GWTCustomException e1) {
+				
+				e1.printStackTrace();
+			}
+	    
         boolean success = false;
         JasperPrint jasperPrint;	
         java.util.HashMap params = new java.util.HashMap();
         InputStream jasperFile = this.getServletContext().getResourceAsStream(
-        		"/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/addresslabels/ClientAddressLabels.jasper");
+        		"/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/billrates/CustomerHourlyBillRatesReport.jasper");
         try {
 			jasperPrint = JasperFillManager.fillReport(
 			    jasperFile, params,new JRBeanCollectionDataSource(beans,false));

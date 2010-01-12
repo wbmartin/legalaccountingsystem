@@ -1,4 +1,7 @@
-
+/*
+ * This file has been modified
+ *  * added invoice all hourly clients
+ */
 package com.martinanalytics.legaltime.client.controller;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -18,6 +21,9 @@ import com.martinanalytics.legaltime.client.model.InvoiceServiceAsync;
 import com.martinanalytics.legaltime.client.model.bean.InvoiceBean;
 import com.martinanalytics.legaltime.client.view.InvoiceView;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.martinanalytics.legaltime.client.widget.ReportUtil;
 import com.martinanalytics.legaltime.client.widget.SimpleDateFormat;
 import com.extjs.gxt.ui.client.store.Record;
 import java.util.List;
@@ -380,6 +386,39 @@ public void saveAllChanges(){
 		
 		
 	  
+  }
+
+
+
+public void invoiceAllHourlyClients(java.util.Date invoiceDt_){
+	final java.util.Date startTime = new java.util.Date();
+	invoiceService.invoiceAllHourlyClients(userProfile, invoiceDt_, 
+			new AsyncCallback<ArrayList<Integer>>(){
+				public void onFailure(Throwable caught) {
+					Log.debug("invoiceAllHourlyClients Failed: " + caught);
+					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+							AppPref.SERVER_ERROR + caught.getMessage());
+					masterController.getAppContainer().setTransactionResults(
+						"invoiceAllHourlyClients Failed"
+						, (new java.util.Date().getTime() -startTime.getTime()));
+				}
+		
+				public void onSuccess(ArrayList<Integer> invoiceResult) {
+					Log.debug("invoiceAllHourlyClients onSuccess: " + invoiceResult.toString());
+					masterController.getAppContainer().setTransactionResults(
+							"Successfully invoiceAllHourlyClients"
+							, (new java.util.Date().getTime() - startTime.getTime()));
+					 HashMap params = new HashMap();
+					 String list ="";
+					 for(int ndx =0;ndx<invoiceResult.size();ndx++ ){
+						 list = list +invoiceResult.get(ndx) +",";
+					 }
+					 list = list.substring(0,list.length()-1);
+						params.put("invoiceIdList", list);
+						ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
+			
+				}
+		});
   }
 
 

@@ -1,4 +1,5 @@
-
+//This file has been modified
+// * added assess monthly charges function
 
 package com.martinanalytics.legaltime.server.model;
 
@@ -359,5 +360,69 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 		}
 		return  laborRegisterBeanList_;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public Integer AssessMonthlyCharges(UserProfile userProfile_, java.util.Date assessDt_) throws GWTCustomException{
+		  int ndx =1;
+		  PreparedStatement ps;
+		  ResultSet rs;
+		  Integer result = 0;
+		  
+		  try {
+			ps = databaseManager.getConnection().prepareStatement("select  * from assess_all_monthly_charges('CHECK_AUTH',?,?,?,?) ;");
+			ps.setInt(ndx++, userProfile_.getClientId());
+			ps.setString(ndx++,  userProfile_.getUserId());
+			ps.setString(ndx++, userProfile_.getSessionId());
+			ps.setDate(ndx++, new java.sql.Date(assessDt_.getTime()));
+			rs =  ps.executeQuery();
+			while(rs.next()){
+			  result = rs.getInt(1);
+			}
+		  }catch (Exception e) {
+			e.printStackTrace();
+			if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+				
+				throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+			}else{
+				throw new GWTServerException("Retrieving LaborRegister Records Failed", e);
+			}
+		  }
+		  return result;
+		}
+	
+	public java.util.Date RetrieveLastMonthlycharge(UserProfile userProfile_) throws GWTCustomException{
+		  int ndx =1;
+		  PreparedStatement ps;
+		  ResultSet rs;
+		  java.util.Date result = null;
+		  
+		  try {
+			ps = databaseManager.getConnection().prepareStatement("select  * from retrieve_last_monthly_charge('CHECK_AUTH',?,?,?) ;");
+			ps.setInt(ndx++, userProfile_.getClientId());
+			ps.setString(ndx++,  userProfile_.getUserId());
+			ps.setString(ndx++, userProfile_.getSessionId());
+
+			rs =  ps.executeQuery();
+			while(rs.next()){
+			  result = rs.getDate(1);
+			}
+		  }catch (Exception e) {
+			e.printStackTrace();
+			if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+				
+				throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+			}else{
+				throw new GWTServerException("Retrieving LaborRegister Records Failed", e);
+			}
+		  }
+		  return result;
+		}
+
 
 }
