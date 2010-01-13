@@ -245,7 +245,7 @@ public class AppContainer extends LayoutContainer {
     miInvoiceManager.addStyleName("LEFT");
     mnuBilling.add(miInvoiceManager);
     
-    MenuItem miAssessMonthlyCharges = new MenuItem("Assess Monthly Charges");
+    MenuItem miAssessMonthlyCharges = new MenuItem("Invoice All Monthly Clients");
     miAssessMonthlyCharges.addListener(Events.Select, new Listener<ComponentEvent>() {
         public void handleEvent(ComponentEvent be) {
         	assessMonthlyChargesDatePromptDialog.show();

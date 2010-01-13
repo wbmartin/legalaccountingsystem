@@ -20,10 +20,8 @@ public interface LaborRegisterServiceAsync{
 	void  saveLaborRegisterBeanBatch(UserProfile userProfile_, ArrayList<LaborRegisterBean> laborRegisterBeanList_, AsyncCallback<ArrayList<LaborRegisterBean>> callback);
 
 	void  getLaborRegisterByPrKey(UserProfile userProfile_ , Integer laborRegisterId_ , Integer customerId_ , AsyncCallback<LaborRegisterBean> callback);
-	void AssessMonthlyCharges(UserProfile userProfile_, Date assessDt_,
-			AsyncCallback<Integer> callback);
-	void RetrieveLastMonthlycharge(UserProfile userProfile_,
-			AsyncCallback<Date> callback);
+	void AssessMonthlyChargesAndInvoice(UserProfile userProfile_, Date assessDt_,		AsyncCallback<ArrayList<Integer>> callback);
+	void RetrieveLastMonthlycharge(UserProfile userProfile_,	AsyncCallback<Date> callback);
 
 
 }
