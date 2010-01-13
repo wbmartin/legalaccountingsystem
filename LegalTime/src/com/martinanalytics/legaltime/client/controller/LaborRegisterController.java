@@ -20,6 +20,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
+import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.LaborRegisterService;
 import com.martinanalytics.legaltime.client.model.LaborRegisterServiceAsync;
@@ -47,7 +48,7 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
   private UserProfile userProfile;  			// User Properties
   private MasterController masterController;		// Overarching Controller
   private java.util.Date endTimeHolder;  //Holder variables for timestamps  private java.util.Date startTimeHolder;  //Holder variables for timestamps  private java.util.Date lastUpdateHolder;  //Holder variables for timestamps
-
+  private AppNotifyObject notifier = new AppNotifyObject();
   final Dialog laborRegisterDialog =new Dialog();
   /**
  * Primary constructor, only called by getInstance, hence protected
@@ -730,10 +731,10 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 		  }
   
   
-  public void assessMontlyCharges(java.util.Date assessDt_ ){
+  public void assessMonthlyChargesAndInvoice(java.util.Date assessDt_ ){
 		final java.util.Date startTime = new java.util.Date();
-			laborRegisterService.AssessMonthlyCharges(userProfile,  assessDt_,
-					new AsyncCallback<Integer>(){
+			laborRegisterService.AssessMonthlyChargesAndInvoice(userProfile,  assessDt_,
+					new AsyncCallback<ArrayList<Integer>>(){
 						public void onFailure(Throwable caught) {
 							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
 									AppPref.SERVER_ERROR + caught.getMessage());
@@ -744,18 +745,32 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 
 						}
 			
-						public void onSuccess(Integer chargesAssessedCount) {
+						public void onSuccess(ArrayList<Integer> invoiceList) {
 							masterController.getAppContainer().addSysLogMessage("retrieveLastMonthlyChargeDate ");
 							
 							masterController.getAppContainer().setTransactionResults(
 								"Successfully retrieveLastMonthlyChargeDate"
 								, (new java.util.Date().getTime() - startTime.getTime()));
-							masterController.notifyUserOfSystemError("Monthly Charge Cycle Completed", chargesAssessedCount + "customer(s) were assessed their montly " +
-									"charge, but have not been invoiced.");
+							
+							notifier.notifyAppEvent(this, "MonthlyChargesAssesmentComplete", invoiceList);
 							
 						}
 			});
 		  }
+
+/**
+ * @param notifier the notifier to set
+ */
+public void setNotifier(AppNotifyObject notifier) {
+	this.notifier = notifier;
+}
+
+/**
+ * @return the notifier
+ */
+public AppNotifyObject getNotifier() {
+	return notifier;
+}
   
   
 

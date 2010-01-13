@@ -1,5 +1,6 @@
 package com.martinanalytics.legaltime.client.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import com.allen_sauer.gwt.log.client.Log;
@@ -8,6 +9,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.widget.AppContainer;
+import com.martinanalytics.legaltime.client.widget.ReportUtil;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPages;
 import com.martinanalytics.legaltime.client.model.UserInfoCache;
@@ -71,7 +73,8 @@ public class MasterController implements AppEventListener{
 
 		 laborRegisterController =  LaborRegisterController.getInstance(this);
 		 itemWidgets.put(AppPages.LABOR_REGISTER_PAGE, laborRegisterController.getLaborRegisterView().getLaborRegisterComposite());
-
+		 laborRegisterController.getNotifier().addAppEventListener(this);
+		 
 		 invoiceManagerController =  InvoiceManagerController.getInstance(this);
 		 itemWidgets.put(AppPages.INVOICE_MANAGER_PAGE,  invoiceManagerController.getInvoiceManagerView().getInvoiceManagerViewComposite());
 
@@ -153,9 +156,19 @@ public class MasterController implements AppEventListener{
 		}else if(e_.getName().equals(	"AssessMonthlyChargesRequested")){	
 			laborRegisterController.retrieveLastMonthlyChargeDate();
 		}else if(e_.getName().equals(	"AssessMonthlyChargeCommit")){		
-			laborRegisterController.assessMontlyCharges(appContainer.getDtfAssessMonthlyCharges().getValue());
+			laborRegisterController.assessMonthlyChargesAndInvoice(appContainer.getDtfAssessMonthlyCharges().getValue());
 		}else if(e_.getName().equals(	"InvoiceAllHourlyClients")){
 			invoiceController.invoiceAllHourlyClients(new java.util.Date());
+		}else if(e_.getName().equals(	"MonthlyChargesAssesmentComplete")){
+			ArrayList<Integer> invoiceResult = (ArrayList<Integer>)e_.getPayLoad();
+			String list ="";
+			 for(int ndx =0;ndx<invoiceResult.size();ndx++ ){
+				 list = list +invoiceResult.get(ndx) +",";
+			 }
+			 list = list.substring(0,list.length()-1);
+			HashMap params = new HashMap();
+			params.put("invoiceIdList", list);
+			ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
 			
 		}else{
 			Log.debug("Unexpected App Message" + e_.getName());

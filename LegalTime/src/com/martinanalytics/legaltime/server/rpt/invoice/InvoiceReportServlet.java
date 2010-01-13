@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -107,11 +108,19 @@ public class InvoiceReportServlet extends HttpServlet{
 		for(VwInvoiceDisplayBean bean :beans){
 			single.clear();
 			single.add(bean);
+			
 			System.err.println("Invoice ID: " +bean.getInvoiceId());
 			try {
-				jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice.jasper");
-				result.add(JasperFillManager.fillReport(
-					    jasperFile, getParams(userProfile_, bean.getInvoiceId()),new JRBeanCollectionDataSource(single,false)));				
+				if(bean.getBillType().equals("HOURLY")){
+					jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice.jasper");
+					result.add(JasperFillManager.fillReport(
+						    jasperFile, getParams(userProfile_, bean),new JRBeanCollectionDataSource(single,false)));
+				}else{
+					
+					jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerMonthlyInvoice.jasper");
+					result.add(JasperFillManager.fillReport(
+						    jasperFile, getParams(userProfile_, bean),new JRBeanCollectionDataSource(single,false)));
+				}
 			} catch (JRException e) {
 				
 				e.printStackTrace();
@@ -143,17 +152,19 @@ public class InvoiceReportServlet extends HttpServlet{
 
 	 }
 	 
-	 public java.util.HashMap getParams(UserProfile userProfile_, int invoiceId_){
+	 public java.util.HashMap getParams(UserProfile userProfile_, VwInvoiceDisplayBean bean_){
 	       java.util.HashMap params = new java.util.HashMap();
-	       double pleaseRemit =0;
+	       
 	       try{
-	    	   String reportsDirPath = this.getServletContext().getRealPath(REPORT_PATH+"invoice/");
-	    	   
-	    	   params.put("SUBREPORT_DIR",reportsDirPath);  
-	    	   params.put("LaborRecords", getLaborBeans(userProfile_, invoiceId_));
-	    	   params.put("Expenses", getExpenseBeans(userProfile_, invoiceId_));
-	    	   params.put("Payments",getPaymentBeans(userProfile_, invoiceId_));
-	    	   params.put("PreviousBalance",0D);
+	    	   if(bean_.getBillType().equals("Hourly")){
+		    	   String reportsDirPath = this.getServletContext().getRealPath(REPORT_PATH+"invoice/");
+		    	   
+		    	   params.put("SUBREPORT_DIR",reportsDirPath);  
+		    	   params.put("LaborRecords", getLaborBeans(userProfile_, bean_.getInvoiceId()));
+		    	   params.put("Expenses", getExpenseBeans(userProfile_, bean_.getInvoiceId()));
+		    	   params.put("Payments",getPaymentBeans(userProfile_, bean_.getInvoiceId()));
+		    	   params.put("PreviousBalance",bean_.getPrevBalanceDue());
+	    	   }
 	       }catch(Exception e){
 	           Log.debug( "Error General Exception getParams"+ e.getMessage());
 	       }

@@ -368,21 +368,25 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	
 	
 	
-	public Integer AssessMonthlyCharges(UserProfile userProfile_, java.util.Date assessDt_) throws GWTCustomException{
+	public ArrayList AssessMonthlyChargesAndInvoice(UserProfile userProfile_, java.util.Date assessDt_) throws GWTCustomException{
 		  int ndx =1;
 		  PreparedStatement ps;
 		  ResultSet rs;
-		  Integer result = 0;
-		  
+		  String result = "";
+		  ArrayList<Integer> resultList  = new ArrayList<Integer>();
 		  try {
-			ps = databaseManager.getConnection().prepareStatement("select  * from assess_all_monthly_charges('CHECK_AUTH',?,?,?,?) ;");
+			ps = databaseManager.getConnection().prepareStatement("select  * from assess_all_monthly_charges_and_invoice('CHECK_AUTH',?,?,?,?) ;");
 			ps.setInt(ndx++, userProfile_.getClientId());
 			ps.setString(ndx++,  userProfile_.getUserId());
 			ps.setString(ndx++, userProfile_.getSessionId());
 			ps.setDate(ndx++, new java.sql.Date(assessDt_.getTime()));
 			rs =  ps.executeQuery();
 			while(rs.next()){
-			  result = rs.getInt(1);
+			  result = rs.getString(1);
+			}
+			String[] resultArray = result.split(",");
+			for( ndx =0;ndx<resultArray.length;ndx++){
+				resultList.add(Integer.parseInt(resultArray[ndx]));
 			}
 		  }catch (Exception e) {
 			e.printStackTrace();
@@ -393,7 +397,7 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 				throw new GWTServerException("Retrieving LaborRegister Records Failed", e);
 			}
 		  }
-		  return result;
+		  return resultList;
 		}
 	
 	public java.util.Date RetrieveLastMonthlycharge(UserProfile userProfile_) throws GWTCustomException{
