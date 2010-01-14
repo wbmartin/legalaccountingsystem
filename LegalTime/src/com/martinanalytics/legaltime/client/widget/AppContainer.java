@@ -318,7 +318,15 @@ public class AppContainer extends LayoutContainer {
           }}
     );
     
-    
+    MenuItem miMonthlyCustomerReport = new MenuItem("Monthly Client Report");
+    mnuReports.add(miMonthlyCustomerReport);
+    miMonthlyCustomerReport.addStyleName("LEFT");
+    miMonthlyCustomerReport.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+
+        	ReportUtil.showReport("./MonthlyClientReportServlet",UserProfile.getInstance(), null);
+          }}
+    );
     
     
     Menu mnuHelp = new Menu();

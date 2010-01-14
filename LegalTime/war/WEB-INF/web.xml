@@ -252,4 +252,17 @@
 <!-- ============================= -->
 
 
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>MonthlyClientReportServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.rpt.monthlyclient.MonthlyClientReportServlet</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>MonthlyClientReportServlet</servlet-name> 
+        <url-pattern>/legaltime/MonthlyClientReportServlet</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+
 </web-app>
