@@ -265,4 +265,17 @@
 <!-- ============================= -->
 
 
+<!-- ============================= -->
+    <servlet> 
+        <servlet-name>HourlyClientReportServlet</servlet-name> 
+        <servlet-class>com.martinanalytics.legaltime.server.rpt.hourlyclient.HourlyClientReportServlet</servlet-class> 
+    </servlet> 
+ 
+    <servlet-mapping> 
+        <servlet-name>HourlyClientReportServlet</servlet-name> 
+        <url-pattern>/legaltime/HourlyClientReportServlet</url-pattern> 
+    </servlet-mapping> 
+<!-- ============================= -->
+
+
 </web-app>

@@ -87,8 +87,9 @@ public class CustomerAccountRegisterController implements AppEventListener, Clic
 	}else if(e_.getName().equals("CustomerAccountRegisterTableOnAttach")){		
 	}else if(e_.getName().equals("CustomerAccountRegisterTableOnDetach")){		
 	}else if(e_.getName().equals("AccountRegisterCustomerChanged")){
-		Integer custid = (Integer)e_.getPayLoad();
-		selectCustomerAccountRegisterBeans("where customer_id=" + custid, "order by effective_dt");
+		refreshList();
+		
+		
 	}else if(e_.getName().equals("PostPaymentRequest")){	
 		notifier.notifyAppEvent(this, "PostPaymentRequest", e_.getPayLoad());
 	}else if(e_.getName().equals(	"ReverseRequest")){
@@ -105,6 +106,19 @@ private void reverseTransaction() {
 	String tranType ="";
 	try{
 	CustomerAccountRegisterBean customerAccountRegisterBean = customerAccountRegisterView.getCustomerAccountRegisterTable().getGrid().getSelectionModel().getSelection().get(0);
+		if (customerAccountRegisterBean.getRefId() == null){
+			masterController.notifyUserOfSystemError("Transaction Reversal Error", "Sorry, that transaction cannont be reversed.");
+		}else{
+			if(customerAccountRegisterBean.getTranType().equals("INVCE")){
+				notifier.notifyAppEvent(this, "UnwindInvoiceRequest",customerAccountRegisterBean.getRefId() );
+			}else if(customerAccountRegisterBean.getTranType().equals("PAY")){
+				notifier.notifyAppEvent(this, "ReversePaymentRequest", customerAccountRegisterBean.getRefId());
+			}else{
+				masterController.notifyUserOfSystemError("Transaction Reversal Error", "Sorry, that type of transaction cannont be reversed.");
+
+			}
+			
+		}
 	Log.debug("selected ref" + customerAccountRegisterBean.getRefId() );
 	Log.debug("selected type" + customerAccountRegisterBean.getTranType() );
 	}catch(Exception e){
@@ -441,10 +455,12 @@ public AppNotifyObject getNotifier() {
 }
 
 public void refreshList() {
-	Integer custid = (Integer)customerAccountRegisterView.getCboCustomerId().getKeyValue();
+	Integer custid = (Integer)customerAccountRegisterView.getCboCustomerId().getSelectedKeyValue();
 	selectCustomerAccountRegisterBeans("where customer_id=" + custid, "order by effective_dt");
 	
 }
+
+
 
 
 

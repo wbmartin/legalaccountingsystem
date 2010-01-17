@@ -133,19 +133,19 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 			public Object render(ModelData model_, String property_,
 					ColumnData config_, int rowIndex_, int colIndex_,
 					ListStore store_, Grid grid_) {
-//				Double result;
-//				if(model_.get("tranAmt")!= null && ((Double)model_.get("tranAmt"))>0){
-//					result = (Double)model_.get("tranAmt");
-//					return NumberFormat.getFormat("$#,##0.00").format(result);
-//				}else{
-//					return null;
-//				}
-				try{
-					return runningTotal.get(rowIndex_);
-				}catch(Exception ex){
-					//Log.debug("runningTotal" + runningTotal.toString());
+				Double result;
+				if(model_.get("tranAmt")!= null && ((Double)model_.get("tranAmt"))>0){
+					result = (Double)model_.get("tranAmt");
+					return NumberFormat.getFormat("$#,##0.00").format(result);
+				}else{
 					return null;
 				}
+//				try{
+//					return runningTotal.get(rowIndex_);
+//				}catch(Exception ex){
+//					//Log.debug("runningTotal" + runningTotal.toString());
+//					return null;
+//				}
 				
 			}
 	    	
@@ -192,12 +192,18 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 					ColumnData config_, int rowIndex_, int colIndex_,
 					ListStore store_, Grid grid_) {
 				Double result = 0D;
-				for(int ndx =0; ndx<=rowIndex_;ndx++){
-					if(store.getAt(ndx).getTranAmt() != null){
-						result += store.getAt(ndx).getTranAmt();
-					}
-				}
+//				for(int ndx =0; ndx<=rowIndex_;ndx++){
+//					if(store.getAt(ndx).getTranAmt() != null){
+//						result += store.getAt(ndx).getTranAmt();
+//					}
+//				}
+				try{
+				result = runningTotal.get(rowIndex_);
 				return NumberFormat.getFormat("$#,##0.00").format(result);
+				}catch(Exception ex){
+					ex.printStackTrace();
+					return null;
+				}
 			}
 	    	
 	    });
@@ -345,6 +351,15 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 		  //for(int ndx = 0; ndx<customerAccountRegisterBeans_.size(); ndx++){
 		//	  customerAccountRegisterTableModelDataList.add(customerAccountRegisterBeans_.get(ndx));
 		 // }
+		  Double previousValue =0D;
+		  runningTotal.clear();
+		  for(int ndx =0; ndx <customerAccountRegisterBeans_.size();ndx++ ){
+			  
+			  
+				  runningTotal.add(previousValue + customerAccountRegisterBeans_.get(ndx).getTranAmt());  
+				  previousValue = previousValue + customerAccountRegisterBeans_.get(ndx).getTranAmt();
+			  
+		  }
 		  store.setFiresEvents(false);
 		  store.removeAll();
 		  //store.add(customerAccountRegisterTableModelDataList);
@@ -352,14 +367,7 @@ public class CustomerAccountRegisterTable extends LayoutContainer {
 		  store.setFiresEvents(true);
 		  grid.getView().refresh(false);
 		  
-		  Double previousValue =0D;
-		  runningTotal.clear();
-		  for(int ndx =0; ndx <customerAccountRegisterBeans_.size();ndx++ ){
-			  
-				  runningTotal.add(previousValue + customerAccountRegisterBeans_.get(ndx).getTranAmt());  
-				  previousValue = previousValue + customerAccountRegisterBeans_.get(ndx).getTranAmt();
-			  
-		  }
+		  
 		  
 
 		  

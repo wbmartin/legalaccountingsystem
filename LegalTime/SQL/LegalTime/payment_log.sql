@@ -1,8 +1,11 @@
-
+--This file has been modified:
+-- * payment_reversal
 -- Security Grants
 GRANT ALL ON TABLE payment_log TO GROUP legaltime_full;
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'SELECT_PAYMENTLOG', now(), 'Allows users to select payment_log'); 
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'INSERT_PAYMENTLOG', now(), 'Allows users to add records to payment_log');
+INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'SELECT_PAYMENTLOG', now(), 'Allows users to select payment_log'); 
+
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'UPDATE_PAYMENTLOG', now(), 'Allows users to update records in payment_log');
 INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'DELETE_PAYMENTLOG', now(), 'Allows users to delete records from payment_log');
 select * from security_privilege where priv_name in ('SELECT_PAYMENTLOG','INSERT_PAYMENTLOG','UPDATE_PAYMENTLOG','DELETE_PAYMENTLOG');
@@ -10,6 +13,11 @@ INSERT INTO security_profile_grant(client_id, security_profile_id, security_priv
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 63);
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 64);
 INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 65);
+
+
+INSERT INTO security_privilege(client_id,  priv_name, last_update, description)    VALUES (1, 'REVERSE_PAYMENTL', now(), 'Allows users to select payment_log'); 
+select * from security_privilege
+INSERT INTO security_profile_grant(client_id, security_profile_id, security_privilege_id) VALUES (1, 1, 70);
 
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 -- Function: payment_log_sq(text, integer, text, text)
@@ -198,4 +206,40 @@ GRANT EXECUTE ON FUNCTION payment_log_dq(text, integer, text, text , integer, cu
 --=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
  
+-- Function: payment_log_sq(text, integer, text, text)
 
+-- DROP FUNCTION payment_reversal(text, integer, text, text, integer);
+
+CREATE OR REPLACE FUNCTION payment_reversal(alreadyauth_ text, clientid_ integer, securityuserid_ text, sessionid_ text, paymentLogId_ integer)
+  RETURNS boolean AS
+$BODY$
+  Declare
+  payLogToBeRvsd payment_log;
+  carToBeRvsd customer_account_register;
+  Begin
+    if alreadyAuth_ <>'ALREADY_AUTH' then
+    	perform isSessionValid(clientId_, securityuserId_,sessionId_) ;
+    	perform isUserAuthorized(clientId_, securityuserId_, 'REVERSE_PAYMENT' );
+    end if;
+-- customer_account_register_id, invoice_id, amount, description, effective_dt, last_update, customer_id, client_id, payment_log_id    
+     select * into payLogToBeRvsd from payment_log where client_id = clientId_ and payment_log_id = paymentLogId_;
+    insert into payment_log (invoice_id, amount, description, effective_dt, last_update, customer_id, client_id)
+      values(payLogToBeRvsd.invoice_id, payLogToBeRvsd.amount, 'Payment Reversed', payLogToBeRvsd.effective_dt, now(), payLogToBeRvsd.customer_id, payLogToBeRvsd.client_id);
+    INSERT INTO customer_account_register( client_id, customer_id, last_update,  effective_dt, description, 				tran_amt, tran_type, ref_id)
+				 VALUES (clientid_,    payLogToBeRvsd.customer_id, now(),        payLogToBeRvsd.effective_dt, 	'Payment REVERSAL' , payLogToBeRvsd.amount * -1 ,'PAYR', null);
+  
+    return true;
+  End;
+$BODY$
+  LANGUAGE 'plpgsql' VOLATILE
+  COST 100;
+ALTER FUNCTION payment_reversal(text, integer, text, text, integer) OWNER TO postgres;
+GRANT EXECUTE ON FUNCTION payment_reversal(text, integer, text, text, integer) TO public;
+GRANT EXECUTE ON FUNCTION payment_reversal(text, integer, text, text, integer) TO postgres;
+GRANT EXECUTE ON FUNCTION payment_reversal(text, integer, text, text, integer) TO legaltime_full;
+
+--select * from payment_log
+
+
+--select * from customer_account_register;
+--select * from payment_reversal('ALREADY_AUTH' , 1 , '', '', 1);

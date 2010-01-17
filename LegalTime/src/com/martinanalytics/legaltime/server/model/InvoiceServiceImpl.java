@@ -390,9 +390,11 @@ public Boolean unwindInvoice(UserProfile userProfile_, Integer invoiceId_)throws
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
+		System.err.println("invoiceservieIMpl.unwind exception: " + e.getMessage());
 		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
-			System.err.println("FiredCustomExceptions");
 			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else if(e.getMessage().equals("ERROR: Invoice Cannot Be Reversed, It may have already been reversed.")){
+			throw new GWTCustomException("ERROR: Invoice Cannot Be Reversed, It may have already been reversed.");
 		}else{
 			throw new GWTServerException("Retrieving LaborRegister Records Failed", e);
 		}

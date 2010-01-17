@@ -9,3 +9,7 @@ INSERT INTO tran_type(
 	    INSERT INTO tran_type(
 	            client_id, tran_type, last_update, description)
 	    VALUES (1, 'INVR', now(), 'INVOICE REVERSAL');
+	    
+	    	    INSERT INTO tran_type(
+	            client_id, tran_type, last_update, description)
+	    VALUES (1, 'PAYR', now(), 'PAYMENT REVERSAL');

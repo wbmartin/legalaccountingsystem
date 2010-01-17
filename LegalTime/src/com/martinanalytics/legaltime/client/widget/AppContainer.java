@@ -264,7 +264,7 @@ public class AppContainer extends LayoutContainer {
         	
           }}
     );
-    miAssessMonthlyCharges.addStyleName("LEFT");
+    miInvoiceHourlyClients.addStyleName("LEFT");
     mnuBilling.add(miInvoiceHourlyClients);
     
     
@@ -325,6 +325,16 @@ public class AppContainer extends LayoutContainer {
         public void handleEvent(ComponentEvent be) {
 
         	ReportUtil.showReport("./MonthlyClientReportServlet",UserProfile.getInstance(), null);
+          }}
+    );
+    
+    MenuItem miHourlyCustomerReport = new MenuItem("Hourly Client Report");
+    mnuReports.add(miHourlyCustomerReport);
+    miHourlyCustomerReport.addStyleName("LEFT");
+    miHourlyCustomerReport.addListener(Events.Select, new Listener<ComponentEvent>() {
+        public void handleEvent(ComponentEvent be) {
+
+        	ReportUtil.showReport("./HourlyClientReportServlet",UserProfile.getInstance(), null);
           }}
     );
     

@@ -16,5 +16,5 @@ public interface PaymentLogService extends RemoteService{
 	 ArrayList<PaymentLogBean> selectPaymentLog(UserProfile userProfile_, String whereClause_, String OrderByClause_) throws GWTCustomException;
 	 ArrayList<PaymentLogBean> savePaymentLogBeanBatch(UserProfile userProfile_, ArrayList<PaymentLogBean> paymentLogBeanList_) throws GWTCustomException;
 	 PaymentLogBean getPaymentLogByPrKey(UserProfile userProfile_ , Integer paymentLogId_ , Integer customerId_ ) throws GWTCustomException;
-
+	 Boolean reversePayment(UserProfile userProfile_, Integer paymentLogId_) throws GWTCustomException;
 }

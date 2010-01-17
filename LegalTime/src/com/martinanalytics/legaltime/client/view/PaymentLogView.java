@@ -251,6 +251,7 @@ class PaymentLogComposite extends Composite{
 		nbrAmount.setName("amount");
 		nbrAmount.setRegex(GXTValidator.DOUBLE);
 		nbrAmount.setAllowDecimals(true);
+		
 		nbrAmount.setAllowBlank(false);
 		nbrAmount.addStyleName("RIGHT");
 		//nbrAmount.getPropertyEditor().setFormat(NumberFormat.getFormat("$#,##0.00"));

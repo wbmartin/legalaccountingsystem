@@ -1,4 +1,4 @@
-package com.martinanalytics.legaltime.server.rpt.monthlyclient;
+package com.martinanalytics.legaltime.server.rpt.hourlyclient;
 
 
 import java.io.ByteArrayOutputStream;
@@ -23,44 +23,44 @@ import net.sf.jasperreports.engine.export.JRTextExporter;
 
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
-import com.martinanalytics.legaltime.client.model.bean.VwMonthlyCustomerReportBean;
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.widget.GWTCustomException;
+import com.martinanalytics.legaltime.server.model.CustomerServiceImpl;
 import com.martinanalytics.legaltime.server.model.VwCustomerFollowupServiceImpl;
 import com.martinanalytics.legaltime.server.model.VwMonthlyCustomerReportServiceImpl;
 
-public class MonthlyClientReportServlet extends HttpServlet {
+public class HourlyClientReportServlet extends HttpServlet {
 	  /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	VwMonthlyCustomerReportServiceImpl vwMonthlyCustomerReportServiceImpl = new VwMonthlyCustomerReportServiceImpl();
+	CustomerServiceImpl customerServiceImpl = new CustomerServiceImpl();
 
 	public void doPost(HttpServletRequest request,
               HttpServletResponse response) throws ServletException, IOException {
 		//PrintWriter out = response.getWriter();
-		ArrayList<VwMonthlyCustomerReportBean> beans = new  ArrayList<VwMonthlyCustomerReportBean>();
+		ArrayList<CustomerBean> beans = new  ArrayList<CustomerBean>();
 		UserProfile userProfile = new UserProfile();
 		userProfile.setUserId(request.getParameter("userId"));
 		userProfile.setSessionId(request.getParameter("sessionId"));
 		userProfile.setClientId(Integer.parseInt(request.getParameter("clientId")));
 		String whereClause ="";
-		String orderByClause ="";
+		String orderByClause ="order by last_name, first_name";
 	    
-		try {
-			beans = vwMonthlyCustomerReportServiceImpl.selectVwMonthlyCustomerReport(userProfile, whereClause, orderByClause);
-		} catch (GWTCustomException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		//try {
+			beans = customerServiceImpl.selectCustomer(userProfile, whereClause, orderByClause);
+//		} catch (GWTCustomException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
         boolean success = false;
         response.setContentType("text/plain");
         ServletOutputStream outputStream = response.getOutputStream();
         
         for(int ndx =0;ndx<beans.size();ndx++){
-        	outputStream.println(beans.get(ndx).getLastName() + ","+beans.get(ndx).getFirstName() +";Months Unpaid: " 
-        			+ beans.get(ndx).getMonthsUnpaid()+ ";Escrow: " + beans.get(ndx).getEscrow() );
+        	outputStream.println(beans.get(ndx).getLastName() + ","+beans.get(ndx).getFirstName() +";\n");
         }
-			;
+			
 
 			
 	        outputStream.flush();

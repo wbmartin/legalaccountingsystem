@@ -24,7 +24,7 @@ public class AlternateComboBoxBinding extends FieldBinding {
 
 	  @Override
 	  protected Object onConvertFieldValue(Object value) {
-		  Object ret = simpleComboBox.getKeyValue();
+		  Object ret = simpleComboBox.getSelectedKeyValue();
 		 // Log.debug("Decent Binding onConvertFieldValue: " +ret.toString());
 	    return ret;
 	  }

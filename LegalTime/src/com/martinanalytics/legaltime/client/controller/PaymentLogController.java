@@ -429,6 +429,37 @@ public AppNotifyObject getNotifier() {
 	return notifier;
 }
 
+public void reversePayment(Integer paymentLogId_) {
+	final java.util.Date startTime = new java.util.Date();
+	paymentLogService.reversePayment(userProfile, paymentLogId_, 
+			new AsyncCallback<Boolean>(){
+				public void onFailure(Throwable caught) {
+					masterController.getAppContainer().setTransactionResults(
+						"Retrieving PaymentLog Failed"
+						, (new java.util.Date().getTime() -startTime.getTime()));
+					masterController.getAppContainer().addSysLogMessage("ReversePayment attempted " );
+						if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
+							masterController.promptUserForLogin();
+						}else{
+							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
+									AppPref.SERVER_ERROR + caught.getMessage());
+						}
+
+
+				}
+	
+				public void onSuccess(Boolean paymentLogResult) {
+					masterController.getAppContainer().addSysLogMessage("Reverse Payment succeeded"  );
+					masterController.getAppContainer().setTransactionResults(
+						"Successfully Retrieved PaymentLog listing"
+						, (new java.util.Date().getTime() - startTime.getTime()));
+					notifier.notifyAppEvent(this, "PaymentReversedSuccessfully");
+					
+				}
+	});
+	
+}
+
 
 }
 
