@@ -156,7 +156,7 @@ public class InvoiceReportServlet extends HttpServlet{
 	       java.util.HashMap params = new java.util.HashMap();
 	       
 	       try{
-	    	   if(bean_.getBillType().equals("Hourly")){
+	    	   if(bean_.getBillType().equals("HOURLY")){
 		    	   String reportsDirPath = this.getServletContext().getRealPath(REPORT_PATH+"invoice/");
 		    	   
 		    	   params.put("SUBREPORT_DIR",reportsDirPath);  
