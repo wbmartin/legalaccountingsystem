@@ -308,6 +308,8 @@ public class InvoiceManagerController implements AppEventListener {
 			 					invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
 			 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
 									masterController.promptUserForLogin();
+								}else if(caught.getMessage().equals("ERROR: Invoice Cannot Be Reversed, It may have already been reversed.")){
+									masterController.notifyUserOfSystemError("Invoice Not Reversed", "Invoice Cannot Be Reversed, It may have already been reversed.");
 								}else{
 									masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
 											AppPref.SERVER_ERROR + caught.getMessage());
@@ -321,6 +323,7 @@ public class InvoiceManagerController implements AppEventListener {
 			 							, (new java.util.Date().getTime() - startTime.getTime()));
 			 					
 			 					selectVwInvoiceDisplayBeans("","");
+			 					notifier.notifyAppEvent(this, "RequestCustomerAccountRegisterRefresh");
 			 				}
 			 		});
 			   }		   

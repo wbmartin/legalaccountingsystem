@@ -77,7 +77,8 @@ public class MasterController implements AppEventListener{
 		 
 		 invoiceManagerController =  InvoiceManagerController.getInstance(this);
 		 itemWidgets.put(AppPages.INVOICE_MANAGER_PAGE,  invoiceManagerController.getInvoiceManagerView().getInvoiceManagerViewComposite());
-
+		 invoiceManagerController.getNotifier().addAppEventListener(this);
+		 
 		 invoiceController =  InvoiceController.getInstance(this);
 		 itemWidgets.put(AppPages.INVOICE_PAGE, invoiceController.getInvoiceView().getInvoiceComposite());
 
@@ -169,6 +170,20 @@ public class MasterController implements AppEventListener{
 			HashMap params = new HashMap();
 			params.put("invoiceIdList", list);
 			ReportUtil.showReport("./InvoiceReportServlet",UserProfile.getInstance(),params);
+		}else if(e_.getName().equals(	"UnwindInvoiceRequest")){
+			Integer invoiceId = (Integer)e_.getPayLoad();
+			try{
+				invoiceManagerController.unwindInvoice(invoiceId);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+			
+		}else if(e_.getName().equals(	"RequestCustomerAccountRegisterRefresh")){	
+			customerAccountRegisterController.refreshList();
+		}else if(e_.getName().equals(	"ReversePaymentRequest")){		
+			paymentLogController.reversePayment((Integer)e_.getPayLoad());
+		}else if(e_.getName().equals(	"PaymentReversedSuccessfully")){
+			customerAccountRegisterController.refreshList();
 			
 		}else{
 			Log.debug("Unexpected App Message" + e_.getName());

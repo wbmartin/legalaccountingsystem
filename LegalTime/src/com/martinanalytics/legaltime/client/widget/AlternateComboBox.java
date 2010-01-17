@@ -50,7 +50,7 @@ public class AlternateComboBox<D extends ModelData> extends ComboBox{
 	
 	
 	
-	public Object getKeyValue(){
+	public Object getSelectedKeyValue(){
 		try{
 		return getValue().get(getValueField());
 		}catch(Exception e){
@@ -58,6 +58,7 @@ public class AlternateComboBox<D extends ModelData> extends ComboBox{
 		}
 		
 	}
+
 	public int getSelectedIndex(){
 		int ndx;
 		for( ndx =0; ndx< store.getCount();ndx++){

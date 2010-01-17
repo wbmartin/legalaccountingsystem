@@ -19,6 +19,8 @@ public interface PaymentLogServiceAsync{
 	void  savePaymentLogBeanBatch(UserProfile userProfile_, ArrayList<PaymentLogBean> paymentLogBeanList_, AsyncCallback<ArrayList<PaymentLogBean>> callback);
 
 	void  getPaymentLogByPrKey(UserProfile userProfile_ , Integer paymentLogId_ , Integer customerId_ , AsyncCallback<PaymentLogBean> callback);
+	void reversePayment(UserProfile userProfile_, Integer paymentLogId_,
+			AsyncCallback<Boolean> callback);
 
 
 }

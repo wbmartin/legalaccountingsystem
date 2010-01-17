@@ -165,7 +165,7 @@ class CustomerAccountRegisterComposite extends Composite{
 		      @Override  
 		      public void componentSelected(ButtonEvent ce) {  
 
-		        notifier.notifyAppEvent(this, "PostPaymentRequest", cboCustomerId.getKeyValue()) ;
+		        notifier.notifyAppEvent(this, "PostPaymentRequest", getSelectedCustomerId()) ;
 		      }  
 		    });
 		cmdPostPayment.setBorders(true);
@@ -395,5 +395,8 @@ public CustomerAccountRegisterTable getCustomerAccountRegisterTable() {
 	return customerAccountRegisterTable;
 }
 
+public Integer getSelectedCustomerId(){
+	return (Integer) cboCustomerId.getSelectedKeyValue();
+}
 }
 

@@ -339,4 +339,37 @@ public class PaymentLogServiceImpl extends RemoteServiceServlet
 		return  paymentLogBeanList_;
 	}
 
+	
+	
+	
+	
+	
+	public Boolean reversePayment(UserProfile userProfile_, Integer paymentLogId_) throws GWTCustomException{
+		  int ndx =1;
+		  PreparedStatement ps;
+		  ResultSet rs;
+		  Boolean result = false;
+		  
+		  try {
+			ps = databaseManager.getConnection().prepareStatement("select  * from payment_reversal('CHECK_AUTH',?,?,?,?) ;");
+			ps.setInt(ndx++, userProfile_.getClientId());
+			ps.setString(ndx++,  userProfile_.getUserId());
+			ps.setString(ndx++, userProfile_.getSessionId());
+			ps.setInt(ndx++, paymentLogId_);
+			rs =  ps.executeQuery();
+			while(rs.next()){
+			  result = rs.getBoolean(1);
+			}
+		  }catch (Exception e) {
+			e.printStackTrace();
+			if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+				System.err.println("FiredCustomExceptions");
+				throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+			}else{
+				throw new GWTServerException("Reversing Payment Failed", e);
+			}
+			
+		  }
+		  return result;
+		}
 }
