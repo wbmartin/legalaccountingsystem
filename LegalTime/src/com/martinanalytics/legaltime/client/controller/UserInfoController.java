@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
@@ -119,8 +120,9 @@ public class UserInfoController implements AppEventListener, ClickHandler, Chang
 		userInfoService.selectUserInfo(userProfile, whereClause_, orderByClause_, 
 				new AsyncCallback<ArrayList<UserInfoBean>>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving UserInfo Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -155,8 +157,9 @@ public class UserInfoController implements AppEventListener, ClickHandler, Chang
 		userInfoService.getUserInfoByPrKey(userProfile,  userId_ , 
 				new AsyncCallback<UserInfoBean>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving UserInfo by Identifier Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -187,8 +190,9 @@ public class UserInfoController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<UserInfoBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("userInfoService.insertUserInfo Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Adding UserInfo Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -225,8 +229,9 @@ public class UserInfoController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<UserInfoBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("userInfoService.updateUserInfo Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Updating UserInfo Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -263,8 +268,9 @@ public class UserInfoController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<Boolean>(){
 				public void onFailure(Throwable caught) {
 					
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Deleting UserInfo Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -302,8 +308,9 @@ public class UserInfoController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<UserInfoBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("userInfoService.saveUserInfo Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving UserInfo Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -341,8 +348,9 @@ public class UserInfoController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<ArrayList<UserInfoBean>>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("userInfoService.saveUserInfoBeanBatch Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving UserInfo Batch Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));

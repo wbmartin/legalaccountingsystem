@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
@@ -137,9 +138,9 @@ public class InvoiceController implements AppEventListener, ClickHandler,
 		invoiceService.selectInvoice(userProfile, whereClause_, orderByClause_,
 				new AsyncCallback<ArrayList<InvoiceBean>>() {
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError(
-								"Remote Procedure Call - Failure",
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController
 								.getAppContainer()
 								.setTransactionResults(
@@ -189,9 +190,9 @@ public class InvoiceController implements AppEventListener, ClickHandler,
 		invoiceService.getInvoiceByPrKey(userProfile, invoiceId_, customerId_,
 				new AsyncCallback<InvoiceBean>() {
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError(
-								"Remote Procedure Call - Failure",
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController
 								.getAppContainer()
 								.setTransactionResults(
@@ -229,9 +230,9 @@ public class InvoiceController implements AppEventListener, ClickHandler,
 					public void onFailure(Throwable caught) {
 						Log.debug("invoiceService.insertInvoice Failed: "
 								+ caught);
-						masterController.notifyUserOfSystemError(
-								"Remote Procedure Call - Failure",
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController
 								.getAppContainer()
 								.setTransactionResults(
@@ -287,9 +288,9 @@ public class InvoiceController implements AppEventListener, ClickHandler,
 					public void onFailure(Throwable caught) {
 						Log.debug("invoiceService.updateInvoice Failed: "
 								+ caught);
-						masterController.notifyUserOfSystemError(
-								"Remote Procedure Call - Failure",
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController
 								.getAppContainer()
 								.setTransactionResults(
@@ -344,9 +345,9 @@ public class InvoiceController implements AppEventListener, ClickHandler,
 				new AsyncCallback<Boolean>() {
 					public void onFailure(Throwable caught) {
 
-						masterController.notifyUserOfSystemError(
-								"Remote Procedure Call - Failure",
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController
 								.getAppContainer()
 								.setTransactionResults(
@@ -402,9 +403,9 @@ public class InvoiceController implements AppEventListener, ClickHandler,
 					public void onFailure(Throwable caught) {
 						Log.debug("invoiceService.saveInvoice Failed: "
 								+ caught);
-						masterController.notifyUserOfSystemError(
-								"Remote Procedure Call - Failure",
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController
 								.getAppContainer()
 								.setTransactionResults(
@@ -464,9 +465,9 @@ public class InvoiceController implements AppEventListener, ClickHandler,
 						Log
 								.debug("invoiceService.saveInvoiceBeanBatch Failed: "
 										+ caught);
-						masterController.notifyUserOfSystemError(
-								"Remote Procedure Call - Failure",
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController
 								.getAppContainer()
 								.setTransactionResults(
@@ -513,9 +514,9 @@ public class InvoiceController implements AppEventListener, ClickHandler,
 				new AsyncCallback<ArrayList<Integer>>() {
 					public void onFailure(Throwable caught) {
 						Log.debug("invoiceAllHourlyClients Failed: " + caught);
-						masterController.notifyUserOfSystemError(
-								"Remote Procedure Call - Failure",
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController
 								.getAppContainer()
 								.setTransactionResults(

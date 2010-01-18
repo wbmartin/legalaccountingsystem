@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.UserInfoBean;
 import com.martinanalytics.legaltime.client.model.UserInfoService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -30,8 +31,9 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param userInfoBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public UserInfoBean insertUserInfoBean(UserProfile userProfile_, UserInfoBean userInfoBean_){
+	public UserInfoBean insertUserInfoBean(UserProfile userProfile_, UserInfoBean userInfoBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -54,7 +56,11 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting UserInfo Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting UserInfo Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -65,8 +71,9 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param userInfoBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public UserInfoBean updateUserInfoBean(UserProfile userProfile_, UserInfoBean userInfoBean_){
+	public UserInfoBean updateUserInfoBean(UserProfile userProfile_, UserInfoBean userInfoBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -90,7 +97,11 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating UserInfo Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating UserInfo Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -101,8 +112,9 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param userInfoBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteUserInfoBean(UserProfile userProfile_, UserInfoBean userInfoBean_){
+	public Boolean deleteUserInfoBean(UserProfile userProfile_, UserInfoBean userInfoBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -123,7 +135,11 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting UserInfo Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting UserInfo Record Failed", e);
+		}
 	  }
 
 
@@ -139,8 +155,9 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< UserInfoBean> selectUserInfo(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< UserInfoBean> selectUserInfo(UserProfile userProfile_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -157,7 +174,11 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving UserInfo Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving UserInfo Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}
@@ -173,8 +194,9 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	 * @param userId_ 
 	 * @param clientId_ 
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public  UserInfoBean getUserInfoByPrKey(UserProfile userProfile_ , String userId_ ){
+	public  UserInfoBean getUserInfoByPrKey(UserProfile userProfile_ , String userId_ ) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -191,8 +213,11 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving UserInfo Record Failed", e);
-	
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving UserInfo Record Failed", e);
+		}
 	  }
 	  return result;
 	}
@@ -217,8 +242,9 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the UserInfoBean that was converted
+	 * @throws GWTCustomException 
          */
-	public UserInfoBean saveUserInfoBean(UserProfile userProfile_, UserInfoBean userInfoBean_){
+	public UserInfoBean saveUserInfoBean(UserProfile userProfile_, UserInfoBean userInfoBean_) throws GWTCustomException{
 		if (  userInfoBean_.getUserId() ==null ||  userInfoBean_.getUserId() ==""   || userInfoBean_.getClientId() ==null ||  userInfoBean_.getClientId() ==0  ){
 			return insertUserInfoBean( userProfile_,  userInfoBean_);
 		}else{
@@ -231,8 +257,9 @@ public class UserInfoServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param userInfoBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<UserInfoBean> saveUserInfoBeanBatch(UserProfile userProfile_, ArrayList<UserInfoBean> userInfoBeanList_){
+	public ArrayList<UserInfoBean> saveUserInfoBeanBatch(UserProfile userProfile_, ArrayList<UserInfoBean> userInfoBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< userInfoBeanList_.size(); ndx++){
 			userInfoBeanList_.set(ndx, saveUserInfoBean(userProfile_,userInfoBeanList_.get(ndx)));
 		}

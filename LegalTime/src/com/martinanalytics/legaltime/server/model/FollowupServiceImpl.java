@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
 import com.martinanalytics.legaltime.client.model.FollowupService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -30,8 +31,9 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param followupBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public FollowupBean insertFollowupBean(UserProfile userProfile_, FollowupBean followupBean_){
+	public FollowupBean insertFollowupBean(UserProfile userProfile_, FollowupBean followupBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -68,7 +70,11 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting Followup Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting Followup Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -79,8 +85,9 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param followupBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public FollowupBean updateFollowupBean(UserProfile userProfile_, FollowupBean followupBean_){
+	public FollowupBean updateFollowupBean(UserProfile userProfile_, FollowupBean followupBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -125,7 +132,11 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating Followup Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating Followup Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -136,8 +147,9 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param followupBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteFollowupBean(UserProfile userProfile_, FollowupBean followupBean_){
+	public Boolean deleteFollowupBean(UserProfile userProfile_, FollowupBean followupBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -158,7 +170,11 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting Followup Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting Followup Record Failed", e);
+		}
 	  }
 
 
@@ -174,8 +190,9 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< FollowupBean> selectFollowup(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< FollowupBean> selectFollowup(UserProfile userProfile_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -192,7 +209,11 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving Followup Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving Followup Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}
@@ -208,8 +229,9 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	 * @param followupId_ 
 	 * @param clientId_ 
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public  FollowupBean getFollowupByPrKey(UserProfile userProfile_ , Integer followupId_ ){
+	public  FollowupBean getFollowupByPrKey(UserProfile userProfile_ , Integer followupId_ ) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -226,7 +248,11 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving Followup Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving Followup Record Failed", e);
+		}
 	
 	  }
 	  return result;
@@ -255,8 +281,9 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the FollowupBean that was converted
+	 * @throws GWTCustomException 
          */
-	public FollowupBean saveFollowupBean(UserProfile userProfile_, FollowupBean followupBean_){
+	public FollowupBean saveFollowupBean(UserProfile userProfile_, FollowupBean followupBean_) throws GWTCustomException{
 		if (  followupBean_.getFollowupId() ==null ||  followupBean_.getFollowupId() ==0   || followupBean_.getClientId() ==null ||  followupBean_.getClientId() ==0  ){
 			return insertFollowupBean( userProfile_,  followupBean_);
 		}else{
@@ -269,8 +296,9 @@ public class FollowupServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param followupBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<FollowupBean> saveFollowupBeanBatch(UserProfile userProfile_, ArrayList<FollowupBean> followupBeanList_){
+	public ArrayList<FollowupBean> saveFollowupBeanBatch(UserProfile userProfile_, ArrayList<FollowupBean> followupBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< followupBeanList_.size(); ndx++){
 			followupBeanList_.set(ndx, saveFollowupBean(userProfile_,followupBeanList_.get(ndx)));
 		}

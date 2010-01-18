@@ -78,7 +78,7 @@ public class PaymentLogServiceImpl extends RemoteServiceServlet
 		e.printStackTrace();
 		result = "FAIL";
 		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
-			System.err.println("FiredCustomExceptions");
+			
 			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
 		}else{
 			throw new GWTServerException("Retrieving LaborRegister Records Failed", e);

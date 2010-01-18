@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
@@ -193,8 +194,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 		customerService.selectCustomer(userProfile, whereClause_, orderByClause_, 
 				new AsyncCallback<ArrayList<CustomerBean>>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving Customer Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -229,8 +231,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<CustomerBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("customerService.insertCustomer Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Adding Customer Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -267,8 +270,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<CustomerBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("customerService.updateCustomer Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Updating Customer Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -305,8 +309,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<Boolean>(){
 				public void onFailure(Throwable caught) {
 					
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Deleting Customer Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -344,8 +349,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<CustomerBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("customerService.saveCustomer Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving Customer Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -383,8 +389,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 			new AsyncCallback<ArrayList<CustomerBean>>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("customerService.saveCustomerBeanBatch Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving Customer Batch Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -415,8 +422,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   	final java.util.Date startTime = new java.util.Date();
   		customerService.getCustomerByPrKey(userProfile,  customerId_ 	,			new AsyncCallback<CustomerBean>(){
   					public void onFailure(Throwable caught) {
-  						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-  								AppPref.SERVER_ERROR + caught.getMessage());
+  						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
   						masterController.getAppContainer().setTransactionResults(
   							"Retrieving Customer by Identifier Failed"
   							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -646,8 +654,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 			vwCustomerHourlyBillRateService.selectVwCustomerHourlyBillRate(userProfile, whereClause_, orderByClause_, 
 					new AsyncCallback<ArrayList<VwCustomerHourlyBillRateBean>>(){
 						public void onFailure(Throwable caught) {
-							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-									AppPref.SERVER_ERROR + caught.getMessage());
+							if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+							}
 							masterController.getAppContainer().setTransactionResults(
 								"Retrieving VwCustomerHourlyBillRate Failed"
 								, (new java.util.Date().getTime() -startTime.getTime()));
@@ -690,8 +699,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   			new AsyncCallback<ArrayList<CustomerBillRateBean>>(){
   				public void onFailure(Throwable caught) {
   					Log.debug("customerBillRateService.saveCustomerBeanBatch Failed: " + caught);
-  					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-  							AppPref.SERVER_ERROR + caught.getMessage());
+  					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
   					masterController.getAppContainer().setTransactionResults(
   						"Saving Customer Batch Failed"
   						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -715,8 +725,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   			new AsyncCallback<ArrayList<FollowupBean>>(){
   				public void onFailure(Throwable caught) {
   					Log.debug("customerBillRateService.saveFollowupBeanBatch Failed: " + caught);
-  					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-  							AppPref.SERVER_ERROR + caught.getMessage());
+  					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
   					masterController.getAppContainer().setTransactionResults(
   						"Saving Customer Batch Failed"
   						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -830,8 +841,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     		followupService.selectFollowup(userProfile, whereClause, orderByClause, 
     				new AsyncCallback<ArrayList<FollowupBean>>(){
     					public void onFailure(Throwable caught) {
-    						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-    								AppPref.SERVER_ERROR + caught.getMessage());
+    						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+    						}
     						masterController.getAppContainer().setTransactionResults(
     							"Retrieving Followup Failed"
     							, (new java.util.Date().getTime() -startTime.getTime()));

@@ -11,6 +11,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
@@ -159,15 +160,13 @@ private void reverseTransaction() {
 				new AsyncCallback<ArrayList<CustomerAccountRegisterBean>>(){
 					public void onFailure(Throwable caught) {
 						masterController.getAppContainer().setTransactionResults(
-							"Retrieving CustomerAccountRegister Failed"
-							, (new java.util.Date().getTime() -startTime.getTime()));
-						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
-							if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-								masterController.promptUserForLogin();
-							}else{
-								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-										AppPref.SERVER_ERROR + caught.getMessage());
-							}
+								"Retrieving CustomerAccountRegister Failed"
+								, (new java.util.Date().getTime() -startTime.getTime()));
+						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + 
+								" | Orderby attempted " + orderByClause_ );
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 
 
 					}
@@ -239,11 +238,8 @@ private void reverseTransaction() {
 						"Adding CustomerAccountRegister Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Insert Bean Attempted: " + customerAccountRegisterBean_);
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 				}
 	
@@ -280,11 +276,8 @@ private void reverseTransaction() {
 						"Updating CustomerAccountRegister Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Update Bean Attempted: " + customerAccountRegisterBean_);
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 				}
 	
@@ -320,11 +313,8 @@ private void reverseTransaction() {
 						"Deleting CustomerAccountRegister Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Delete Bean Attempted: " + customerAccountRegisterBean_);
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 
 				}
@@ -363,11 +353,8 @@ private void reverseTransaction() {
 						"Saving CustomerAccountRegister Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Save Bean Attempted: " + customerAccountRegisterBean_);
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 
 				}
@@ -405,11 +392,8 @@ private void reverseTransaction() {
 					masterController.getAppContainer().setTransactionResults(
 						"Saving CustomerAccountRegister Batch Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 
 				}

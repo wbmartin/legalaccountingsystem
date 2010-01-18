@@ -22,6 +22,7 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.VwCustomerFollowupServiceImpl;
 
 public class FollowupReportServlet extends HttpServlet {
@@ -42,12 +43,17 @@ public class FollowupReportServlet extends HttpServlet {
 		String whereClause ="where close_dt is null";
 		String orderByClause ="order by due_dt desc";
 	    
-		beans = vwCustomerFollowupServiceImpl.selectVwCustomerFollowup(userProfile, whereClause, orderByClause);
+		try {
+			beans = vwCustomerFollowupServiceImpl.selectVwCustomerFollowup(userProfile, whereClause, orderByClause);
+		} catch (GWTCustomException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         boolean success = false;
         JasperPrint jasperPrint;
         java.util.HashMap params = new java.util.HashMap();
         InputStream jasperFile = this.getServletContext().getResourceAsStream(
-        		"/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/Followup.jasper");
+        		"/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/followup/Followup.jasper");
         try {
 			jasperPrint = JasperFillManager.fillReport(
 			    jasperFile, params,new JRBeanCollectionDataSource(beans,false));

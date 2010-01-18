@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwLaborInvoiceItemDisplayBean;
 import com.martinanalytics.legaltime.client.model.VwLaborInvoiceItemDisplayService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -32,8 +33,9 @@ public class VwLaborInvoiceItemDisplayServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< VwLaborInvoiceItemDisplayBean> selectVwLaborInvoiceItemDisplay(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< VwLaborInvoiceItemDisplayBean> selectVwLaborInvoiceItemDisplay(UserProfile userProfile_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -50,7 +52,11 @@ public class VwLaborInvoiceItemDisplayServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving VwLaborInvoiceItemDisplay Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving VwLaborInvoiceItemDisplay Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}

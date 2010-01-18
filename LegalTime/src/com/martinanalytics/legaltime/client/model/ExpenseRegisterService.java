@@ -10,12 +10,12 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("expenseRegister")
 public interface ExpenseRegisterService extends RemoteService{
-	 ExpenseRegisterBean insertExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_);
-	 ExpenseRegisterBean updateExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_);
-	 ExpenseRegisterBean saveExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_);
-	 Boolean deleteExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_);
+	 ExpenseRegisterBean insertExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_) throws GWTCustomException;
+	 ExpenseRegisterBean updateExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_) throws GWTCustomException;
+	 ExpenseRegisterBean saveExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_) throws GWTCustomException;
+	 Boolean deleteExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_) throws GWTCustomException;
 	 ArrayList<ExpenseRegisterBean> selectExpenseRegister(UserProfile userProfile_, String whereClause_, String OrderByClause_) throws GWTCustomException;
-	 ArrayList<ExpenseRegisterBean> saveExpenseRegisterBeanBatch(UserProfile userProfile_, ArrayList<ExpenseRegisterBean> expenseRegisterBeanList_);
-	 ExpenseRegisterBean getExpenseRegisterByPrKey(UserProfile userProfile_ , Integer expenseRegisterId_ , Integer customerId_ );
+	 ArrayList<ExpenseRegisterBean> saveExpenseRegisterBeanBatch(UserProfile userProfile_, ArrayList<ExpenseRegisterBean> expenseRegisterBeanList_) throws GWTCustomException;
+	 ExpenseRegisterBean getExpenseRegisterByPrKey(UserProfile userProfile_ , Integer expenseRegisterId_ , Integer customerId_ ) throws GWTCustomException;
 
 }

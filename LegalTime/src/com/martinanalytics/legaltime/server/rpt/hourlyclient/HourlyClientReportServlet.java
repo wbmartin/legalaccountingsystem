@@ -47,12 +47,12 @@ public class HourlyClientReportServlet extends HttpServlet {
 		String whereClause ="";
 		String orderByClause ="order by last_name, first_name";
 	    
-		//try {
+		try {
 			beans = customerServiceImpl.selectCustomer(userProfile, whereClause, orderByClause);
-//		} catch (GWTCustomException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+		} catch (GWTCustomException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         boolean success = false;
         response.setContentType("text/plain");
         ServletOutputStream outputStream = response.getOutputStream();

@@ -36,6 +36,7 @@ import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
 import com.martinanalytics.legaltime.client.model.bean.VwInvoiceDisplayBean;
 import com.martinanalytics.legaltime.client.model.bean.VwLaborInvoiceItemDisplayBean;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.CustomerServiceImpl;
 import com.martinanalytics.legaltime.server.model.ExpenseInvoiceItemServiceImpl;
 import com.martinanalytics.legaltime.server.model.ExpenseRegisterServiceImpl;
@@ -68,7 +69,12 @@ public class InvoiceReportServlet extends HttpServlet{
 		  Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
 		  beans.add(vwInvoiceDisplayService.selectVwInvoiceDisplay(userProfile, "where invoice_id= " +invoiceId, "").get(0));
 		}catch(Exception e){
-			beans = vwInvoiceDisplayService.selectVwInvoiceDisplay(userProfile, "where invoice_id in (" +request.getParameter("invoiceIdList") +")", "");
+			try {
+				beans = vwInvoiceDisplayService.selectVwInvoiceDisplay(userProfile, "where invoice_id in (" +request.getParameter("invoiceIdList") +")", "");
+			} catch (GWTCustomException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 
         
@@ -134,12 +140,12 @@ public class InvoiceReportServlet extends HttpServlet{
 	
 	
 	
-	 public static JRDataSource  getExpenseBeans(UserProfile userProfile_, int invoiceId_){
+	 public static JRDataSource  getExpenseBeans(UserProfile userProfile_, int invoiceId_) throws GWTCustomException{
 		   ArrayList<ExpenseInvoiceItemBean> expenseLines = expenseInvoiceItemService.selectExpenseInvoiceItem(userProfile_, "where invoice_id = " + invoiceId_, "order by expense_dt");
 	       return new JRBeanCollectionDataSource(expenseLines);
 
 	 }
-	 public static JRDataSource  getLaborBeans(UserProfile userProfile_, int invoiceId_){
+	 public static JRDataSource  getLaborBeans(UserProfile userProfile_, int invoiceId_) throws GWTCustomException{
 	       ArrayList<VwLaborInvoiceItemDisplayBean> laborLines = laborInvoiceItemService.selectVwLaborInvoiceItemDisplay(userProfile_, "where invoice_id = " + invoiceId_, "order by activity_dt");
 	       
 	       return new JRBeanCollectionDataSource(laborLines);

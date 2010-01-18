@@ -4,6 +4,8 @@
 package com.martinanalytics.legaltime.client.model;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
+
 import java.util.ArrayList;
 //private final CustomerServiceAsync customerService = 
 //	GWT.create(CustomerService.class);

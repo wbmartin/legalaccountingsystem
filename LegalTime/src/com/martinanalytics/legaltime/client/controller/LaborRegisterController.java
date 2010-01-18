@@ -18,6 +18,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
@@ -133,8 +134,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 		laborRegisterService.selectLaborRegister(userProfile, whereClause_, orderByClause_, 
 				new AsyncCallback<ArrayList<LaborRegisterBean>>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving LaborRegister Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -169,8 +171,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 		laborRegisterService.getLaborRegisterByPrKey(userProfile,  laborRegisterId_ , customerId_ , 
 				new AsyncCallback<LaborRegisterBean>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving LaborRegister by Identifier Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -201,8 +204,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 			new AsyncCallback<LaborRegisterBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("laborRegisterService.insertLaborRegister Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Adding LaborRegister Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -239,8 +243,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 			new AsyncCallback<LaborRegisterBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("laborRegisterService.updateLaborRegister Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Updating LaborRegister Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -276,9 +281,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 	laborRegisterService.deleteLaborRegisterBean(userProfile,laborRegisterBean_,
 			new AsyncCallback<Boolean>(){
 				public void onFailure(Throwable caught) {
-					
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Deleting LaborRegister Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -316,8 +321,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 			new AsyncCallback<LaborRegisterBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("laborRegisterService.saveLaborRegister Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving LaborRegister Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -355,8 +361,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 			new AsyncCallback<ArrayList<LaborRegisterBean>>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("laborRegisterService.saveLaborRegisterBeanBatch Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving LaborRegister Batch Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -709,8 +716,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 			laborRegisterService.RetrieveLastMonthlycharge(userProfile, 
 					new AsyncCallback<java.util.Date>(){
 						public void onFailure(Throwable caught) {
-							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-									AppPref.SERVER_ERROR + caught.getMessage());
+							if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+							}
 							masterController.getAppContainer().setTransactionResults(
 								"retrieveLastMonthlyChargeDate Failed"
 								, (new java.util.Date().getTime() -startTime.getTime()));
@@ -736,8 +744,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 			laborRegisterService.AssessMonthlyChargesAndInvoice(userProfile,  assessDt_,
 					new AsyncCallback<ArrayList<Integer>>(){
 						public void onFailure(Throwable caught) {
-							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-									AppPref.SERVER_ERROR + caught.getMessage());
+							if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+							}
 							masterController.getAppContainer().setTransactionResults(
 								"retrieveLastMonthlyChargeDate Failed"
 								, (new java.util.Date().getTime() -startTime.getTime()));

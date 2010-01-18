@@ -15,6 +15,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
@@ -187,8 +188,9 @@ public void showFollowupViewDialog(String owner_) {
 		followupService.selectFollowup(userProfile, whereClause_, orderByClause_, 
 				new AsyncCallback<ArrayList<FollowupBean>>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving Followup Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -223,8 +225,9 @@ public void showFollowupViewDialog(String owner_) {
 		followupService.getFollowupByPrKey(userProfile,  followupId_ , 
 				new AsyncCallback<FollowupBean>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving Followup by Identifier Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -255,8 +258,9 @@ public void showFollowupViewDialog(String owner_) {
 			new AsyncCallback<FollowupBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("followupService.insertFollowup Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Adding Followup Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -293,8 +297,9 @@ public void showFollowupViewDialog(String owner_) {
 			new AsyncCallback<FollowupBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("followupService.updateFollowup Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Updating Followup Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -331,8 +336,9 @@ public void showFollowupViewDialog(String owner_) {
 			new AsyncCallback<Boolean>(){
 				public void onFailure(Throwable caught) {
 					
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Deleting Followup Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -370,8 +376,9 @@ public void showFollowupViewDialog(String owner_) {
 			new AsyncCallback<FollowupBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("followupService.saveFollowup Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving Followup Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -409,8 +416,9 @@ public void showFollowupViewDialog(String owner_) {
 			new AsyncCallback<ArrayList<FollowupBean>>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("followupService.saveFollowupBeanBatch Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving Followup Batch Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));

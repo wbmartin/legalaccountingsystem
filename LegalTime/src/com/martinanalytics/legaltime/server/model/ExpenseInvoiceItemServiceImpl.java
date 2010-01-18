@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.ExpenseInvoiceItemBean;
 import com.martinanalytics.legaltime.client.model.ExpenseInvoiceItemService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -30,8 +31,9 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param expenseInvoiceItemBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public ExpenseInvoiceItemBean insertExpenseInvoiceItemBean(UserProfile userProfile_, ExpenseInvoiceItemBean expenseInvoiceItemBean_){
+	public ExpenseInvoiceItemBean insertExpenseInvoiceItemBean(UserProfile userProfile_, ExpenseInvoiceItemBean expenseInvoiceItemBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -71,7 +73,11 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting ExpenseInvoiceItem Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting ExpenseInvoiceItem Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -82,8 +88,9 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param expenseInvoiceItemBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public ExpenseInvoiceItemBean updateExpenseInvoiceItemBean(UserProfile userProfile_, ExpenseInvoiceItemBean expenseInvoiceItemBean_){
+	public ExpenseInvoiceItemBean updateExpenseInvoiceItemBean(UserProfile userProfile_, ExpenseInvoiceItemBean expenseInvoiceItemBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -133,7 +140,11 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating ExpenseInvoiceItem Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating ExpenseInvoiceItem Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -144,8 +155,9 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param expenseInvoiceItemBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteExpenseInvoiceItemBean(UserProfile userProfile_, ExpenseInvoiceItemBean expenseInvoiceItemBean_){
+	public Boolean deleteExpenseInvoiceItemBean(UserProfile userProfile_, ExpenseInvoiceItemBean expenseInvoiceItemBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -167,7 +179,11 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting ExpenseInvoiceItem Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting ExpenseInvoiceItem Record Failed", e);
+		}
 	  }
 
 
@@ -183,8 +199,9 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< ExpenseInvoiceItemBean> selectExpenseInvoiceItem(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< ExpenseInvoiceItemBean> selectExpenseInvoiceItem(UserProfile userProfile_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -201,7 +218,11 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving ExpenseInvoiceItem Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving ExpenseInvoiceItem Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}
@@ -274,8 +295,9 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the ExpenseInvoiceItemBean that was converted
+	 * @throws GWTCustomException 
          */
-	public ExpenseInvoiceItemBean saveExpenseInvoiceItemBean(UserProfile userProfile_, ExpenseInvoiceItemBean expenseInvoiceItemBean_){
+	public ExpenseInvoiceItemBean saveExpenseInvoiceItemBean(UserProfile userProfile_, ExpenseInvoiceItemBean expenseInvoiceItemBean_) throws GWTCustomException{
 		if (  expenseInvoiceItemBean_.getExpenseInvoiceItemId() ==null ||  expenseInvoiceItemBean_.getExpenseInvoiceItemId() ==0   || expenseInvoiceItemBean_.getClientId() ==null ||  expenseInvoiceItemBean_.getClientId() ==0   || expenseInvoiceItemBean_.getCustomerId() ==null ||  expenseInvoiceItemBean_.getCustomerId() ==0  ){
 			return insertExpenseInvoiceItemBean( userProfile_,  expenseInvoiceItemBean_);
 		}else{
@@ -288,8 +310,9 @@ public class ExpenseInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param expenseInvoiceItemBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<ExpenseInvoiceItemBean> saveExpenseInvoiceItemBeanBatch(UserProfile userProfile_, ArrayList<ExpenseInvoiceItemBean> expenseInvoiceItemBeanList_){
+	public ArrayList<ExpenseInvoiceItemBean> saveExpenseInvoiceItemBeanBatch(UserProfile userProfile_, ArrayList<ExpenseInvoiceItemBean> expenseInvoiceItemBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< expenseInvoiceItemBeanList_.size(); ndx++){
 			expenseInvoiceItemBeanList_.set(ndx, saveExpenseInvoiceItemBean(userProfile_,expenseInvoiceItemBeanList_.get(ndx)));
 		}

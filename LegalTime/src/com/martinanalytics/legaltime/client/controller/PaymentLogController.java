@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
@@ -132,12 +133,9 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 							"Retrieving PaymentLog Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
 						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
-							if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-								masterController.promptUserForLogin();
-							}else{
-								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-										AppPref.SERVER_ERROR + caught.getMessage());
-							}
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 
 
 					}
@@ -172,11 +170,8 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving PaymentLog by Identifier Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
-						if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-							masterController.promptUserForLogin();
-						}else{
-							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-									AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 						}
 
 					}
@@ -209,11 +204,8 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 						"Adding PaymentLog Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Insert Bean Attempted: " + paymentLogBean_);
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 				}
 	
@@ -250,11 +242,8 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 						"Updating PaymentLog Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Update Bean Attempted: " + paymentLogBean_);
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 				}
 	
@@ -290,11 +279,8 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 						"Deleting PaymentLog Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Delete Bean Attempted: " + paymentLogBean_);
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 
 				}
@@ -333,11 +319,8 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 						"Saving PaymentLog Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Save Bean Attempted: " + paymentLogBean_);
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 
 				}
@@ -379,11 +362,8 @@ public class PaymentLogController implements AppEventListener, ClickHandler, Cha
 					masterController.getAppContainer().setTransactionResults(
 						"Saving PaymentLog Batch Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
-					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-						masterController.promptUserForLogin();
-					}else{
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 					}
 
 				}
@@ -438,12 +418,9 @@ public void reversePayment(Integer paymentLogId_) {
 						"Retrieving PaymentLog Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("ReversePayment attempted " );
-						if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-							masterController.promptUserForLogin();
-						}else{
-							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-									AppPref.SERVER_ERROR + caught.getMessage());
-						}
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 
 
 				}

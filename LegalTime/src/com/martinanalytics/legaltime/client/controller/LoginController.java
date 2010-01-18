@@ -15,6 +15,7 @@ import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.AppPages;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.model.ApplicationSecurityService;
 import com.martinanalytics.legaltime.client.model.ApplicationSecurityServiceAsync;
 import com.martinanalytics.legaltime.client.model.bean.SecurityUserBean;
@@ -104,8 +105,9 @@ public class LoginController implements   AppEventListener{
 					public void onFailure(Throwable caught) {
 						Log.debug("authenticateUser Failed: " + caught);
 						
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						if(type.equals("INITIAL")){
 							loginView.getInitialLoginFormPanel().getSendButton().setEnabled(true);
 						}
