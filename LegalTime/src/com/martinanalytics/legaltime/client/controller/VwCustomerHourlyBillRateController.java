@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
@@ -117,8 +118,9 @@ public class VwCustomerHourlyBillRateController implements AppEventListener, Cli
 		vwCustomerHourlyBillRateService.selectVwCustomerHourlyBillRate(userProfile, whereClause_, orderByClause_, 
 				new AsyncCallback<ArrayList<VwCustomerHourlyBillRateBean>>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving VwCustomerHourlyBillRate Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));

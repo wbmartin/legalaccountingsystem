@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.LaborInvoiceItemBean;
 import com.martinanalytics.legaltime.client.model.LaborInvoiceItemService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -30,8 +31,9 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param laborInvoiceItemBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public LaborInvoiceItemBean insertLaborInvoiceItemBean(UserProfile userProfile_, LaborInvoiceItemBean laborInvoiceItemBean_){
+	public LaborInvoiceItemBean insertLaborInvoiceItemBean(UserProfile userProfile_, LaborInvoiceItemBean laborInvoiceItemBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -77,7 +79,11 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting LaborInvoiceItem Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting LaborInvoiceItem Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -88,8 +94,9 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param laborInvoiceItemBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public LaborInvoiceItemBean updateLaborInvoiceItemBean(UserProfile userProfile_, LaborInvoiceItemBean laborInvoiceItemBean_){
+	public LaborInvoiceItemBean updateLaborInvoiceItemBean(UserProfile userProfile_, LaborInvoiceItemBean laborInvoiceItemBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -145,7 +152,11 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating LaborInvoiceItem Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating LaborInvoiceItem Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -156,8 +167,9 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param laborInvoiceItemBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteLaborInvoiceItemBean(UserProfile userProfile_, LaborInvoiceItemBean laborInvoiceItemBean_){
+	public Boolean deleteLaborInvoiceItemBean(UserProfile userProfile_, LaborInvoiceItemBean laborInvoiceItemBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -179,7 +191,11 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting LaborInvoiceItem Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting LaborInvoiceItem Record Failed", e);
+		}
 	  }
 
 
@@ -195,8 +211,9 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< LaborInvoiceItemBean> selectLaborInvoiceItem(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< LaborInvoiceItemBean> selectLaborInvoiceItem(UserProfile userProfile_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -213,7 +230,11 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving LaborInvoiceItem Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving LaborInvoiceItem Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}
@@ -230,8 +251,9 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param clientId_ 
 	 * @param customerId_ 
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public  LaborInvoiceItemBean getLaborInvoiceItemByPrKey(UserProfile userProfile_ , Integer laborInvoiceItemId_ , Integer customerId_ ){
+	public  LaborInvoiceItemBean getLaborInvoiceItemByPrKey(UserProfile userProfile_ , Integer laborInvoiceItemId_ , Integer customerId_ ) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -249,8 +271,11 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving LaborInvoiceItem Record Failed", e);
-	
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving LaborInvoiceItem Record Failed", e);
+		}
 	  }
 	  return result;
 	}
@@ -290,8 +315,9 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the LaborInvoiceItemBean that was converted
+	 * @throws GWTCustomException 
          */
-	public LaborInvoiceItemBean saveLaborInvoiceItemBean(UserProfile userProfile_, LaborInvoiceItemBean laborInvoiceItemBean_){
+	public LaborInvoiceItemBean saveLaborInvoiceItemBean(UserProfile userProfile_, LaborInvoiceItemBean laborInvoiceItemBean_) throws GWTCustomException{
 		if (  laborInvoiceItemBean_.getLaborInvoiceItemId() ==null ||  laborInvoiceItemBean_.getLaborInvoiceItemId() ==0   || laborInvoiceItemBean_.getClientId() ==null ||  laborInvoiceItemBean_.getClientId() ==0   || laborInvoiceItemBean_.getCustomerId() ==null ||  laborInvoiceItemBean_.getCustomerId() ==0  ){
 			return insertLaborInvoiceItemBean( userProfile_,  laborInvoiceItemBean_);
 		}else{
@@ -304,8 +330,9 @@ public class LaborInvoiceItemServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param laborInvoiceItemBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<LaborInvoiceItemBean> saveLaborInvoiceItemBeanBatch(UserProfile userProfile_, ArrayList<LaborInvoiceItemBean> laborInvoiceItemBeanList_){
+	public ArrayList<LaborInvoiceItemBean> saveLaborInvoiceItemBeanBatch(UserProfile userProfile_, ArrayList<LaborInvoiceItemBean> laborInvoiceItemBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< laborInvoiceItemBeanList_.size(); ndx++){
 			laborInvoiceItemBeanList_.set(ndx, saveLaborInvoiceItemBean(userProfile_,laborInvoiceItemBeanList_.get(ndx)));
 		}

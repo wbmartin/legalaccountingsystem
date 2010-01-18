@@ -12,6 +12,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
@@ -151,11 +152,8 @@ public class InvoiceManagerController implements AppEventListener {
 								, (new java.util.Date().getTime() -startTime.getTime()));
 							masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
 							
-							if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-								masterController.promptUserForLogin();
-							}else{
-								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-										AppPref.SERVER_ERROR + caught.getMessage());
+							if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 							}
 							
 							
@@ -191,11 +189,8 @@ public class InvoiceManagerController implements AppEventListener {
 	 					masterController.getAppContainer().setTransactionResults(
 	 						"Saving LaborRegister Batch Failed"
 	 						, (new java.util.Date().getTime() -startTime.getTime()));
-	 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-							masterController.promptUserForLogin();
-						}else{
-							masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-									AppPref.SERVER_ERROR + caught.getMessage());
+	 					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 						}
 	 				}
 	 		
@@ -232,11 +227,8 @@ public class InvoiceManagerController implements AppEventListener {
 	   							"Retrieving ExpenseRegister Failed"
 	   							, (new java.util.Date().getTime() -startTime.getTime()));
 	   						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
-	   						if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-								masterController.promptUserForLogin();
-							}else{
-								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-										AppPref.SERVER_ERROR + caught.getMessage());
+	   						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 							}
 	   					}
 	   		
@@ -270,11 +262,8 @@ public class InvoiceManagerController implements AppEventListener {
 		 						"Saving LaborRegister Batch Failed"
 		 						, (new java.util.Date().getTime() -startTime.getTime()));
 		 					invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
-		 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-								masterController.promptUserForLogin();
-							}else{
-								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-										AppPref.SERVER_ERROR + caught.getMessage());
+		 					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 							}
 		 				}
 		 		
@@ -306,13 +295,8 @@ public class InvoiceManagerController implements AppEventListener {
 			 						"Saving LaborRegister Batch Failed"
 			 						, (new java.util.Date().getTime() -startTime.getTime()));
 			 					invoiceManagerView.getCmdGenerateInvoice().setEnabled(true);
-			 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-									masterController.promptUserForLogin();
-								}else if(caught.getMessage().equals("ERROR: Invoice Cannot Be Reversed, It may have already been reversed.")){
-									masterController.notifyUserOfSystemError("Invoice Not Reversed", "Invoice Cannot Be Reversed, It may have already been reversed.");
-								}else{
-									masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-											AppPref.SERVER_ERROR + caught.getMessage());
+			 					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 								}
 			 				}
 			 		
@@ -357,11 +341,8 @@ public class InvoiceManagerController implements AppEventListener {
 			 					masterController.getAppContainer().setTransactionResults(
 			 						"Saving LaborRegister Batch Failed"
 			 						, (new java.util.Date().getTime() -startTime.getTime()));
-			 					if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-									masterController.promptUserForLogin();
-								}else{
-									masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-											AppPref.SERVER_ERROR + caught.getMessage());
+			 					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 								}
 			 				}
 			 		
@@ -437,11 +418,8 @@ public class InvoiceManagerController implements AppEventListener {
 	   							"Retrieving VwInvoiceDisplay Failed"
 	   							, (new java.util.Date().getTime() -startTime.getTime()));
 	   						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
-	   						if (caught.getMessage().equals(AppMsg.SERVER_TIMEOUT_ERROR)){
-								masterController.promptUserForLogin();
-							}else{
-								masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-										AppPref.SERVER_ERROR + caught.getMessage());
+	   						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
 							}
 	   					}
 	   		

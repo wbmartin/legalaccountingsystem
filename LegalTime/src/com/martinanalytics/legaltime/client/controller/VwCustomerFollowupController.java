@@ -11,6 +11,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
@@ -141,8 +142,9 @@ public class VwCustomerFollowupController implements AppEventListener, ClickHand
 		vwCustomerFollowupService.selectVwCustomerFollowup(userProfile, whereClause_, orderByClause_, 
 				new AsyncCallback<ArrayList<VwCustomerFollowupBean>>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving VwCustomerFollowup Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
@@ -370,8 +372,9 @@ public class VwCustomerFollowupController implements AppEventListener, ClickHand
 			new AsyncCallback<ArrayList<FollowupBean>>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("vwCustomerFollowupService.saveVwCustomerFollowupBeanBatch Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving VwCustomerFollowup Batch Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));

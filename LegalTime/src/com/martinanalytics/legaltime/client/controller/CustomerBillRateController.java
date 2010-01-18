@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
@@ -117,13 +118,16 @@ public class CustomerBillRateController implements AppEventListener, ClickHandle
 		customerBillRateService.selectCustomerBillRate(userProfile, whereClause_, orderByClause_, 
 				new AsyncCallback<ArrayList<CustomerBillRateBean>>(){
 					public void onFailure(Throwable caught) {
-						masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-								AppPref.SERVER_ERROR + caught.getMessage());
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+						}
 						masterController.getAppContainer().setTransactionResults(
 							"Retrieving CustomerBillRate Failed"
 							, (new java.util.Date().getTime() -startTime.getTime()));
 						masterController.getAppContainer().addSysLogMessage("Where Attempted: " +whereClause_ + " | Orderby attempted " + orderByClause_ );
+						if(!ServerExcpetionHandler.getInstance().handle(caught)){
 
+						}
 					}
 		
 					public void onSuccess(ArrayList<CustomerBillRateBean> customerBillRateResult) {
@@ -185,13 +189,16 @@ public class CustomerBillRateController implements AppEventListener, ClickHandle
 			new AsyncCallback<CustomerBillRateBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("customerBillRateService.insertCustomerBillRate Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Adding CustomerBillRate Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Insert Bean Attempted: " + customerBillRateBean_);
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
 
+					}
 				}
 	
 				public void onSuccess(CustomerBillRateBean result) {
@@ -223,13 +230,14 @@ public class CustomerBillRateController implements AppEventListener, ClickHandle
 			new AsyncCallback<CustomerBillRateBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("customerBillRateService.updateCustomerBillRate Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					
 					masterController.getAppContainer().setTransactionResults(
 						"Updating CustomerBillRate Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Update Bean Attempted: " + customerBillRateBean_);
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
 
+					}
 				}
 	
 				public void onSuccess(CustomerBillRateBean result) {
@@ -261,13 +269,14 @@ public class CustomerBillRateController implements AppEventListener, ClickHandle
 			new AsyncCallback<Boolean>(){
 				public void onFailure(Throwable caught) {
 					
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					
 					masterController.getAppContainer().setTransactionResults(
 						"Deleting CustomerBillRate Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
 					masterController.getAppContainer().addSysLogMessage("Delete Bean Attempted: " + customerBillRateBean_);
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
 
+					}
 				}
 	
 
@@ -300,8 +309,9 @@ public class CustomerBillRateController implements AppEventListener, ClickHandle
 			new AsyncCallback<CustomerBillRateBean>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("customerBillRateService.saveCustomerBillRate Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving CustomerBillRate Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));
@@ -339,8 +349,9 @@ public class CustomerBillRateController implements AppEventListener, ClickHandle
 			new AsyncCallback<ArrayList<CustomerBillRateBean>>(){
 				public void onFailure(Throwable caught) {
 					Log.debug("customerBillRateService.saveCustomerBillRateBeanBatch Failed: " + caught);
-					masterController.notifyUserOfSystemError("Remote Procedure Call - Failure", 
-							AppPref.SERVER_ERROR + caught.getMessage());
+					if(!ServerExcpetionHandler.getInstance().handle(caught)){
+
+					}
 					masterController.getAppContainer().setTransactionResults(
 						"Saving CustomerBillRate Batch Failed"
 						, (new java.util.Date().getTime() -startTime.getTime()));

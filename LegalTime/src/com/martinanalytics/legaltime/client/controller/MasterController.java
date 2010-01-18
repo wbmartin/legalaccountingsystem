@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.widget.AppContainer;
 import com.martinanalytics.legaltime.client.widget.ReportUtil;
 import com.martinanalytics.legaltime.client.AppMsg;
 import com.martinanalytics.legaltime.client.AppPages;
+import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
 import com.martinanalytics.legaltime.client.model.UserInfoCache;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 
@@ -41,6 +42,7 @@ public class MasterController implements AppEventListener{
 
 	 
 	 public MasterController(){
+		 ServerExcpetionHandler.getInstance().setMasterController(this);
 		 userProfile = UserProfile.getInstance();
 		 UserInfoCache.getNotifier().addAppEventListener(this);
 		 loginController = LoginController.getInstance(this);

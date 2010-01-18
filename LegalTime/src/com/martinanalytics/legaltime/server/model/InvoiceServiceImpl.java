@@ -34,8 +34,9 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param invoiceBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public InvoiceBean insertInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_){
+	public InvoiceBean insertInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -84,7 +85,11 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting Invoice Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting Invoice Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -95,8 +100,9 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param invoiceBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public InvoiceBean updateInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_){
+	public InvoiceBean updateInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -150,7 +156,11 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating Invoice Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating Invoice Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -161,8 +171,9 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param invoiceBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_){
+	public Boolean deleteInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -184,7 +195,11 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting Invoice Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting Invoice Record Failed", e);
+		}
 	  }
 
 
@@ -200,8 +215,9 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< InvoiceBean> selectInvoice(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< InvoiceBean> selectInvoice(UserProfile userProfile_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -218,7 +234,11 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving Invoice Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving Invoice Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}
@@ -235,8 +255,9 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	 * @param clientId_ 
 	 * @param customerId_ 
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public  InvoiceBean getInvoiceByPrKey(UserProfile userProfile_ , Integer invoiceId_ , Integer customerId_ ){
+	public  InvoiceBean getInvoiceByPrKey(UserProfile userProfile_ , Integer invoiceId_ , Integer customerId_ ) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -254,7 +275,11 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving Invoice Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving Invoice Record Failed", e);
+		}
 	
 	  }
 	  return result;
@@ -291,8 +316,9 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the InvoiceBean that was converted
+	 * @throws GWTCustomException 
          */
-	public InvoiceBean saveInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_){
+	public InvoiceBean saveInvoiceBean(UserProfile userProfile_, InvoiceBean invoiceBean_) throws GWTCustomException{
 		if (  invoiceBean_.getInvoiceId() ==null ||  invoiceBean_.getInvoiceId() ==0   || invoiceBean_.getClientId() ==null ||  invoiceBean_.getClientId() ==0   || invoiceBean_.getCustomerId() ==null ||  invoiceBean_.getCustomerId() ==0  ){
 			return insertInvoiceBean( userProfile_,  invoiceBean_);
 		}else{
@@ -305,8 +331,9 @@ public class InvoiceServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param invoiceBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<InvoiceBean> saveInvoiceBeanBatch(UserProfile userProfile_, ArrayList<InvoiceBean> invoiceBeanList_){
+	public ArrayList<InvoiceBean> saveInvoiceBeanBatch(UserProfile userProfile_, ArrayList<InvoiceBean> invoiceBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< invoiceBeanList_.size(); ndx++){
 			invoiceBeanList_.set(ndx, saveInvoiceBean(userProfile_,invoiceBeanList_.get(ndx)));
 		}
@@ -410,7 +437,7 @@ public Boolean unwindInvoice(UserProfile userProfile_, Integer invoiceId_)throws
 
 
 
-public ArrayList<Integer> invoiceAllHourlyClients(UserProfile userProfile_, java.util.Date invoiceDt_){
+public ArrayList<Integer> invoiceAllHourlyClients(UserProfile userProfile_, java.util.Date invoiceDt_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -432,7 +459,11 @@ public ArrayList<Integer> invoiceAllHourlyClients(UserProfile userProfile_, java
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving Invoice Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving Invoice Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}

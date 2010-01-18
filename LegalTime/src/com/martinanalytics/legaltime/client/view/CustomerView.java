@@ -305,6 +305,7 @@ class CustomerComposite extends Composite{
 		grid.getSelectionModel().addListener(Events.SelectionChange,  
 				new Listener<SelectionChangedEvent<CustomerBean>>() {  
 					public void handleEvent(SelectionChangedEvent<CustomerBean> be) {  
+						notifyAppEvent(this, "SaveCustomerBatch");
 						if (be.getSelection().size() > 0) {  
 							if(txtLastName.getValue()==null || customerFormPanel.isValid()){
 								formBindings.bind((ModelData) be.getSelection().get(0)); 
@@ -553,6 +554,7 @@ class CustomerComposite extends Composite{
 		txtMonthlyBillRate.setName("monthlyBillRate");
 		txtMonthlyBillRate.setRegex(GXTValidator.DOUBLE);
 		txtMonthlyBillRate.setAutoValidate(true);
+		txtMonthlyBillRate.setAllowBlank(true);
 		getCustomerFormPanel().add(txtMonthlyBillRate);
 		
 
@@ -561,7 +563,7 @@ class CustomerComposite extends Composite{
 				nbrContingencyRate.setName("contingencyRate");
 				nbrContingencyRate.setRegex(GXTValidator.DOUBLE);
 				nbrContingencyRate.setFireChangeEventOnSetValue(true);
-				//nbrContingencyRate.setAllowBlank(false);
+				nbrContingencyRate.setAllowBlank(true);
 				nbrContingencyRate.setAutoValidate(true);
 				//nbrContingencyRate.setVisible(false);
 				customerFormPanel.add(nbrContingencyRate);
@@ -574,7 +576,7 @@ class CustomerComposite extends Composite{
 				nbrMortgageAmount.setName("mortgageAmount");
 				nbrMortgageAmount.setRegex(GXTValidator.DOUBLE);
 				nbrMortgageAmount.setFireChangeEventOnSetValue(true);
-				//nbrMortgageAmount.setAllowBlank(false);
+				nbrMortgageAmount.setAllowBlank(true);
 				nbrMortgageAmount.setAutoValidate(true);
 				//nbrMortgageAmount.setVisible(false);
 				customerFormPanel.add(nbrMortgageAmount);

@@ -23,6 +23,7 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.VwCustomerFollowupBean;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.CustomerServiceImpl;
 import com.martinanalytics.legaltime.server.model.VwCustomerFollowupServiceImpl;
 
@@ -43,12 +44,19 @@ public class CustomerAddressLabelServlet extends HttpServlet {
 		userProfile.setClientId(Integer.parseInt(request.getParameter("clientId")));
 		String whereClause ="";
 		String orderByClause ="order by last_name desc";
-	    if(request.getParameter("invoiceOnly")!=null && request.getParameter("invoiceOnly").equals("YES")){
-	    	java.util.Date dt = new java.util.Date(request.getParameter("invoiceDt"));
-	    	beans = customerServiceImpl.selectCustomerWithInvoice(userProfile, dt,whereClause, orderByClause);
-	    }else{
-	    	beans = customerServiceImpl.selectCustomer(userProfile, whereClause, orderByClause);
-	    }
+		try {
+		    if(request.getParameter("invoiceOnly")!=null && request.getParameter("invoiceOnly").equals("YES")){
+		    	java.util.Date dt = new java.util.Date(request.getParameter("invoiceDt"));
+		    	
+					beans = customerServiceImpl.selectCustomerWithInvoice(userProfile, dt,whereClause, orderByClause);
+				
+		    }else{
+		    	beans = customerServiceImpl.selectCustomer(userProfile, whereClause, orderByClause);
+		    }
+		} catch (GWTCustomException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         boolean success = false;
         JasperPrint jasperPrint;	
         java.util.HashMap params = new java.util.HashMap();

@@ -32,8 +32,9 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param laborRegisterBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public LaborRegisterBean insertLaborRegisterBean(UserProfile userProfile_, LaborRegisterBean laborRegisterBean_){
+	public LaborRegisterBean insertLaborRegisterBean(UserProfile userProfile_, LaborRegisterBean laborRegisterBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -102,7 +103,11 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting LaborRegister Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting LaborRegister Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -113,8 +118,9 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param laborRegisterBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public LaborRegisterBean updateLaborRegisterBean(UserProfile userProfile_, LaborRegisterBean laborRegisterBean_){
+	public LaborRegisterBean updateLaborRegisterBean(UserProfile userProfile_, LaborRegisterBean laborRegisterBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -181,7 +187,11 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating LaborRegister Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating LaborRegister Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -192,8 +202,9 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param laborRegisterBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteLaborRegisterBean(UserProfile userProfile_, LaborRegisterBean laborRegisterBean_){
+	public Boolean deleteLaborRegisterBean(UserProfile userProfile_, LaborRegisterBean laborRegisterBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -215,7 +226,11 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting LaborRegister Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting LaborRegister Record Failed", e);
+		}
 	  }
 
 
@@ -251,7 +266,7 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
-			System.err.println("FiredCustomExceptions");
+			
 			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
 		}else{
 			throw new GWTServerException("Retrieving LaborRegister Records Failed", e);
@@ -272,8 +287,9 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	 * @param clientId_ 
 	 * @param customerId_ 
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public  LaborRegisterBean getLaborRegisterByPrKey(UserProfile userProfile_ , Integer laborRegisterId_ , Integer customerId_ ){
+	public  LaborRegisterBean getLaborRegisterByPrKey(UserProfile userProfile_ , Integer laborRegisterId_ , Integer customerId_ ) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -291,8 +307,11 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving LaborRegister Record Failed", e);
-	
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving LaborRegister Record Failed", e);
+		}
 	  }
 	  return result;
 	}
@@ -339,8 +358,9 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the LaborRegisterBean that was converted
+	 * @throws GWTCustomException 
          */
-	public LaborRegisterBean saveLaborRegisterBean(UserProfile userProfile_, LaborRegisterBean laborRegisterBean_){
+	public LaborRegisterBean saveLaborRegisterBean(UserProfile userProfile_, LaborRegisterBean laborRegisterBean_) throws GWTCustomException{
 		if (  laborRegisterBean_.getLaborRegisterId() ==null ||  laborRegisterBean_.getLaborRegisterId() ==0   || laborRegisterBean_.getClientId() ==null ||  laborRegisterBean_.getClientId() ==0   || laborRegisterBean_.getCustomerId() ==null ||  laborRegisterBean_.getCustomerId() ==0  ){
 			return insertLaborRegisterBean( userProfile_,  laborRegisterBean_);
 		}else{
@@ -353,8 +373,9 @@ public class LaborRegisterServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param laborRegisterBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<LaborRegisterBean> saveLaborRegisterBeanBatch(UserProfile userProfile_, ArrayList<LaborRegisterBean> laborRegisterBeanList_){
+	public ArrayList<LaborRegisterBean> saveLaborRegisterBeanBatch(UserProfile userProfile_, ArrayList<LaborRegisterBean> laborRegisterBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< laborRegisterBeanList_.size(); ndx++){
 			laborRegisterBeanList_.set(ndx, saveLaborRegisterBean(userProfile_,laborRegisterBeanList_.get(ndx)));
 		}

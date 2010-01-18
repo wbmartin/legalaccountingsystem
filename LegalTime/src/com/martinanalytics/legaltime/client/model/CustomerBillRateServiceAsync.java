@@ -3,6 +3,8 @@
 package com.martinanalytics.legaltime.client.model;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBillRateBean;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
+
 import java.util.ArrayList;
 //private final CustomerBillRateServiceAsync customerBillRateService = 
 //	GWT.create(CustomerBillRateService.class);

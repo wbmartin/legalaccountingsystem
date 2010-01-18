@@ -31,8 +31,9 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param expenseRegisterBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public ExpenseRegisterBean insertExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_){
+	public ExpenseRegisterBean insertExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -73,7 +74,11 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting ExpenseRegister Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting ExpenseRegister Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -84,8 +89,9 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param expenseRegisterBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public ExpenseRegisterBean updateExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_){
+	public ExpenseRegisterBean updateExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -140,7 +146,11 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating ExpenseRegister Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating ExpenseRegister Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -151,8 +161,9 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param expenseRegisterBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_){
+	public Boolean deleteExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -174,7 +185,11 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting ExpenseRegister Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting ExpenseRegister Record Failed", e);
+		}
 	  }
 
 
@@ -210,7 +225,7 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 		e.printStackTrace();
 		System.err.println("**************"+e.getMessage());
 		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
-			System.err.println("FiredCustomExceptions");
+			
 			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
 		}else{
 			throw new GWTServerException("Retrieving ExpenseRegister Records Failed", e);
@@ -231,8 +246,9 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	 * @param clientId_ 
 	 * @param customerId_ 
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public  ExpenseRegisterBean getExpenseRegisterByPrKey(UserProfile userProfile_ , Integer expenseRegisterId_ , Integer customerId_ ){
+	public  ExpenseRegisterBean getExpenseRegisterByPrKey(UserProfile userProfile_ , Integer expenseRegisterId_ , Integer customerId_ ) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -250,7 +266,11 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving ExpenseRegister Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving ExpenseRegister Record Failed", e);
+		}
 	
 	  }
 	  return result;
@@ -289,8 +309,9 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the ExpenseRegisterBean that was converted
+	 * @throws GWTCustomException 
          */
-	public ExpenseRegisterBean saveExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_){
+	public ExpenseRegisterBean saveExpenseRegisterBean(UserProfile userProfile_, ExpenseRegisterBean expenseRegisterBean_) throws GWTCustomException{
 		if (  expenseRegisterBean_.getExpenseRegisterId() ==null ||  expenseRegisterBean_.getExpenseRegisterId() ==0   || expenseRegisterBean_.getClientId() ==null ||  expenseRegisterBean_.getClientId() ==0   || expenseRegisterBean_.getCustomerId() ==null ||  expenseRegisterBean_.getCustomerId() ==0  ){
 			return insertExpenseRegisterBean( userProfile_,  expenseRegisterBean_);
 		}else{
@@ -303,8 +324,9 @@ public class ExpenseRegisterServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param expenseRegisterBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<ExpenseRegisterBean> saveExpenseRegisterBeanBatch(UserProfile userProfile_, ArrayList<ExpenseRegisterBean> expenseRegisterBeanList_){
+	public ArrayList<ExpenseRegisterBean> saveExpenseRegisterBeanBatch(UserProfile userProfile_, ArrayList<ExpenseRegisterBean> expenseRegisterBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< expenseRegisterBeanList_.size(); ndx++){
 			expenseRegisterBeanList_.set(ndx, saveExpenseRegisterBean(userProfile_,expenseRegisterBeanList_.get(ndx)));
 		}

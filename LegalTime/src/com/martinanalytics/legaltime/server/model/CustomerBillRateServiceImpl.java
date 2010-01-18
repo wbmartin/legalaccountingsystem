@@ -12,6 +12,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBillRateBean;
 import com.martinanalytics.legaltime.client.model.CustomerBillRateService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -30,8 +31,9 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param customerBillRateBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public CustomerBillRateBean insertCustomerBillRateBean(UserProfile userProfile_, CustomerBillRateBean customerBillRateBean_){
+	public CustomerBillRateBean insertCustomerBillRateBean(UserProfile userProfile_, CustomerBillRateBean customerBillRateBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -53,7 +55,11 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting CustomerBillRate Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting CustomerBillRate Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -64,8 +70,9 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param customerBillRateBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public CustomerBillRateBean updateCustomerBillRateBean(UserProfile userProfile_, CustomerBillRateBean customerBillRateBean_){
+	public CustomerBillRateBean updateCustomerBillRateBean(UserProfile userProfile_, CustomerBillRateBean customerBillRateBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -89,7 +96,11 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating CustomerBillRate Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating CustomerBillRate Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -100,8 +111,9 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param customerBillRateBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteCustomerBillRateBean(UserProfile userProfile_, CustomerBillRateBean customerBillRateBean_){
+	public Boolean deleteCustomerBillRateBean(UserProfile userProfile_, CustomerBillRateBean customerBillRateBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -122,7 +134,11 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting CustomerBillRate Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting CustomerBillRate Record Failed", e);
+		}
 	  }
 
 
@@ -138,8 +154,9 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< CustomerBillRateBean> selectCustomerBillRate(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< CustomerBillRateBean> selectCustomerBillRate(UserProfile userProfile_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -156,7 +173,11 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving CustomerBillRate Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving CustomerBillRate Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}
@@ -172,8 +193,9 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	 * @param customerBillRateId_ 
 	 * @param clientId_ 
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public  CustomerBillRateBean getCustomerBillRateByPrKey(UserProfile userProfile_ , Integer customerBillRateId_ ){
+	public  CustomerBillRateBean getCustomerBillRateByPrKey(UserProfile userProfile_ , Integer customerBillRateId_ ) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -190,7 +212,11 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving CustomerBillRate Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving CustomerBillRate Record Failed", e);
+		}
 	
 	  }
 	  return result;
@@ -218,8 +244,9 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the CustomerBillRateBean that was converted
+	 * @throws GWTCustomException 
          */
-	public CustomerBillRateBean saveCustomerBillRateBean(UserProfile userProfile_, CustomerBillRateBean customerBillRateBean_){
+	public CustomerBillRateBean saveCustomerBillRateBean(UserProfile userProfile_, CustomerBillRateBean customerBillRateBean_) throws GWTCustomException{
 		if (  customerBillRateBean_.getCustomerBillRateId() ==null ||  customerBillRateBean_.getCustomerBillRateId() ==0   || customerBillRateBean_.getClientId() ==null ||  customerBillRateBean_.getClientId() ==0  ){
 			return insertCustomerBillRateBean( userProfile_,  customerBillRateBean_);
 		}else{
@@ -232,8 +259,9 @@ public class CustomerBillRateServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param customerBillRateBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<CustomerBillRateBean> saveCustomerBillRateBeanBatch(UserProfile userProfile_, ArrayList<CustomerBillRateBean> customerBillRateBeanList_){
+	public ArrayList<CustomerBillRateBean> saveCustomerBillRateBeanBatch(UserProfile userProfile_, ArrayList<CustomerBillRateBean> customerBillRateBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< customerBillRateBeanList_.size(); ndx++){
 			customerBillRateBeanList_.set(ndx, saveCustomerBillRateBean(userProfile_,customerBillRateBeanList_.get(ndx)));
 		}

@@ -13,6 +13,7 @@ import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.CustomerService;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 import com.martinanalytics.legaltime.server.GWTServerException;
 /**
@@ -31,8 +32,9 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param customerBean_ the bean to add
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public CustomerBean insertCustomerBean(UserProfile userProfile_, CustomerBean customerBean_){
+	public CustomerBean insertCustomerBean(UserProfile userProfile_, CustomerBean customerBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -81,7 +83,11 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Inserting Customer Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Inserting Customer Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -92,8 +98,9 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param customerBean_ the bean to update, new values come through this bean
          * @return the updated bean
+	 * @throws GWTCustomException 
 	 */
-	public CustomerBean updateCustomerBean(UserProfile userProfile_, CustomerBean customerBean_){
+	public CustomerBean updateCustomerBean(UserProfile userProfile_, CustomerBean customerBean_) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -149,7 +156,11 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {
 		e.printStackTrace();
 		result = "FAIL";
-		throw new GWTServerException("Updating Customer Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Updating Customer Record Failed", e);
+		}
 	  }
 	  return resultList.get(0);
 	}
@@ -160,8 +171,9 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param customerBean_ the bean to delete, only primary keys value
          * @return true if the delete was successful
+	 * @throws GWTCustomException 
 	 */
-	public Boolean deleteCustomerBean(UserProfile userProfile_, CustomerBean customerBean_){
+	public Boolean deleteCustomerBean(UserProfile userProfile_, CustomerBean customerBean_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -182,7 +194,11 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  }catch (Exception e) {	
 		e.printStackTrace();
 		result = false;
-		throw new GWTServerException("Deleting Customer Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Deleting Customer Record Failed", e);
+		}
 	  }
 
 
@@ -198,8 +214,9 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< CustomerBean> selectCustomer(UserProfile userProfile_, String whereClause_, String orderByClause_){
+	public ArrayList< CustomerBean> selectCustomer(UserProfile userProfile_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -216,7 +233,11 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving Customer Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving Customer Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}
@@ -228,8 +249,9 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	 * @param whereClause_ the filter to apply to the list, should begin with "where"
 	 * @param orderByClause_ the sorting order in standard SQL, should being with "order by"
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList< CustomerBean> selectCustomerWithInvoice(UserProfile userProfile_,java.util.Date invoiceDt_, String whereClause_, String orderByClause_){
+	public ArrayList< CustomerBean> selectCustomerWithInvoice(UserProfile userProfile_,java.util.Date invoiceDt_, String whereClause_, String orderByClause_) throws GWTCustomException{
 	  int ndx =1;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -248,7 +270,11 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving Invoiced Customer Records Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving Invoiced Customer Records Failed", e);
+		}
 	  }
 	  return resultList;
 	}
@@ -264,8 +290,9 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	 * @param customerId_ 
 	 * @param clientId_ 
          * @return an arraylist of the beans
+	 * @throws GWTCustomException 
 	 */
-	public  CustomerBean getCustomerByPrKey(UserProfile userProfile_ , Integer customerId_ ){
+	public  CustomerBean getCustomerByPrKey(UserProfile userProfile_ , Integer customerId_ ) throws GWTCustomException{
 	  int ndx =0;
 	  PreparedStatement ps;
 	  ResultSet rs;
@@ -282,7 +309,11 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();
-		throw new GWTServerException("Retrieving Customer Record Failed", e);
+		if(e.getMessage().equals("ERROR: Invalid Session -- Access Denied")){
+			throw new GWTCustomException("ERROR: Invalid Session -- Access Denied");
+		}else{
+			throw new GWTServerException("Retrieving Customer Record Failed", e);
+		}
 	
 	  }
 	  return result;
@@ -323,8 +354,9 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	 * Convert a result set a bean
          * @param rs the result set to be converted
 	 * @return the CustomerBean that was converted
+	 * @throws GWTCustomException 
          */
-	public CustomerBean saveCustomerBean(UserProfile userProfile_, CustomerBean customerBean_){
+	public CustomerBean saveCustomerBean(UserProfile userProfile_, CustomerBean customerBean_) throws GWTCustomException{
 		if (  customerBean_.getCustomerId() ==null ||  customerBean_.getCustomerId() ==0   || customerBean_.getClientId() ==null ||  customerBean_.getClientId() ==0  ){
 			return insertCustomerBean( userProfile_,  customerBean_);
 		}else{
@@ -337,8 +369,9 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	 * @param userProfile_ the credentials to use for authentication and authorization
 	 * @param customerBeanList_ the list of beans to save
          * @return an arraylist of the beans, updated with primary keys and last updates.
+	 * @throws GWTCustomException 
 	 */
-	public ArrayList<CustomerBean> saveCustomerBeanBatch(UserProfile userProfile_, ArrayList<CustomerBean> customerBeanList_){
+	public ArrayList<CustomerBean> saveCustomerBeanBatch(UserProfile userProfile_, ArrayList<CustomerBean> customerBeanList_) throws GWTCustomException{
 		for(int ndx =0; ndx< customerBeanList_.size(); ndx++){
 			customerBeanList_.set(ndx, saveCustomerBean(userProfile_,customerBeanList_.get(ndx)));
 		}
