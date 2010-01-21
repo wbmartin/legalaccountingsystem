@@ -259,7 +259,7 @@ class PaymentLogComposite extends Composite{
 		//nbrAmount.setPropertyEditorType(Integer.class);
 		nbrAmount.setFireChangeEventOnSetValue(true);
 		//nbrAmount.setAllowBlank(false);
-		nbrAmount.setAutoValidate(true);
+		nbrAmount.setAutoValidate(false);
 		//nbrAmount.setVisible(false);
 		paymentLogFormPanel.add(nbrAmount);
 //---------------------------------------------------------------
@@ -271,7 +271,7 @@ class PaymentLogComposite extends Composite{
 		txtDescription.setName("description");
 		txtDescription.setFireChangeEventOnSetValue(true);
 		//txtDescription.setRegex("");
-		//txtDescription.setAutoValidate(true);
+		txtDescription.setAutoValidate(false);
 		//txtDescription.setAllowBlank(false);
 		//txtDescription.setVisible(false);
 		paymentLogFormPanel.add(txtDescription);
@@ -280,13 +280,13 @@ class PaymentLogComposite extends Composite{
 
 
 //---------------------------------------------------------------
-		dtfEffectiveDt.setFieldLabel("EffectiveDt");
+		dtfEffectiveDt.setFieldLabel("Date");
 		dtfEffectiveDt.setName("effectiveDt");
 		//dtfEffectiveDt.setAllowBlank(false);
 		dtfEffectiveDt.setFireChangeEventOnSetValue(true);
 		
 		//dtfEffectiveDt.setRegex("");	
-		//dtfEffectiveDt.setAutoValidate(true);
+		dtfEffectiveDt.setAutoValidate(false);
 		//dtfEffectiveDt.setVisible(false);
 		paymentLogFormPanel.add(dtfEffectiveDt);
 //---------------------------------------------------------------

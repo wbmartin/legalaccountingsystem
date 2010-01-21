@@ -41,11 +41,11 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  String result;
 	  ArrayList<CustomerBean> resultList  = new ArrayList<CustomerBean>();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_iq('CHECK_AUTH',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+		ps = databaseManager.getConnection().prepareStatement("select  suspend_invoice ,contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_iq('CHECK_AUTH',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 		ps.setInt(++ndx, userProfile_.getClientId());
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
-
+		ps.setString(++ndx,customerBean_.getSuspendInvoice() );	
 		try{
   			ps.setDouble(++ndx, customerBean_.getContingencyRate());
   		}catch(NullPointerException nex){
@@ -107,10 +107,11 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  String result;
 	  ArrayList<CustomerBean> resultList  = new ArrayList<CustomerBean>();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_uq('CHECK_AUTH',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+		ps = databaseManager.getConnection().prepareStatement("select  suspend_invoice , contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_uq('CHECK_AUTH',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 		ps.setInt(++ndx,  userProfile_.getClientId());
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
+		ps.setString(++ndx,customerBean_.getSuspendInvoice() );
 		try{
   			ps.setDouble(++ndx, customerBean_.getContingencyRate());
   		}catch(NullPointerException nex){
@@ -223,7 +224,7 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  String result;
 	  ArrayList<CustomerBean> resultList  = new ArrayList<CustomerBean>();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_sq('CHECK_AUTH',?,?,?) " + whereClause_ + " " + orderByClause_+ ";");
+		ps = databaseManager.getConnection().prepareStatement("select   suspend_invoice , contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_sq('CHECK_AUTH',?,?,?) " + whereClause_ + " " + orderByClause_+ ";");
 		ps.setInt(ndx++, userProfile_.getClientId());
 		ps.setString(ndx++,  userProfile_.getUserId());
 		ps.setString(ndx++, userProfile_.getSessionId());
@@ -258,7 +259,7 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  String result;
 	  ArrayList<CustomerBean> resultList  = new ArrayList<CustomerBean>();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_invoiced_sq('CHECK_AUTH',?,?,?,?) " + whereClause_ + " " + orderByClause_+ ";");
+		ps = databaseManager.getConnection().prepareStatement("select  suspend_invoice , contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_invoiced_sq('CHECK_AUTH',?,?,?,?) " + whereClause_ + " " + orderByClause_+ ";");
 		ps.setInt(ndx++, userProfile_.getClientId());
 		ps.setString(ndx++,  userProfile_.getUserId());
 		ps.setString(ndx++, userProfile_.getSessionId());
@@ -298,7 +299,7 @@ public class CustomerServiceImpl extends RemoteServiceServlet
 	  ResultSet rs;
 	  CustomerBean result  = new CustomerBean();
 	  try {
-		ps = databaseManager.getConnection().prepareStatement("select  contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_bypk('CHECK_AUTH',?,?,?, ? );");
+		ps = databaseManager.getConnection().prepareStatement("select  suspend_invoice , contingency_rate , mortgage_amount , active_yn , monthly_bill_rate , bill_type , note , client_since_dt , email , fax , home_phone , work_phone , zip , state , city , address , last_name , first_name , last_update , client_id , customer_id  from customer_bypk('CHECK_AUTH',?,?,?, ? );");
 		ps.setInt(++ndx, userProfile_.getClientId());
 		ps.setString(++ndx,  userProfile_.getUserId());
 		ps.setString(++ndx, userProfile_.getSessionId());
@@ -324,31 +325,54 @@ public class CustomerServiceImpl extends RemoteServiceServlet
          * @param rs the result set to be converted
 	 * @return the CustomerBean that was converted
          */
- 	public CustomerBean decodeRow(ResultSet rs) throws SQLException{
-          CustomerBean bean = new CustomerBean();
-          bean.setContingencyRate(rs.getDouble(1));
-          bean.setMortgageAmount(rs.getDouble(2));
-          bean.setActiveYn(rs.getString(3));
-          bean.setMonthlyBillRate(rs.getDouble(4));
-          bean.setBillType(rs.getString(5));
-          bean.setNote(rs.getString(6));
-          bean.setClientSinceDt(rs.getDate(7));
-          bean.setEmail(rs.getString(8));
-          bean.setFax(rs.getString(9));
-          bean.setHomePhone(rs.getString(10));
-          bean.setWorkPhone(rs.getString(11));
-          bean.setZip(rs.getString(12));
-          bean.setState(rs.getString(13));
-          bean.setCity(rs.getString(14));
-          bean.setAddress(rs.getString(15));
-          bean.setLastName(rs.getString(16));
-          bean.setFirstName(rs.getString(17));
-          bean.setLastUpdate(rs.getTimestamp(18)); 
-          bean.setClientId(rs.getInt(19));
-          bean.setCustomerId(rs.getInt(20));
-          bean.setDisplayName(bean.getLastName() + ", " + bean.getFirstName());
-          return bean;
-        }
+     	public CustomerBean decodeRow(ResultSet rs) throws SQLException{
+     		  java.util.Date nullDate = new java.util.Date(0);
+     	          CustomerBean bean = new CustomerBean();
+     	          bean.setSuspendInvoice(rs.getString(1));
+     	            if(rs.wasNull()){bean.setSuspendInvoice(null);}
+     	          bean.setContingencyRate(rs.getDouble(2));
+     	            if(rs.wasNull()){bean.setContingencyRate(null);}
+     	          bean.setMortgageAmount(rs.getDouble(3));
+     	            if(rs.wasNull()){bean.setMortgageAmount(null);}
+     	          bean.setActiveYn(rs.getString(4));
+     	            if(rs.wasNull()){bean.setActiveYn(null);}
+     	          bean.setMonthlyBillRate(rs.getDouble(5));
+     	            if(rs.wasNull()){bean.setMonthlyBillRate(null);}
+     	          bean.setBillType(rs.getString(6));
+     	            if(rs.wasNull()){bean.setBillType(null);}
+     	          bean.setNote(rs.getString(7));
+     	            if(rs.wasNull()){bean.setNote(null);}
+     	          bean.setClientSinceDt(rs.getDate(8));
+     	            if(rs.wasNull()){bean.setClientSinceDt(null);}
+     	          bean.setEmail(rs.getString(9));
+     	            if(rs.wasNull()){bean.setEmail(null);}
+     	          bean.setFax(rs.getString(10));
+     	            if(rs.wasNull()){bean.setFax(null);}
+     	          bean.setHomePhone(rs.getString(11));
+     	            if(rs.wasNull()){bean.setHomePhone(null);}
+     	          bean.setWorkPhone(rs.getString(12));
+     	            if(rs.wasNull()){bean.setWorkPhone(null);}
+     	          bean.setZip(rs.getString(13));
+     	            if(rs.wasNull()){bean.setZip(null);}
+     	          bean.setState(rs.getString(14));
+     	            if(rs.wasNull()){bean.setState(null);}
+     	          bean.setCity(rs.getString(15));
+     	            if(rs.wasNull()){bean.setCity(null);}
+     	          bean.setAddress(rs.getString(16));
+     	            if(rs.wasNull()){bean.setAddress(null);}
+     	          bean.setLastName(rs.getString(17));
+     	            if(rs.wasNull()){bean.setLastName(null);}
+     	          bean.setFirstName(rs.getString(18));
+     	            if(rs.wasNull()){bean.setFirstName(null);}
+     	          bean.setLastUpdate(rs.getTimestamp(19));
+     	            if(bean.getLastUpdate().equals(nullDate)){bean.setLastUpdate(null);} 
+     	          bean.setClientId(rs.getInt(20));
+     	            if(rs.wasNull()){bean.setClientId(null);}
+     	          bean.setCustomerId(rs.getInt(21));
+     	            if(rs.wasNull()){bean.setCustomerId(null);}
+     	           bean.setDisplayName(bean.getLastName() + ", " + bean.getFirstName());
+     	          return bean;
+     	        }
 
 	/**
 	 * Convert a result set a bean
