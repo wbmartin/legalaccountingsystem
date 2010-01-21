@@ -744,6 +744,9 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   				}
   		});
     }
+    public Integer getPrimaryViewSelectedCustomer(){
+    	return customerView.getGrid().getSelectionModel().getSelectedItem().getCustomerId();
+    }
     
     public void addCustomer(){
     	CustomerBean customerTableModelBean  = new CustomerBean();
@@ -765,6 +768,8 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
 		customerTableModelBean.setLastUpdate(new java.util.Date());
 		customerTableModelBean.setClientId(0);
 		customerTableModelBean.setCustomerId(0);
+		customerTableModelBean.setMortgageAmount(0D);
+		customerTableModelBean.setContingencyRate(0D);
 		customerView.getStore().insert(customerTableModelBean, 0);
         Record record = customerView.getStore().getRecord(customerView.getStore().getAt(0));
         record.set("firstName","Customer");
@@ -774,12 +779,7 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
     }
     
     public void setCustomerList(ArrayList<CustomerBean> customerBeans_){
-    	//Log.debug("Set Customer List Called " );
-//    	  List <CustomerBean> customerTableModelDataList = new ArrayList <CustomerBean>();
-//    	  for(int ndx = 0; ndx<customerBeans_.size(); ndx++){
-//    		  
-//    		  customerTableModelDataList.add(new CustomerBean(customerBeans_.get(ndx)));
-//    	  }
+
     	  customerView.getStore().removeAll();
     	  customerView.getStore().clearFilters();
     	  customerView.getStore().add(customerBeans_);

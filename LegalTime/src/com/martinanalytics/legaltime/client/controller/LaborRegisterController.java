@@ -16,6 +16,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.ServerExcpetionHandler;
@@ -29,6 +30,8 @@ import com.martinanalytics.legaltime.client.model.bean.LaborRegisterBean;
 import com.martinanalytics.legaltime.client.view.LaborRegisterView;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 import com.extjs.gxt.ui.client.store.Record;
 import com.martinanalytics.legaltime.client.widget.AppContainer;
@@ -51,6 +54,7 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
   private java.util.Date endTimeHolder;  //Holder variables for timestamps  private java.util.Date startTimeHolder;  //Holder variables for timestamps  private java.util.Date lastUpdateHolder;  //Holder variables for timestamps
   private AppNotifyObject notifier = new AppNotifyObject();
   final Dialog laborRegisterDialog =new Dialog();
+  Timer t;
   /**
  * Primary constructor, only called by getInstance, hence protected
  * @param masterController_
@@ -62,6 +66,11 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 	//laborRegisterView.getLaborRegisterTable().getNotifier().addAppEventListener(this);
 	userProfile = UserProfile.getInstance();
 	createLaborRegisterDialog();
+	 t = new Timer() {
+	      public void run() {
+	    	  laborRegisterView.clearAllInvalids();
+	      }
+	    };
   }
 
 /**
@@ -379,239 +388,7 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 		});
   }
 
-/**
- * updates the UI with the bean parameter
- */
-//  public void synchBeanToDisplay(LaborRegisterBean laborRegisterBean_){
-//
-//
-//    try{
-//	laborRegisterBean_.setUserId(laborRegisterView.getTxtUserId().getValue());
-//    }catch(Exception e){
-//		
-//    }
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setInvoiceId((Integer)laborRegisterView.getNbrInvoiceId().getValue());
-//    }catch(Exception e){
-//		
-//    }	
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setBillRate((Double)laborRegisterView.getNbrBillRate().getValue());
-//    }catch(Exception e){
-//		
-//    }	
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setInvoiceable(laborRegisterView.getTxtInvoiceable().getValue());
-//    }catch(Exception e){
-//		
-//    }
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setActivityDate(laborRegisterView.getDtfActivityDate().getValue());
-//    }catch(Exception e){
-//		
-//    }
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setEndTime(laborRegisterView.getDtfEndTime().getValue());
-//    }catch(Exception e){
-//		
-//    }
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setStartTime(laborRegisterView.getDtfStartTime().getValue());
-//    }catch(Exception e){
-//		
-//    }
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setMinuteCount((Integer)laborRegisterView.getNbrMinuteCount().getValue());
-//    }catch(Exception e){
-//		
-//    }	
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setDescription(laborRegisterView.getTxtDescription().getValue());
-//    }catch(Exception e){
-//		
-//    }
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setLastUpdate(laborRegisterView.getDtfLastUpdate().getValue());
-//    }catch(Exception e){
-//		
-//    }
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setCustomerId((Integer)laborRegisterView.getNbrCustomerId().getValue());
-//    }catch(Exception e){
-//		
-//    }	
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setClientId((Integer)laborRegisterView.getNbrClientId().getValue());
-//    }catch(Exception e){
-//		
-//    }	
-// 
-//
-//
-//
-//
-//   
-//
-//
-//    try{
-//	laborRegisterBean_.setLaborRegisterId((Integer)laborRegisterView.getNbrLaborRegisterId().getValue());
-//    }catch(Exception e){
-//		
-//    }	
-// 
-//
-//
-//
-//
-//   
-// 
-//
-//  }
-///**
-// * updates the bean parameter with values in the UI
-// */
-//  public void synchDisplayToBean(LaborRegisterBean laborRegisterBean_){
-// 	laborRegisterView.getTxtUserId().setValue(laborRegisterBean_.getUserId());
-// 
-//
-//
-//	laborRegisterView.getNbrInvoiceId().setValue(laborRegisterBean_.getInvoiceId());
-// 
-//
-//
-//	laborRegisterView.getNbrBillRate().setValue(laborRegisterBean_.getBillRate());	
-// 
-//
-//
-// 	laborRegisterView.getTxtInvoiceable().setValue(laborRegisterBean_.getInvoiceable());
-// 
-//
-//
-//	laborRegisterView.getDtfActivityDate().setValue(laborRegisterBean_.getActivityDate());
-// 
-//
-//
-//	laborRegisterView.getDtfEndTime().setValue(laborRegisterBean_.getEndTime());
-// 
-//
-//
-//	laborRegisterView.getDtfStartTime().setValue(laborRegisterBean_.getStartTime());
-// 
-//
-//
-//	laborRegisterView.getNbrMinuteCount().setValue(laborRegisterBean_.getMinuteCount());
-// 
-//
-//
-// 	laborRegisterView.getTxtDescription().setValue(laborRegisterBean_.getDescription());
-// 
-//
-//
-//	laborRegisterView.getDtfLastUpdate().setValue(laborRegisterBean_.getLastUpdate());
-// 
-//
-//
-//	laborRegisterView.getNbrCustomerId().setValue(laborRegisterBean_.getCustomerId());
-// 
-//
-//
-//	laborRegisterView.getNbrClientId().setValue(laborRegisterBean_.getClientId());
-// 
-//
-//
-//	laborRegisterView.getNbrLaborRegisterId().setValue(laborRegisterBean_.getLaborRegisterId());
-// 
-//
-//
-//  }
+
   
   public void createLaborRegisterDialog(){
 	  
@@ -622,6 +399,7 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
   	  laborRegisterDialog.setClosable(false);
   	  laborRegisterDialog.getButtonById(Dialog.CANCEL).setText("Home");
   	  laborRegisterDialog.add(laborRegisterView.getLaborRegisterFormPanel());
+  	  laborRegisterView.clearAllInvalids();
   	  laborRegisterDialog.getButtonById(Dialog.CANCEL).addSelectionListener(new SelectionListener<ButtonEvent>() { 
   		
   		  @Override  
@@ -665,7 +443,7 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 	  addLaborRegisterBean();
 
 	  laborRegisterDialog.show();
-	  
+	  laborRegisterView.clearAllInvalids();
   }
   
   public void addLaborRegisterBean(){
@@ -679,6 +457,8 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 	  //laborRegisterView.getCboCustomerId().clearSelections();
 	  laborRegisterView.getStore().insert(bean, 0);
 	  laborRegisterView.getFormBindings().bind(laborRegisterView.getStore().getAt(0));
+	  
+	    t.schedule(500);
 
   }
 

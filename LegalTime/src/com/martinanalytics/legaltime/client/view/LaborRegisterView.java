@@ -78,7 +78,7 @@ public class LaborRegisterView extends AppEventProducer{
 		AlternateComboBoxBinding bindCustId = new AlternateComboBoxBinding(formBindings, cboCustomerId);
 		AlternateComboBoxBinding binduserId = new AlternateComboBoxBinding(formBindings, cboUserId);
 		formBindings.setStore(store); 
-
+		
 //-----------------------
 	}
 	/**
@@ -193,7 +193,7 @@ class LaborRegisterComposite extends Composite{
 		laborRegisterFormPanel.setWidth(650);
 	
 		createControls();
-		
+		//laborRegisterFormPanel.isv
 
 	//	initWidget(vpPrimary);
 		VerticalPanel vp = new VerticalPanel();
@@ -382,6 +382,16 @@ class LaborRegisterComposite extends Composite{
 //					nbrBillRate.setAutoValidate(true);
 					nbrBillRate.setVisible(false);
 					laborRegisterFormPanel.add(nbrBillRate);
+//					Button cmdTest = new Button("test");
+//					cmdTest.addSelectionListener(new SelectionListener<ButtonEvent>() {
+//						
+//						@Override
+//						public void componentSelected(ButtonEvent ce_) {
+//							clearAllInvalids();
+//							
+//						}
+//					});
+//					laborRegisterFormPanel.add(cmdTest);
 //---------------------------------------------------------------
 
 			
@@ -577,6 +587,13 @@ public void setFormBindings(FormBinding formBindings) {
  */
 public FormBinding getFormBindings() {
 	return formBindings;
+	
+}
+public void clearAllInvalids(){
+	txtDescription.clearInvalid();
+	dtfActivityDate.clearInvalid();
+	cboCustomerId.clearInvalid();
+	cboUserId.clearInvalid();
 }
 
 }

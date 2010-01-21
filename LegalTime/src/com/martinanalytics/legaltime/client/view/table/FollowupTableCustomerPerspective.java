@@ -340,7 +340,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	  
 	      @Override  
 	      public void componentSelected(ButtonEvent ce) { 
-	    	  notifier.notifyAppEvent(this, AppMsg.SHOW_FOLLOWUP_EDITOR,"CUSTOMER");
+	    	  
 		    FollowupBean followupBean  = new FollowupBean();
 	  		followupBean.setAssignedUserId(UserProfile.getInstance().getUserId());
 	   		followupBean.setFollowupDescription("!New");
@@ -348,7 +348,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	   		followupBean.setOpenDt(new java.util.Date());
 	   		followupBean.setDueDt(new java.util.Date());
 	   		followupBean.setLastUpdate(new java.util.Date());
-	   		followupBean.setCustomerId(currentCustomerId);
+	   		followupBean.setCustomerId(CustomerController.getInstance(null).getPrimaryViewSelectedCustomer());
 	   		followupBean.setClientId(0);
 	   		followupBean.setFollowupId(0);
 	    	//grid.stopEditing();  

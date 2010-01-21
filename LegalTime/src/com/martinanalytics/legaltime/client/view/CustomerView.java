@@ -12,18 +12,21 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextArea;
+
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import com.martinanalytics.legaltime.client.AppPref;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventProducer;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
+import com.martinanalytics.legaltime.client.model.bean.KeyValuePair;
 
 import com.martinanalytics.legaltime.client.model.bean.UserProfile;
 import com.martinanalytics.legaltime.client.view.table.CustomerTable;
 import com.martinanalytics.legaltime.client.view.table.FollowupTableCustomerPerspective;
 import com.martinanalytics.legaltime.client.view.table.VwCustomerHourlyBillRateTable;
+import com.martinanalytics.legaltime.client.widget.AlternateComboBox;
+import com.martinanalytics.legaltime.client.widget.AlternateComboBoxBinding;
 import com.martinanalytics.legaltime.client.widget.AppContainer;
 import com.martinanalytics.legaltime.client.widget.GXTValidator;
 import com.martinanalytics.legaltime.client.widget.ReportUtil;
@@ -51,6 +54,7 @@ import com.extjs.gxt.ui.client.widget.form.ListField;
 import com.extjs.gxt.ui.client.widget.form.NumberField;
 import com.extjs.gxt.ui.client.widget.form.SimpleComboBox;
 import com.extjs.gxt.ui.client.widget.form.SimpleComboValue;
+import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.form.Validator;
 import com.extjs.gxt.ui.client.widget.form.ComboBox.TriggerAction;
@@ -92,7 +96,7 @@ public class CustomerView extends AppEventProducer{
 	private TextField<String> txtActiveYn = new TextField<String>();
 	private NumberField txtMonthlyBillRate = new NumberField();
 	private SimpleComboBox<String> cboBillType = new SimpleComboBox<String>();
-	private TextField<String> txtNote = new TextField<String>();
+	private TextArea txtNote = new TextArea();
 	private DateField dtpClientSinceDt = new DateField();
 	private TextField<String> txtEmail = new TextField<String>();
 	private TextField<String> txtFax = new TextField<String>();
@@ -107,6 +111,7 @@ public class CustomerView extends AppEventProducer{
 	private TextField<java.util.Date> txtLastUpdate = new TextField<java.util.Date>();
 	private TextField<Integer> txtClientId = new TextField<Integer>();
 	private TextField<Integer> txtCustomerId = new TextField<Integer>();
+	private AlternateComboBox<KeyValuePair> cboSuspendInvoice = new AlternateComboBox<KeyValuePair>("Suspend Invoices","key","suspendInvoice", "value" );
 	//private ListField<CustomerBean> lstCustomerChooser = new ListField<CustomerBean>();
 	private final ListStore<CustomerBean> store = new ListStore<CustomerBean>();
 	private FormBinding formBindings;    
@@ -136,6 +141,11 @@ public class CustomerView extends AppEventProducer{
 		};
 		store.addFilter(storeFilter);
 		store.applyFilters("");
+		ArrayList<KeyValuePair> suspendInvoiceOptions = new ArrayList<KeyValuePair>();
+		suspendInvoiceOptions.add(new KeyValuePair("Y", "Yes"));
+		suspendInvoiceOptions.add(new KeyValuePair("N", "No"));
+		Log.debug("CustomerView: " + suspendInvoiceOptions.get(1).getKey());
+		cboSuspendInvoice.add(suspendInvoiceOptions);
 	}
 	/**
 	 * @return the nbrContingencyRate
@@ -171,7 +181,7 @@ public class CustomerView extends AppEventProducer{
 	/**
 	 * @return the txtNote
 	 */
-	public TextField<String> getTxtNote() {
+	public TextArea getTxtNote() {
 		return txtNote;
 	}
 	/**
@@ -300,6 +310,7 @@ class CustomerComposite extends Composite{
 		formBindings.setStore((Store<CustomerBean>) grid.getStore()); 
 		formBindings.removeFieldBinding((formBindings.getBinding(cboBillType)));
 		formBindings.addFieldBinding(new SimpleComboBoxFieldBinding(cboBillType, "billType"));
+		AlternateComboBoxBinding suspendInvoiiceBinding = new AlternateComboBoxBinding (formBindings, cboSuspendInvoice);
 //-----------------------
 		grid.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);  
 		grid.getSelectionModel().addListener(Events.SelectionChange,  
@@ -517,6 +528,8 @@ class CustomerComposite extends Composite{
 		txtNote.setName("note");
 		txtNote.setWidth(300);
 		txtNote.setHeight(200);
+		
+		
 		getCustomerFormPanel().add(txtNote);
 
 		cboBillType.setFieldLabel("Bill Type");
@@ -603,11 +616,15 @@ class CustomerComposite extends Composite{
 		getCustomerFormPanel().add(txtCustomerId);
 		txtCustomerId.setVisible(false);
 	
-		txtActiveYn.setFieldLabel("Active Yn");
+		txtActiveYn.setFieldLabel("Active ");
 		txtActiveYn.setName("activeYn");
 		txtActiveYn.setFireChangeEventOnSetValue(true);
 		getCustomerFormPanel().add(txtActiveYn);
 		txtActiveYn.setVisible(false);
+		
+		cboSuspendInvoice.setFireChangeEventOnSetValue(true);
+		getCustomerFormPanel().add(cboSuspendInvoice);
+		
 		
 
 	}
