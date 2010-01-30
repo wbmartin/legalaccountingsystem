@@ -42,8 +42,8 @@ public class LegalTime implements EntryPoint {
 					Log.debug("Recieved SessionID: "+userProfile.getSessionId()+ " for event" + event.getValue() );
 					RootPanel.get().clear();
 					RootPanel.get().add(masterController.getPage(AppPages.LOGIN_PAGE));
-				} else	if ((event == null ||!userProfile.isValidSession()) ) {
-					Log.debug("invalid Session.  event:"+ event.getValue() + " sessionid: " + userProfile.getSessionId());
+				} else	if ((event == null || userProfile.getSessionId().equals("") ) ) {//||!userProfile.isValidSession()
+					Log.debug("Null Event Recievedinvalid Session.  event:" + " sessionid: " + userProfile.getSessionId());
 					History.newItem(AppPages.LOGIN_PAGE);
 					
 				}  else{

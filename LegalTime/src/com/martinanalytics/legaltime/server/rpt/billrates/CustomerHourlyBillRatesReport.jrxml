@@ -4,8 +4,9 @@
 	<field name="lastName" class="java.lang.String"/>
 	<field name="displayName" class="java.lang.String"/>
 	<field name="billRate" class="java.lang.Double"/>
+	<field name="customerId" class="java.lang.Integer"/>
 	<group name="ClientName">
-		<groupExpression><![CDATA[$F{firstName}+$F{lastName}]]></groupExpression>
+		<groupExpression><![CDATA[$F{customerId}]]></groupExpression>
 		<groupHeader>
 			<band height="21">
 				<textField>

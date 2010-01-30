@@ -169,7 +169,9 @@ public class InvoiceReportServlet extends HttpServlet{
 		    	   params.put("LaborRecords", getLaborBeans(userProfile_, bean_.getInvoiceId()));
 		    	   params.put("Expenses", getExpenseBeans(userProfile_, bean_.getInvoiceId()));
 		    	   params.put("Payments",getPaymentBeans(userProfile_, bean_.getInvoiceId()));
-		    	   params.put("PreviousBalance",bean_.getPrevBalanceDue());
+		    	   Double prevBalance = bean_.getPrevBalanceDue();
+		    	   if (prevBalance == null){prevBalance =0D;}
+		    	   params.put("PreviousBalance",prevBalance);
 	    	   }
 	       }catch(Exception e){
 	           Log.debug( "Error General Exception getParams"+ e.getMessage());

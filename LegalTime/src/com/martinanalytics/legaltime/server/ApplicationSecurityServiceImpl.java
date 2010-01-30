@@ -10,6 +10,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.martinanalytics.legaltime.client.model.ApplicationSecurityService;
 import com.martinanalytics.legaltime.client.model.SQLGarage;
 import com.martinanalytics.legaltime.client.model.bean.SecurityUserBean;
+import com.martinanalytics.legaltime.client.widget.GWTCustomException;
 import com.martinanalytics.legaltime.server.model.DatabaseManager;
 
 @RemoteServiceRelativePath("applicationSecurity")
@@ -27,7 +28,7 @@ public class ApplicationSecurityServiceImpl
 	/**
 	 * 
 	 */
-	public SecurityUserBean authenticateUser(String userId_, String password_){
+	public SecurityUserBean authenticateUser(String userId_, String password_)throws GWTCustomException{
 		PreparedStatement ps;
 		SecurityUserBean result = new SecurityUserBean();
 		try {
@@ -46,9 +47,9 @@ public class ApplicationSecurityServiceImpl
 				result.setClientId(0);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			result.setClientId(0);
-			throw new GWTServerException("Authentication Failure", e);
+			throw new GWTCustomException("Authentication Failure", e);
 		}
 		System.err.println("SessionID: " +result.getSessionId());
 		return result;

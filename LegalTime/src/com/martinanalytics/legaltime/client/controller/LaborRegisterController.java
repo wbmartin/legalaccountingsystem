@@ -54,7 +54,8 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
   private java.util.Date endTimeHolder;  //Holder variables for timestamps  private java.util.Date startTimeHolder;  //Holder variables for timestamps  private java.util.Date lastUpdateHolder;  //Holder variables for timestamps
   private AppNotifyObject notifier = new AppNotifyObject();
   final Dialog laborRegisterDialog =new Dialog();
-  Timer t;
+ 
+  LaborRegisterBean bean = new LaborRegisterBean();
   /**
  * Primary constructor, only called by getInstance, hence protected
  * @param masterController_
@@ -65,12 +66,9 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 	laborRegisterView.addAppEventListener(this);
 	//laborRegisterView.getLaborRegisterTable().getNotifier().addAppEventListener(this);
 	userProfile = UserProfile.getInstance();
+	laborRegisterView.getFormBindings().bind(bean);
 	createLaborRegisterDialog();
-	 t = new Timer() {
-	      public void run() {
-	    	  laborRegisterView.clearAllInvalids();
-	      }
-	    };
+	
   }
 
 /**
@@ -414,9 +412,12 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 
   		  @Override  
   		  public void componentSelected(ButtonEvent ce) { 
+  			if (laborRegisterView.getLaborRegisterFormPanel().isValid()){
   			  laborRegisterView.updateCalcValues();
   			  saveAllChanges();
+  			  clearValues();
   			  addLaborRegisterBean();
+  			}
   		  }
   	  }
 
@@ -427,38 +428,49 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 
 		  @Override  
 		  public void componentSelected(ButtonEvent ce) { 
-			  laborRegisterDialog.setVisible(false);
-			  laborRegisterView.updateCalcValues();
-			  saveAllChanges();
+			  if (laborRegisterView.getLaborRegisterFormPanel().isValid()){
+				  laborRegisterDialog.setVisible(false);
+				  laborRegisterView.updateCalcValues();
+				  saveAllChanges();
+				  clearValues();
+			  }
 		  }
+
+		
 	  }
 
 	  );
 	  
   }
+  private void clearValues() {
+	  laborRegisterView.getTxtDescription().setValue("");
+	  laborRegisterView.clearAllInvalids();
+		
+	}
   public void showBillableHoursDialog(){  
 	  masterController.getAppContainer().setAppWindowDialog(laborRegisterDialog);
 
-	  laborRegisterView.getStore().removeAll();
+	  
 	  addLaborRegisterBean();
 
 	  laborRegisterDialog.show();
-	  laborRegisterView.clearAllInvalids();
+	  
   }
   
   public void addLaborRegisterBean(){
-	  LaborRegisterBean bean = new LaborRegisterBean();
+	  
 	  bean.setDescription("");
-	  bean.setUserId(UserProfile.getInstance().getUserId());
+	 
 	  bean.setInvoiceable(true);
+	  bean.setLaborRegisterId(null);
 	  //bean.setStartTime(new java.util.Date());
 	  //bean.setEndTime(new java.util.Date());
-	  laborRegisterView.getFormBindings().unbind();
-	  //laborRegisterView.getCboCustomerId().clearSelections();
-	  laborRegisterView.getStore().insert(bean, 0);
-	  laborRegisterView.getFormBindings().bind(laborRegisterView.getStore().getAt(0));
 	  
-	    t.schedule(500);
+	  //laborRegisterView.getCboCustomerId().clearSelections();
+	  
+	  
+	  
+	  
 
   }
 
@@ -466,19 +478,11 @@ public class LaborRegisterController implements AppEventListener, ClickHandler, 
 
   public void saveAllChanges(){
 	  
-  	  List<Record> modified = laborRegisterView.getStore().getModifiedRecords();
-  	  LaborRegisterBean laborRegisterBean;// = new CustomerBean();
+
   	  ArrayList<LaborRegisterBean> batchSave = new ArrayList<LaborRegisterBean>();
-  	  for (Record r : modified) {
-  		 // Log.debug("Identified Modified Record");
-  		  laborRegisterBean = new LaborRegisterBean();
-  		  laborRegisterBean.setProperties(r.getModel().getProperties());
-  		  batchSave.add(laborRegisterBean);
-  		  Log.debug("Labor Register Controller Saving" + laborRegisterBean.getProperties().toString());
-  		  
-  		  
-  	  }
-  		laborRegisterView.getStore().commitChanges();
+
+  	  batchSave.add(bean);
+  		
   		saveLaborRegisterBeanBatch( batchSave );
   		
   		

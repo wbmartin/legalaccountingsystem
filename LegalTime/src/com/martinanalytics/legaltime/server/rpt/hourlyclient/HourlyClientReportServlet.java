@@ -44,7 +44,7 @@ public class HourlyClientReportServlet extends HttpServlet {
 		userProfile.setUserId(request.getParameter("userId"));
 		userProfile.setSessionId(request.getParameter("sessionId"));
 		userProfile.setClientId(Integer.parseInt(request.getParameter("clientId")));
-		String whereClause ="";
+		String whereClause ="where active_yn = 'Y' and bill_type='HOURLY'";
 		String orderByClause ="order by last_name, first_name";
 	    
 		try {

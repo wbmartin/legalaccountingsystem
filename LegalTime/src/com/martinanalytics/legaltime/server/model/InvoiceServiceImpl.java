@@ -9,6 +9,8 @@ package com.martinanalytics.legaltime.server.model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.ArrayList;
 import com.martinanalytics.legaltime.client.model.SQLGarage;
@@ -453,6 +455,7 @@ public ArrayList<Integer> invoiceAllHourlyClients(UserProfile userProfile_, java
 		while(rs.next()){
 		  result = rs.getString(1);
 		}
+		Log.debug(result);
 		String[] resultArray = result.split(",");
 		for( ndx =0;ndx<resultArray.length;ndx++){
 			resultList.add(Integer.parseInt(resultArray[ndx]));
