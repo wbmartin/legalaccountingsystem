@@ -137,7 +137,9 @@ private void createFollowupEditorDialog() {
 		Log.debug("FollowupController: " + owner);
 		showFollowupViewDialog((String)e_.getPayLoad());
 	}else if(e_.getName().equals("FollowupTableOnAttach")){		
-	}else if(e_.getName().equals("FollowupTableOnDetach")){		
+	}else if(e_.getName().equals("FollowupTableOnDetach")){
+	}else if(e_.getName().equals("NoCustomerSelected")){	
+		masterController.notifyUserOfSystemError("No Customer Selected", "Please select a customer");
 	
 	}else{
 		Log.debug("Unexpected AppEvent named" +e_.getName() );

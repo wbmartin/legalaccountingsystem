@@ -50,6 +50,7 @@ import com.martinanalytics.legaltime.client.AppEvent.AppEvent;
 import com.martinanalytics.legaltime.client.AppEvent.AppEventListener;
 import com.martinanalytics.legaltime.client.AppEvent.AppNotifyObject;
 import com.martinanalytics.legaltime.client.controller.CustomerController;
+import com.martinanalytics.legaltime.client.controller.MasterController;
 import com.martinanalytics.legaltime.client.model.UserInfoCache;
 import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.FollowupBean;
@@ -78,7 +79,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	List<ColumnConfig> configs= new ArrayList<ColumnConfig>();
 	ColumnModel cm =new ColumnModel(configs);
 	Grid<FollowupBean> grid= new Grid<FollowupBean>(store, cm);
-	private int currentCustomerId;
+	private Integer currentCustomerId;
 	AlternateComboBoxBinding assignedUserBinding  ;
 	
 	
@@ -340,7 +341,11 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	  
 	      @Override  
 	      public void componentSelected(ButtonEvent ce) { 
-	    	  
+	    	currentCustomerId =  CustomerController.getInstance(null).getPrimaryViewSelectedCustomer();
+	    	if (currentCustomerId == null){
+	    		notifier.notifyAppEvent(this, "NoCustomerSelected");
+	    		return;
+	    	}
 		    FollowupBean followupBean  = new FollowupBean();
 	  		followupBean.setAssignedUserId(UserProfile.getInstance().getUserId());
 	   		followupBean.setFollowupDescription("!New");
@@ -348,7 +353,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	   		followupBean.setOpenDt(new java.util.Date());
 	   		followupBean.setDueDt(new java.util.Date());
 	   		followupBean.setLastUpdate(new java.util.Date());
-	   		followupBean.setCustomerId(CustomerController.getInstance(null).getPrimaryViewSelectedCustomer());
+	   		followupBean.setCustomerId(currentCustomerId);
 	   		followupBean.setClientId(0);
 	   		followupBean.setFollowupId(0);
 	    	//grid.stopEditing();  
@@ -525,6 +530,7 @@ public class FollowupTableCustomerPerspective extends LayoutContainer implements
 	public void onAppEventNotify(AppEvent e_) {
 		if(e_.getName().equals(AppMsg.FOLLOWUP_EDITOR_CLOSING) && ((String)e_.getPayLoad()).equals("CUSTOMER")){
 			  formBindings.unbind();
+			  store.applyFilters("");
 			  grid.getSelectionModel().deselectAll();
 		}else if(e_.getName().equals(AppMsg.FOLLOWUP_EDITOR_CANCELED) && ((String)e_.getPayLoad()).equals("CUSTOMER")){
 			 store.rejectChanges();

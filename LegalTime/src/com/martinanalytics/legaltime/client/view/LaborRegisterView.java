@@ -49,7 +49,7 @@ public class LaborRegisterView extends AppEventProducer{
 	private ContentPanel cp = new ContentPanel(); 
 	//-----------------------
 	private FormBinding formBindings; 
-	private final ListStore<LaborRegisterBean> store = new ListStore<LaborRegisterBean>();
+	//private final ListStore<LaborRegisterBean> store = new ListStore<LaborRegisterBean>();
 	//-----------------------
 
  	private NumberField nbrInvoiceId = new NumberField();
@@ -77,7 +77,7 @@ public class LaborRegisterView extends AppEventProducer{
 		formBindings = new FormBinding(laborRegisterFormPanel, true);
 		AlternateComboBoxBinding bindCustId = new AlternateComboBoxBinding(formBindings, cboCustomerId);
 		AlternateComboBoxBinding binduserId = new AlternateComboBoxBinding(formBindings, cboUserId);
-		formBindings.setStore(store); 
+		
 		
 //-----------------------
 	}
@@ -191,6 +191,7 @@ class LaborRegisterComposite extends Composite{
 		laborRegisterFormPanel.setFrame(true);
 		laborRegisterFormPanel.setHeading("Billing Hours");
 		laborRegisterFormPanel.setWidth(650);
+		laborRegisterFormPanel.setLabelWidth(75);
 	
 		createControls();
 		//laborRegisterFormPanel.isv
@@ -351,6 +352,8 @@ class LaborRegisterComposite extends Composite{
 		//txtDescription.setRegex("");
 		txtDescription.setAutoValidate(false);
 		txtDescription.setAllowBlank(false);
+		txtDescription.addStyleName("LEFT");
+		
 		//txtDescription.setVisible(false);
 		laborRegisterFormPanel.add(txtDescription);
 		
@@ -570,12 +573,7 @@ public void populateUserInfoList(){
 	Log.debug("LaborRegisterView: " +UserInfoCache.getCache().size() );
 	cboUserId.add( UserInfoCache.getCache());//"displayName", "userId",
 }
-/**
- * @return the store
- */
-public ListStore<LaborRegisterBean> getStore() {
-	return store;
-}
+
 /**
  * @param formBindings the formBindings to set
  */

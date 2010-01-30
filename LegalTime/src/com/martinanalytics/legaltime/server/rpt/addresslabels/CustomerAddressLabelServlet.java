@@ -42,7 +42,7 @@ public class CustomerAddressLabelServlet extends HttpServlet {
 		userProfile.setUserId(request.getParameter("userId"));
 		userProfile.setSessionId(request.getParameter("sessionId"));
 		userProfile.setClientId(Integer.parseInt(request.getParameter("clientId")));
-		String whereClause ="";
+		String whereClause ="where active_yn ='Y'";
 		String orderByClause ="order by last_name desc";
 		try {
 		    if(request.getParameter("invoiceOnly")!=null && request.getParameter("invoiceOnly").equals("YES")){

@@ -95,19 +95,20 @@ public class LoginController implements   AppEventListener{
 
 		
 		
-		if(AppPref.TEST_MODE ){
-			userId ="bmartin";
-			passwd ="test";
-		}
+//		if(AppPref.TEST_MODE ){
+//			userId ="testboger";
+//			passwd ="test";
+//		}
 		masterController.getAppContainer().setStatusMessage("Attempting Login");
 		applicationSecurityService.authenticateUser( userId, passwd,
 				new AsyncCallback<SecurityUserBean>(){
 					public void onFailure(Throwable caught) {
 						Log.debug("authenticateUser Failed: " + caught);
-						
+						clearLoginFormPanel();
 						if(!ServerExcpetionHandler.getInstance().handle(caught)){
 
 						}
+						
 						if(type.equals("INITIAL")){
 							loginView.getInitialLoginFormPanel().getSendButton().setEnabled(true);
 						}
@@ -131,12 +132,13 @@ public class LoginController implements   AppEventListener{
 									"Successful Login"
 									, (new java.util.Date().getTime() -startTime.getTime()));
 							notifier.notifyAppEvent(this, "SuccessfulLogin");
-						if(type.equals("INITIAL"))	{
-							Log.debug("Requesting First Page History Change");
-							History.newItem(AppPages.FIRST_PAGE);
-						}else{
-							masterController.secondaryLoginAccepted();
-						}
+							clearLoginFormPanel();	
+							if(type.equals("INITIAL"))	{
+								Log.debug("Requesting First Page History Change");
+								History.newItem(AppPages.FIRST_PAGE);
+							}else{
+								masterController.secondaryLoginAccepted();
+							}
 								
 						}else{
 							masterController.notifyUserOfSystemError("Sorry...","I couldn't validate your credentials.  Please try again.");
@@ -149,6 +151,11 @@ public class LoginController implements   AppEventListener{
 						}
 					}
 		});
+	}
+	
+	public void clearLoginFormPanel(){
+		loginView.getSubLoginFormPanel().getTxtPassword().setValue("");
+		loginView.getSubLoginFormPanel().getTxtUserId().setValue("");
 	}
 	/**
 	 * Handles custom event system events,  all type casting of payloads should happen here.

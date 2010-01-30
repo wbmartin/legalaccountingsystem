@@ -745,7 +745,11 @@ public class CustomerController implements AppEventListener, ClickHandler, Chang
   		});
     }
     public Integer getPrimaryViewSelectedCustomer(){
+    	try{
     	return customerView.getGrid().getSelectionModel().getSelectedItem().getCustomerId();
+    	}catch(NullPointerException nex){
+    		return null;
+    	}
     }
     
     public void addCustomer(){
