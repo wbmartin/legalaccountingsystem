@@ -235,7 +235,7 @@ public class InvoiceTable extends LayoutContainer {
 					public void handleEvent(SelectionChangedEvent<VwInvoiceDisplayBean> be) {
 						if (be.getSelection().size()>0){
 						Record selected = grid.getStore().getRecord(be.getSelection().get(0));
-						if( selected.get("selected")==null ||selected.get("selected").equals("false")){
+						if( selected.get("selected")==null ||selected.get("selected").equals(false)){
 							selected.set("selected",true);	
 						}else{
 							selected.set("selected",false);

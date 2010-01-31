@@ -418,6 +418,27 @@ class CustomerComposite extends Composite{
 			    	  
 			      }
 		    });
+		    
+		    
+		    
+		    
+		    final Button cmdCustomerHistory = new Button("History Report");
+		    cmdCustomerHistory.setBorders(true);
+		    cmdCustomerHistory.addListener(Events.Select, new Listener<ComponentEvent>() {
+		        public void handleEvent(ComponentEvent be) {
+		        	try{
+			        	HashMap params = new HashMap();
+			        	Integer selectedCustomer = grid.getSelectionModel().getSelection().get(0).getCustomerId();
+			        	params.put("customerId", selectedCustomer);
+			        	
+			        	ReportUtil.showReport("./CustomerHistoryReportServlet",UserProfile.getInstance(), params);
+		        	}catch(Exception e){
+		        		
+		        	}
+
+		          }}
+		    );
+		    toolBar.add(cmdCustomerHistory);
 		    //-----------------------
 		    
 		    //-----------------

@@ -1,4 +1,4 @@
-package com.martinanalytics.legaltime.server.rpt.invoice;
+package com.martinanalytics.legaltime.server.rpt.customerhistory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,6 +27,7 @@ import com.google.gwt.dev.js.rhino.Context;
 import com.martinanalytics.legaltime.client.model.ExpenseInvoiceItemService;
 import com.martinanalytics.legaltime.client.model.LaborInvoiceItemService;
 import com.martinanalytics.legaltime.client.model.VwInvoiceDisplayService;
+import com.martinanalytics.legaltime.client.model.bean.CustomerBean;
 import com.martinanalytics.legaltime.client.model.bean.ExpenseInvoiceItemBean;
 import com.martinanalytics.legaltime.client.model.bean.ExpenseRegisterBean;
 import com.martinanalytics.legaltime.client.model.bean.InvoiceBean;
@@ -48,17 +49,19 @@ import com.martinanalytics.legaltime.server.model.PaymentLogServiceImpl;
 import com.martinanalytics.legaltime.server.model.VwInvoiceDisplayServiceImpl;
 import com.martinanalytics.legaltime.server.model.VwLaborInvoiceItemDisplayServiceImpl;
 
-public class InvoiceReportServlet extends HttpServlet{
+public class CustomerHistoryReportServlet extends HttpServlet{
 	// static LaborRegisterServiceImpl laborRegisterService = new LaborRegisterServiceImpl();
 	static VwLaborInvoiceItemDisplayServiceImpl laborInvoiceItemService = new VwLaborInvoiceItemDisplayServiceImpl();
 	static ExpenseInvoiceItemServiceImpl expenseInvoiceItemService = new ExpenseInvoiceItemServiceImpl();
-	// static ExpenseRegisterServiceImpl expenseRegisterService = new ExpenseRegisterServiceImpl();
-		static PaymentLogServiceImpl paymentLogService = new PaymentLogServiceImpl();
+	static PaymentLogServiceImpl paymentLogService = new PaymentLogServiceImpl();
+	 //static ExpenseRegisterServiceImpl expenseRegisterService = new ExpenseRegisterServiceImpl();
 	// static InvoiceServiceImpl invoiceService = new InvoiceServiceImpl();
 	// static CustomerServiceImpl customerService = new CustomerServiceImpl();
 	 
-	 static VwInvoiceDisplayServiceImpl vwInvoiceDisplayService = new VwInvoiceDisplayServiceImpl();
-	private static double paymentTotal;
+	 static CustomerServiceImpl customerService = new CustomerServiceImpl();
+	private static Double expenseTotal;
+	private static double laborTotal;
+	private static Double paymentTotal;
 	 static final String REPORT_PATH ="/WEB-INF/classes/com/martinanalytics/legaltime/server/rpt/";
 	public void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -68,13 +71,13 @@ public class InvoiceReportServlet extends HttpServlet{
 		userProfile.setSessionId(request.getParameter("sessionId"));
 		userProfile.setClientId(Integer.parseInt(request.getParameter("clientId")));
         boolean success = false;
-        ArrayList<VwInvoiceDisplayBean> beans = new ArrayList<VwInvoiceDisplayBean>();
+        ArrayList<CustomerBean> beans = new ArrayList<CustomerBean>();
 		try{
-		  Integer invoiceId = Integer.parseInt(request.getParameter("invoiceId"));
-		  beans.add(vwInvoiceDisplayService.selectVwInvoiceDisplay(userProfile, "where invoice_id= " +invoiceId, "").get(0));
+		  Integer customerId = Integer.parseInt(request.getParameter("customerId"));
+		  beans.add(customerService.selectCustomer(userProfile, "where customer_id= " +customerId, "").get(0));
 		}catch(Exception e){
 			try {
-				beans = vwInvoiceDisplayService.selectVwInvoiceDisplay(userProfile, "where invoice_id in (" +request.getParameter("invoiceIdList") +")", "");
+				beans = customerService.selectCustomer(userProfile, "where customer_id in (" +request.getParameter("invoiceIdList") +")", "");
 			} catch (GWTCustomException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -83,7 +86,7 @@ public class InvoiceReportServlet extends HttpServlet{
 
         
         
-        ArrayList<JasperPrint> jasperPrintList = buildInvoices(userProfile, beans);
+        ArrayList<JasperPrint> jasperPrintList = buildCustomerHistory(userProfile, beans);
         try {
         	
 			ServletOutputStream outputStream = response.getOutputStream();
@@ -107,30 +110,26 @@ public class InvoiceReportServlet extends HttpServlet{
         
 	}
 	
-	private ArrayList<JasperPrint> buildInvoices(UserProfile userProfile_, ArrayList<VwInvoiceDisplayBean> beans){
+	private ArrayList<JasperPrint> buildCustomerHistory(UserProfile userProfile_, ArrayList<CustomerBean> beans){
 		 
 		InputStream jasperFile ;//= this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice.jasper");
 		//InputStream jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice_ExpenseSubReport.jasper");
-		ArrayList<VwInvoiceDisplayBean> single = new ArrayList<VwInvoiceDisplayBean>();
+		ArrayList<CustomerBean> single = new ArrayList<CustomerBean>();
 		ArrayList<JasperPrint> result = new ArrayList<JasperPrint>();
 
 		
-		for(VwInvoiceDisplayBean bean :beans){
+		for(CustomerBean bean :beans){
 			single.clear();
 			single.add(bean);
 			
-			System.err.println("Invoice ID: " +bean.getInvoiceId());
+			//System.err.println("Invoice ID: " +bean.getInvoiceId());
 			try {
-				if(bean.getBillType().equals("HOURLY")){
-					jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerInvoice.jasper");
-					result.add(JasperFillManager.fillReport(
-						    jasperFile, getParams(userProfile_, bean),new JRBeanCollectionDataSource(single,false)));
-				}else{
+				
 					
-					jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "invoice/BogerMonthlyInvoice.jasper");
+					jasperFile = this.getServletContext().getResourceAsStream(REPORT_PATH + "customerhistory/BogerCustomerHistory.jasper");
 					result.add(JasperFillManager.fillReport(
 						    jasperFile, getParams(userProfile_, bean),new JRBeanCollectionDataSource(single,false)));
-				}
+				
 			} catch (JRException e) {
 				
 				e.printStackTrace();
@@ -144,45 +143,49 @@ public class InvoiceReportServlet extends HttpServlet{
 	
 	
 	
-	 public static JRDataSource  getExpenseBeans(UserProfile userProfile_, int invoiceId_) throws GWTCustomException{
-		   ArrayList<ExpenseInvoiceItemBean> expenseLines = expenseInvoiceItemService.selectExpenseInvoiceItem(userProfile_, "where invoice_id = " + invoiceId_, "order by expense_dt");
+	 public static JRDataSource  getExpenseBeans(UserProfile userProfile_, int customerId_) throws GWTCustomException{
+		   ArrayList<ExpenseInvoiceItemBean> expenseLines = expenseInvoiceItemService.selectExpenseInvoiceItem(userProfile_, "where customer_id = " + customerId_, "order by expense_dt");
+		   expenseTotal = 0D;
+		   for(int ndx =0; ndx< expenseLines.size();ndx++){
+			   expenseTotal += expenseLines.get(ndx).getAmount();
+		   }
 	       return new JRBeanCollectionDataSource(expenseLines);
 
 	 }
-	 public static JRDataSource  getLaborBeans(UserProfile userProfile_, int invoiceId_) throws GWTCustomException{
-	       ArrayList<VwLaborInvoiceItemDisplayBean> laborLines = laborInvoiceItemService.selectVwLaborInvoiceItemDisplay(userProfile_, "where invoice_id = " + invoiceId_, "order by activity_dt");
-	       
+	 public static JRDataSource  getLaborBeans(UserProfile userProfile_, int customerId_) throws GWTCustomException{
+	       ArrayList<VwLaborInvoiceItemDisplayBean> laborLines = laborInvoiceItemService.selectVwLaborInvoiceItemDisplay(userProfile_, "where customer_id = " + customerId_, "order by activity_dt");
+	       laborTotal = 0D;
+	       for(int ndx =0; ndx< laborLines.size();ndx++){
+			   laborTotal += laborLines.get(ndx).getHoursBilled()* laborLines.get(ndx).getBillRate();
+		   }
 	       return new JRBeanCollectionDataSource(laborLines);
 
 	 }
 	 
-	 public static JRDataSource  getPaymentBeans(UserProfile userProfile_, int invoiceId_) throws GWTCustomException{
-		 ArrayList<PaymentLogBean> paymentLines = paymentLogService.selectPaymentLog(userProfile_, "where invoice_id = " + invoiceId_, "order by effective_dt");
-		 paymentTotal =0D;
-		 for(int ndx=0; ndx< paymentLines.size();ndx++){
-			 paymentTotal += paymentLines.get(ndx).getAmount();
-		 }
-		 Log.debug("PaymentTotal: " + paymentTotal );
+	 public static JRDataSource  getPaymentBeans(UserProfile userProfile_, int customerId_)throws GWTCustomException{
+	       ArrayList<PaymentLogBean> paymentLines = paymentLogService.selectPaymentLog(userProfile_, "where customer_id = " + customerId_, "order by effective_dt");
+	       paymentTotal = 0D;
+	       for(int ndx =0; ndx< paymentLines.size();ndx++){
+			   paymentTotal += paymentLines.get(ndx).getAmount();
+		   }
 	       return new JRBeanCollectionDataSource(paymentLines);
-
 
 	 }
 	 
-	 public java.util.HashMap getParams(UserProfile userProfile_, VwInvoiceDisplayBean bean_){
+	 public java.util.HashMap getParams(UserProfile userProfile_, CustomerBean bean_){
 	       java.util.HashMap params = new java.util.HashMap();
 	       
 	       try{
-	    	   if(bean_.getBillType().equals("HOURLY")){
-		    	   String reportsDirPath = this.getServletContext().getRealPath(REPORT_PATH+"invoice/");
+	    	   
+		    	   String reportsDirPath = this.getServletContext().getRealPath(REPORT_PATH+"customerhistory/");
 		    	   
 		    	   params.put("SUBREPORT_DIR",reportsDirPath);  
-		    	   params.put("LaborRecords", getLaborBeans(userProfile_, bean_.getInvoiceId()));
-		    	   params.put("Expenses", getExpenseBeans(userProfile_, bean_.getInvoiceId()));
-		    	   params.put("Payments",getPaymentBeans(userProfile_, bean_.getInvoiceId()));
-		    	   params.put("PreviousBalance",  bean_.getPrevBalanceDue() + paymentTotal);
-		    	   params.put("PaymentTotal", paymentTotal);
-
-	    	   }
+		    	   params.put("LaborRecords", getLaborBeans(userProfile_, bean_.getCustomerId()));
+		    	   params.put("Expenses", getExpenseBeans(userProfile_, bean_.getCustomerId()));
+		    	   params.put("Payments",getPaymentBeans(userProfile_, bean_.getCustomerId()));
+		    	   params.put("CurrentBalance", paymentTotal + laborTotal + expenseTotal);
+		    	   
+	    	   
 	       }catch(Exception e){
 	           Log.debug( "Error General Exception getParams"+ e.getMessage());
 	       }

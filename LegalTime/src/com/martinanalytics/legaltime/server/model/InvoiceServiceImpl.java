@@ -458,7 +458,11 @@ public ArrayList<Integer> invoiceAllHourlyClients(UserProfile userProfile_, java
 		Log.debug(result);
 		String[] resultArray = result.split(",");
 		for( ndx =0;ndx<resultArray.length;ndx++){
+			try{
 			resultList.add(Integer.parseInt(resultArray[ndx]));
+			}catch(Exception e){
+				
+			}
 		}
 	  }catch (Exception e) {
 		e.printStackTrace();

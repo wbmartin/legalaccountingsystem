@@ -113,7 +113,7 @@ public class InvoiceManagerController implements AppEventListener {
 		}else if(e_.getName().equals("LaborRegisterTableOnDetach")){
 			saveLaborRegisterBeanBatch(invoiceManagerView.getLaborRegisterTable().getList());
 		}else if(e_.getName().equals("ShowInvoiceList")){
-			selectVwInvoiceDisplayBeans("","");
+			selectVwInvoiceDisplayBeans(""," order by invoice_id");
 			invoiceSelectionDialog.show();
 		}else if(e_.getName().equals("ReprintInvoice")){
 			ArrayList<VwInvoiceDisplayBean> items = invoiceSelectionView.getInvoiceTable().getSelectedList();
